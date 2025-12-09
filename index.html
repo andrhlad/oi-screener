@@ -29,16 +29,19 @@
         margin-left: 100px;
       }
 
-      /* віконце чату зліва внизу */
+      /* Pump&Dump chat window */
       #tg-chat {
         position: fixed;
         bottom: 20px;
         left: 20px;
         width: 260px;
         height: 320px;
-        background: rgba(0,0,0,0.9);
+        background: radial-gradient(circle at top left, #00ffcc20, #000000e0);
+        border: 1px solid #00ffcc80;
+        box-shadow: 0 0 25px #00ffcc55;
+        backdrop-filter: blur(8px);
         color: #fff;
-        border-radius: 10px;
+        border-radius: 14px;
         display: flex;
         flex-direction: column;
         font-family: sans-serif;
@@ -50,7 +53,7 @@
         background: #00d084;
         color: #000;
         font-weight: 600;
-        border-radius: 10px 10px 0 0;
+        border-radius: 14px 14px 0 0;
       }
 
       #tg-chat-messages {
