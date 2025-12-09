@@ -16,8 +16,9 @@
 
       .hero {
         height: 100vh;
-        background: url("img/color.jpeg") no-repeat center top;
-        background-size: 100% auto;
+        background: url("img/color.jpeg") no-repeat center center;
+        background-size: contain;   /* показати всю картинку цілком */
+        background-color: #000;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -28,16 +29,16 @@
       .hero h1 {
         align-self: flex-start;
         margin-left: 100px;
-        margin-top: -50px; /* підняти текст приблизно на 5 см */
+        margin-top: -50px;
       }
 
       .repeat {
         height: 100vh;
-        background: url("img/color1.jpeg") no-repeat center bottom;
-        background-size: 100% auto;
+        background: url("img/color1.jpeg") no-repeat center center;
+        background-size: contain;   /* теж повний розмір без обрізання */
+        background-color: #000;
       }
 
-      /* Фіксований чат, піднятий на 5 см */
       #tg-chat {
         position: fixed;
         bottom: 20px;
@@ -53,7 +54,7 @@
         z-index: 9999;
         backdrop-filter: blur(6px);
         will-change: transform;
-        transform: translateY(-50px); /* підняти вікно чату приблизно на 5 см */
+        transform: translateY(-50px); /* підняв чат на ~5 см */
       }
 
       #tg-chat-header {
@@ -108,8 +109,7 @@
     </div>
 
     <script>
-      // Якщо ще потрібен рух проти скролу — можна повернути translateY у JS
-      // і забрати статичний transform із CSS.
+      // якщо буде потрібен рух чату проти скролу — можна додати тут JS
     </script>
   </body>
 </html>
