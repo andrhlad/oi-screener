@@ -95,9 +95,9 @@
         line-height: 1.3;
       }
 
-      /* нижній блок для створення вертикального скролу */
+      /* великий нижній блок, щоб створити вертикальний overflow */
       .bottom-section {
-        height: 800px;
+        height: 1200px;  /* гарантовано більше за висоту екрана */
         background: linear-gradient(to top, #000000ee, transparent);
         display: flex;
         align-items: center;
@@ -137,7 +137,7 @@
       </div>
     </div>
 
-    <!-- додатковий контент внизу, щоб був скрол -->
+    <!-- нижній блок, який додає висоту сторінці -->
     <div class="bottom-section">
       <h2>More crypto tools coming soon...</h2>
     </div>
