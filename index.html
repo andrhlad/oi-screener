@@ -8,7 +8,7 @@
         margin: 0;
         padding: 0;
         height: 100%;
-        background: #000; /* запасний фон */
+        background: #000;
       }
 
       body {
@@ -16,8 +16,8 @@
         min-height: 100vh;
         position: relative;
         background-color: #000;
-        background-image: url("img/color.jpeg"); /* основна картинка зверху */
-        background-size: cover;
+        background-image: url("img/color.jpeg"); /* верхня картинка */
+        background-size: 100% auto;              /* по ширині екрана, без зуму */
         background-position: top center;
         background-repeat: no-repeat;
         color: #fff;
@@ -25,20 +25,20 @@
         overflow-x: hidden;
       }
 
-      /* Перевернута копія фону під першою картинкою */
+      /* Дзеркальна + перевернута копія під першою */
       body::after {
         content: "";
         position: fixed;
         left: 0;
-        top: 100vh;          /* одразу під першим екраном */
+        top: 100vh;              /* одразу під першим екраном */
         width: 100vw;
-        height: 100vh;       /* ще один екран висоти */
+        height: 100vh;
         background-image: url("img/color.jpeg");
-        background-size: cover;
+        background-size: 100% auto;  /* те ж саме масштабування */
         background-position: bottom center;
         background-repeat: no-repeat;
-        transform: scaleY(-1);  /* переворот по вертикалі */
-        z-index: -1;            /* під усім контентом */
+        transform: scaleY(-1);       /* переворот по вертикалі */
+        z-index: -1;
       }
 
       .center {
@@ -48,7 +48,6 @@
         justify-content: center;
         align-items: center;
         text-align: center;
-        transform: translateY(-280px);
         position: relative;
         z-index: 1;
       }
@@ -58,7 +57,6 @@
         margin-left: 100px;
       }
 
-      /* Чат */
       #tg-chat {
         position: fixed;
         bottom: 20px;
@@ -106,9 +104,7 @@
         overflow-y: auto;
       }
 
-      .scroll-inner {
-        padding: 0 8px;
-      }
+      .scroll-inner { padding: 0 8px; }
 
       .bot-msg {
         margin-bottom: 8px;
@@ -148,7 +144,6 @@
       </div>
     </div>
 
-    <!-- Контент для скролу -->
     <div style="height: 2000px;">
       <h2 style="color:#0f0; padding:40px;">SCROLL TEST BLOCK</h2>
     </div>
@@ -160,8 +155,7 @@
         const scrolled = window.pageYOffset;
         const chat = document.getElementById('tg-chat');
 
-        // Та сама швидкість, що й скрол, але вгору
-        const chatY = scrolled * -1;
+        const chatY = scrolled * -1; // чат їде вгору з тією ж швидкістю
         chat.style.transform = `translateY(${chatY}px)`;
 
         ticking = false;
