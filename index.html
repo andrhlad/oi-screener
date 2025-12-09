@@ -2,174 +2,66 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Crypto World</title>
-
+    <title>Mirror Test</title>
     <style>
       html, body {
         margin: 0;
         padding: 0;
         height: 100%;
+        overflow-x: hidden;
         background: #000;
-      }
-
-      /* Базовий фон для першого екрану */
-      .bg-image-setup {
-        background-image: url("img/color.jpeg");
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center top;
-        background-attachment: scroll; /* якщо хочеш fixed – можеш змінити */
         color: #fff;
         font-family: sans-serif;
-        overflow-x: hidden;
       }
 
-      /* Перший екран */
-      .center {
+      /* 1. Верхня секція з фоном */
+      .hero {
         height: 100vh;
+        background: url("img/color.jpeg") no-repeat center top;
+        background-size: 100% auto;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
         align-items: center;
-        text-align: center;
+        justify-content: center;
       }
 
-      .center h1 {
-        align-self: flex-start;
-        margin-left: 100px;
-      }
-
-      /* Дзеркальна секція */
-      .mirror-section {
+      /* 2. Дзеркальна секція */
+      .mirror {
         position: relative;
-        min-height: 120vh;
+        height: 100vh;
         overflow: hidden;
       }
 
       .mirror-bg {
         position: absolute;
         inset: 0;
-        background-image: url("img/color.jpeg");
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center bottom;
-        transform: scaleY(-1);           /* перевернуто вертикально */
+        background: url("img/color.jpeg") no-repeat center bottom;
+        background-size: 100% auto;
+        transform: scaleY(-1);   /* переворот */
         transform-origin: top;
         z-index: -1;
-        will-change: transform;          /* для плавного parallax */
       }
 
-      .mirror-inner {
+      .mirror-content {
         position: relative;
-        padding: 50px;
-        max-width: 800px;
+        padding: 40px;
       }
 
-      .mirror-inner h2 {
+      .mirror-content h2 {
         color: #00ff55;
-        margin-bottom: 16px;
-      }
-
-      .mirror-inner p {
-        line-height: 1.6;
-        margin-bottom: 12px;
-      }
-
-      /* Чат */
-      #tg-chat {
-        position: fixed;
-        bottom: 20px;
-        left: 20px;
-        width: 260px;
-        height: 320px;
-        background: rgba(0, 0, 0, 0.7);
-        border: 1px solid #00ffcc80;
-        border-radius: 14px;
-        display: flex;
-        flex-direction: column;
-        color: #fff;
-        z-index: 9999;
-        backdrop-filter: blur(6px);
-        will-change: transform;
-      }
-
-      #tg-chat-header {
-        padding: 10px;
-        background: #00e089;
-        color: #000;
-        font-weight: bold;
-        text-align: center;
-        border-radius: 14px 14px 0 0;
-      }
-
-      #tg-chat-messages {
-        flex: 1;
-        overflow-y: auto;
-        padding: 10px;
-        background: #050711;
-        font-size: 13px;
-      }
-
-      .bot-msg {
-        padding: 6px 8px;
-        background: #0b0f1c;
-        margin-bottom: 8px;
-        border-radius: 6px;
       }
     </style>
   </head>
-
-  <body class="bg-image-setup">
-    <!-- Перший екран з основною картинкою -->
-    <div class="center">
-      <h1>Crypto World</h1>
-      <p>Welcome.</p>
-    </div>
-
-    <!-- Дзеркальна секція -->
-    <section class="mirror-section">
-      <div class="mirror-bg"></div>
-
-      <div class="mirror-inner">
-        <h2>Mirror background zone</h2>
-        <p>
-          Ця секція починається відразу після першого 100vh. 
-          Фон за текстом — дзеркальна копія "img/color.jpeg".
-        </p>
-        <p>
-          Якщо не бачиш картинку внизу, перевір, що файл дійсно лежить у папці <code>img/color.jpeg</code>.
-        </p>
-      </div>
+  <body>
+    <section class="hero">
+      <h1>TOP IMAGE</h1>
     </section>
 
-    <!-- Фіксований чат -->
-    <div id="tg-chat">
-      <div id="tg-chat-header">Pump&Dump</div>
-      <div id="tg-chat-messages">
-        <div class="bot-msg">Bot: Welcome to Pump&Dump.</div>
-        <div class="bot-msg">Bot: This is a test message.</div>
-        <div class="bot-msg">Bot: Scroll down to see more.</div>
-        <div class="bot-msg">Bot: Message 4.</div>
-        <div class="bot-msg">Bot: Message 5.</div>
-        <div class="bot-msg">Bot: Message 6.</div>
-        <div class="bot-msg">Bot: Message 7.</div>
-        <div class="bot-msg">Bot: Message 8.</div>
+    <section class="mirror">
+      <div class="mirror-bg"></div>
+      <div class="mirror-content">
+        <h2>Mirror zone</h2>
+        <p>Тут має бути дзеркальна картинка під текстом.</p>
       </div>
-    </div>
-
-    <script>
-      const mirror = document.querySelector(".mirror-bg");
-      const chat = document.querySelector("#tg-chat");
-
-      window.addEventListener("scroll", () => {
-        const y = window.scrollY;
-
-        // Дзеркальний фон – повільний parallax (0.3 можна підкрутити)
-        mirror.style.transform = `scaleY(-1) translateY(${y * 0.3}px)`;
-
-        // Чат їде вгору з тією ж швидкістю, що й скрол
-        chat.style.transform = `translateY(${-y}px)`;
-      });
-    </script>
+    </section>
   </body>
 </html>
