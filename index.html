@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <title>Crypto World</title>
     <style>
+      html, body {
+        height: 100%;
+        overflow-y: scroll;  /* глобальний скролбар справа для сайту */
+      }
+
       body {
         margin: 0;
         min-height: 100vh;
@@ -29,7 +34,6 @@
         margin-left: 100px;
       }
 
-      /* Pump&Dump chat window */
       #tg-chat {
         position: fixed;
         bottom: 20px;
@@ -75,13 +79,10 @@
         background-size: 220px 220px;
       }
 
-      /* ВНУТРІШНІЙ блок зі СКРОЛОМ */
       .scroll-inner {
         height: 100%;
         overflow-y: auto;
         padding: 0 8px;
-
-        /* Firefox */
         scrollbar-width: thin;
         scrollbar-color: #ff00ff #050505;
       }
@@ -95,7 +96,6 @@
         line-height: 1.3;
       }
 
-      /* ЯСКРАВИЙ, ТОВСТИЙ скролбар без укорочення (щоб точно побачити) */
       .scroll-inner::-webkit-scrollbar {
         width: 10px;
       }
@@ -105,7 +105,7 @@
       }
 
       .scroll-inner::-webkit-scrollbar-thumb {
-        background: #ff00ff;   /* яскраво-рожевий */
+        background: #ff00ff;
         border-radius: 4px;
         border: 0;
         box-shadow: none;
@@ -123,7 +123,6 @@
 
       <div id="tg-chat-messages">
         <div class="scroll-inner">
-          <!-- багато повідомлень, щоб точно був overflow -->
           <div class="bot-msg">Bot: Welcome to Pump&amp;Dump.</div>
           <div class="bot-msg">Bot: This is a test message.</div>
           <div class="bot-msg">Bot: Scroll down to see more.</div>
