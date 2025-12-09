@@ -36,10 +36,10 @@
         background-size: 100% auto;
       }
 
-      /* чат */
+      /* Чат знову fixed */
       #tg-chat {
-        position: absolute;
-        top: 90vh;      /* стартова позиція */
+        position: fixed;
+        bottom: 20px;
         left: 20px;
         width: 260px;
         height: 320px;
@@ -107,14 +107,18 @@
 
     <script>
       const chat = document.querySelector("#tg-chat");
-      const startTop = chat.offsetTop;   // 90vh у пікселях
-      const speed = 1;                   // 1 = така ж швидкість, можна поміняти
+      let lastScroll = window.scrollY;
 
       window.addEventListener("scroll", () => {
-        const y = window.scrollY;        // скільки сторінка прокручена
-        // рух у протилежний бік: скролимо вниз => віднімаємо
-        const newTop = startTop - y * speed;
-        chat.style.top = newTop + "px";
+        const current = window.scrollY;
+        const delta = current - lastScroll;     // наскільки прокрутили
+        lastScroll = current;
+
+        // рухаємо у протилежний бік від скролу
+        const currentOffset = parseFloat(chat.dataset.offset || "0");
+        const newOffset = currentOffset - delta;
+        chat.dataset.offset = newOffset;
+        chat.style.transform = `translateY(${newOffset}px)`;
       });
     </script>
   </body>
