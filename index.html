@@ -1,119 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Crypto World</title>
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        overflow-x: hidden;
-        background: #000;
-        color: #fff;
-        font-family: sans-serif;
-      }
+  <head>
+    <meta charset="UTF-8" />
+    <title>Crypto World</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow-x: hidden;
+        background: #000;
+        color: #fff;
+        font-family: sans-serif;
+      }
 
-      .hero {
-        height: 100vh;
-        background: url("img/color.jpeg") no-repeat center top;
-        background-size: 100% auto;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-      }
+      .hero {
+        height: 100vh;
+        /* Важливо: Для коректного `position: absolute` у #tg-chat, 
+        його батьківський елемент має мати `position: relative`, 
+        або позиціонування буде відносно <body>. 
+        Оскільки вам потрібна позиція на початку сторінки, 
+        залишимо позиціонування відносно <body>. */
+        background: url("img/color.jpeg") no-repeat center top;
+        background-size: 100% auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
 
-      .hero h1 {
-        align-self: flex-start;
-        margin-left: 100px;
-      }
+      .hero h1 {
+        align-self: flex-start;
+        margin-left: 100px;
+      }
 
-      .repeat {
-        height: 100vh;
-        background: url("img/color1.jpeg") no-repeat center bottom;
-        background-size: 100% auto;
-      }
+      .repeat {
+        height: 100vh;
+        background: url("img/color1.jpeg") no-repeat center bottom;
+        background-size: 100% auto;
+      }
 
-      /* Чат залишається в цьому кутку */
-      #tg-chat {
-        position: fixed;
-        bottom: 20px;
-        left: 20px;
-        width: 260px;
-        height: 320px;
-        background: rgba(0, 0, 0, 0.7);
-        border: 1px solid #00ffcc80;
-        border-radius: 14px;
-        display: flex;
-        flex-direction: column;
-        color: #fff;
-        z-index: 9999;
-        backdrop-filter: blur(6px);
-        will-change: transform;
-      }
+      /* Зміни для чату */
+      #tg-chat {
+        /* Змінено з fixed на absolute */
+        position: absolute; 
+        /* Позиція відраховується від верхівки сторінки */
+        top: 90vh; 
+        left: 20px;
+        width: 260px;
+        height: 320px;
+        background: rgba(0, 0, 0, 0.7);
+        border: 1px solid #00ffcc80;
+        border-radius: 14px;
+        display: flex;
+        flex-direction: column;
+        color: #fff;
+        z-index: 9999;
+        backdrop-filter: blur(6px);
+        will-change: transform;
+      }
 
-      #tg-chat-header {
-        padding: 10px;
-        background: #00e089;
-        color: #000;
-        font-weight: bold;
-        text-align: center;
-        border-radius: 14px 14px 0 0;
-      }
+      #tg-chat-header {
+        padding: 10px;
+        background: #00e089;
+        color: #000;
+        font-weight: bold;
+        text-align: center;
+        border-radius: 14px 14px 0 0;
+      }
 
-      #tg-chat-messages {
-        flex: 1;
-        overflow-y: auto;
-        padding: 10px;
-        background: #050711;
-        font-size: 13px;
-      }
+      #tg-chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px;
+        background: #050711;
+        font-size: 13px;
+      }
 
-      .bot-msg {
-        padding: 6px 8px;
-        background: #0b0f1c;
-        margin-bottom: 8px;
-        border-radius: 6px;
-      }
-    </style>
-  </head>
-  <body>
-    <section class="hero">
-      <h1>Crypto World</h1>
-      <p>Welcome.</p>
-    </section>
+      .bot-msg {
+        padding: 6px 8px;
+        background: #0b0f1c;
+        margin-bottom: 8px;
+        border-radius: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="hero">
+      <h1>Crypto World</h1>
+      <p>Welcome.</p>
+    </section>
 
-    <section class="repeat"></section>
+    <section class="repeat"></section>
 
-    <div id="tg-chat">
-      <div id="tg-chat-header">Pump&Dump</div>
-      <div id="tg-chat-messages">
-        <div class="bot-msg">Bot: Welcome to Pump&Dump.</div>
-        <div class="bot-msg">Bot: This is a test message.</div>
-        <div class="bot-msg">Bot: Scroll down to see more.</div>
-        <div class="bot-msg">Bot: Message 4.</div>
-        <div class="bot-msg">Bot: Message 5.</div>
-        <div class="bot-msg">Bot: Message 6.</div>
-        <div class="bot-msg">Bot: Message 7.</div>
-        <div class="bot-msg">Bot: Message 8.</div>
-        <div class="bot-msg">Bot: Message 9.</div>
-        <div class="bot-msg">Bot: Message 10.</div>
-        <div class="bot-msg">Bot: Additional message 11.</div>
-        <div class="bot-msg">Bot: Additional message 12.</div>
-      </div>
-    </div>
+    <div id="tg-chat">
+      <div id="tg-chat-header">Pump&Dump</div>
+      <div id="tg-chat-messages">
+        <div class="bot-msg">Bot: Welcome to Pump&Dump.</div>
+        <div class="bot-msg">Bot: This is a test message.</div>
+        <div class="bot-msg">Bot: Scroll down to see more.</div>
+        <div class="bot-msg">Bot: Message 4.</div>
+        <div class="bot-msg">Bot: Message 5.</div>
+        <div class="bot-msg">Bot: Message 6.</div>
+        <div class="bot-msg">Bot: Message 7.</div>
+        <div class="bot-msg">Bot: Message 8.</div>
+        <div class="bot-msg">Bot: Message 9.</div>
+        <div class="bot-msg">Bot: Message 10.</div>
+        <div class="bot-msg">Bot: Additional message 11.</div>
+        <div class="bot-msg">Bot: Additional message 12.</div>
+      </div>
+    </div>
 
-    <script>
-      const chat = document.querySelector("#tg-chat");
-      let offset = 0;  // поточне зміщення чату
-
-      window.addEventListener("wheel", (e) => {
-        // e.deltaY > 0 — крутимо вниз. Рухаємось у протилежний бік.
-        offset -= e.deltaY;
-        chat.style.transform = `translateY(${offset}px)`;
-      }, { passive: true });
-    </script>
-  </body>
+      </body>
 </html>
