@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Crypto World - Parallax Chat</title>
+    <title>Crypto World - Тест Фонів та Паралаксу</title>
     <style>
       html, body {
         margin: 0;
@@ -23,9 +23,10 @@
         text-align: center;
       }
 
+      /* 🔴 ТИМЧАСОВИЙ ФОН RED */
       .hero {
-        /* Стилі для першої секції */
-        background: url("img/color.jpeg") no-repeat center top;
+        /* background: url("img/color.jpeg") no-repeat center top; */
+        background: red; 
         background-size: cover;
       }
 
@@ -35,13 +36,14 @@
         margin-top: -50px;
       }
 
+      /* 🔵 ТИМЧАСОВИЙ ФОН BLUE */
       .repeat {
-        /* Стилі для другої секції */
-        background: url("img/color1.jpeg") no-repeat center bottom;
+        /* background: url("img/color1.jpeg") no-repeat center bottom; */
+        background: blue; 
         background-size: cover;
       }
 
-      /* 📢 ЧАТ: ВИКОРИСТОВУЄМО FIXED ДЛЯ ПАРАЛАКС-ЕФЕКТУ */
+      /* ЧАТ: ВИКОРИСТОВУЄМО FIXED ДЛЯ ПАРАЛАКС-ЕФЕКТУ */
       #tg-chat {
         position: fixed; /* Чат прив'язаний до вікна перегляду */
         bottom: 20px;
@@ -56,7 +58,6 @@
         color: #fff;
         z-index: 9999;
         backdrop-filter: blur(6px);
-        /* Цей параметр оптимізує анімацію: */
         will-change: transform; 
       }
 
@@ -114,27 +115,19 @@
         <script>
       const chat = document.querySelector("#tg-chat");
       
-      // Коефіцієнт паралаксу. 
-      // 1.0 = елемент стоятиме на місці. 0.0 = елемент не рухатиметься взагалі.
-      // 0.5 = елемент рухається вдвічі повільніше, ніж сторінка.
+      // Коефіцієнт паралаксу (0.5 = вдвічі повільніше, ніж скрол)
       const parallaxFactor = 0.5; 
 
       function updateChatPosition() {
-        // Отримуємо поточну позицію прокрутки сторінки
         const scrollDistance = window.scrollY;
 
-        // Розраховуємо зміщення. Використовуємо негативне значення, 
-        // щоб рухатися проти напрямку прокрутки (скрол вниз = рух вгору).
+        // Негативне зміщення (-Y) змушує чат рухатися вгору.
         const translateY_value = -scrollDistance * parallaxFactor;
         
-        // Застосовуємо трансформацію
         chat.style.transform = `translateY(${translateY_value}px)`;
       }
 
-      // Прив'язуємо функцію до події прокручування сторінки
       window.addEventListener("scroll", updateChatPosition, { passive: true });
-
-      // Викликаємо при завантаженні, щоб чат був на правильній позиції
       updateChatPosition();
     </script>
   </body>
