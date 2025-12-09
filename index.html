@@ -3,35 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <title>Crypto World</title>
+
     <style>
-      html {
+      html, body {
         margin: 0;
         padding: 0;
         height: 100%;
-        background: #000;
+        overflow-x: hidden;
       }
 
-      /* 🔥 СПІЛЬНИЙ КЛАС для налаштування фонового зображення 🔥 */
+      /* Глобальний клас фонового зображення */
       .bg-image-setup {
-        background-image: url("img/color.jpeg"); 
+        background-image: url("img/color.jpeg");
         background-size: 100% auto;
         background-repeat: no-repeat;
       }
 
-      /* До body застосовується .bg-image-setup */
-      body {
-        margin: 0;
-        min-height: 100vh;
+      /* Фон першого екрану */
+      body.bg-image-setup {
+        background-position: top center;
         background-color: #000;
-        /* Лише позиція, оскільки інші властивості в .bg-image-setup */
-        background-position: top center; 
         color: #fff;
         font-family: sans-serif;
-        overflow-x: hidden;
       }
 
+      /* Перший екран */
       .center {
-        height: 100vh; /* Перший екран */
+        height: 100vh;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -44,22 +42,22 @@
         margin-left: 100px;
       }
 
-      /* Дзеркальна секція ФОНУ */
+      /* Дзеркальна секція */
       .mirror-section {
-        min-height: 150vh; /* Достатня висота для прокручування */
+        min-height: 150vh;
         position: relative;
         overflow: hidden;
       }
 
-      /* До .mirror-bg застосовується .bg-image-setup */
+      /* Дзеркальний фон */
       .mirror-bg {
         position: absolute;
         inset: 0;
-        /* background-image, size, repeat беруться з .bg-image-setup */
-        
-        /* Специфічні властивості для дзеркального ефекту */
-        background-position: bottom center; 
-        transform: scaleY(-1);   /* Перевертаємо фон */
+        background-image: url("img/color.jpeg");
+        background-size: 100% auto;
+        background-repeat: no-repeat;
+        background-position: bottom center;
+        transform: scaleY(-1);
         transform-origin: top;
         z-index: -1;
       }
@@ -70,18 +68,19 @@
         flex-direction: column;
         align-items: flex-start;
         padding: 40px;
-      }
-      
-      .mirror-inner p {
-          max-width: 600px;
-          line-height: 1.6;
+        color: #fff;
       }
 
       .mirror-inner h2 {
         color: #0f0;
       }
 
-      /* Чат */
+      .mirror-inner p {
+        max-width: 600px;
+        line-height: 1.6;
+      }
+
+      /* Telegram Chat Widget */
       #tg-chat {
         position: fixed;
         bottom: 20px;
@@ -129,7 +128,9 @@
         overflow-y: auto;
       }
 
-      .scroll-inner { padding: 0 8px; }
+      .scroll-inner {
+        padding: 0 8px;
+      }
 
       .bot-msg {
         margin-bottom: 8px;
@@ -139,29 +140,37 @@
         font-size: 13px;
         line-height: 1.3;
       }
+
     </style>
   </head>
-  <body class="bg-image-setup"> 
+
+  <body class="bg-image-setup">
+
+    <!-- Перший екран -->
     <div class="center">
       <h1>Crypto World</h1>
       <p>Welcome.</p>
     </div>
 
+    <!-- Дзеркальна секція -->
     <section class="mirror-section">
-      <div class="mirror-bg bg-image-setup"></div>
+      <div class="mirror-bg"></div>
+
       <div class="mirror-inner">
         <h2>Mirror background zone</h2>
         <p>
-            Ця секція починається відразу після першого 100vh екрану. 
-            Фон, який ви бачите за цим текстом, є дзеркальною (перевернутою) 
-            копією фонового зображення "img/color.jpeg".
+          Ця секція починається відразу після першого 100vh екрану.
+          Фон, який ви бачите за цим текстом, — дзеркальна (перевернута)
+          копія фонового зображення "img/color.jpeg".
         </p>
         <p>
-            Якщо ви не бачите картинку, перевірте, чи файл **color.jpeg** знаходиться у папці **img**, яка розташована поруч із цим HTML-файлом.
+          Якщо ви не бачите картинку, перевірте, чи файл <b>color.jpeg</b>
+          знаходиться у папці <b>img</b> поруч із цим HTML-файлом.
         </p>
       </div>
     </section>
 
+    <!-- Чат -->
     <div id="tg-chat">
       <div id="tg-chat-header">Pump&Dump</div>
       <div id="tg-chat-messages">
@@ -176,10 +185,6 @@
           <div class="bot-msg">Bot: Message 8.</div>
           <div class="bot-msg">Bot: Message 9.</div>
           <div class="bot-msg">Bot: Message 10.</div>
-          <div class="bot-msg">Bot: Additional message 11.</div>
-          <div class="bot-msg">Bot: Additional message 12.</div>
-          <div class="bot-msg">Bot: Additional message 13.</div>
-          <div class="bot-msg">Bot: Additional message 14.</div>
         </div>
       </div>
     </div>
@@ -191,19 +196,19 @@
         const scrolled = window.pageYOffset;
         const chat = document.getElementById('tg-chat');
 
-        // Чат їде вгору
-        const chatY = scrolled * -1; 
+        const chatY = scrolled * -1;
         chat.style.transform = `translateY(${chatY}px)`;
 
         ticking = false;
       }
 
-      window.addEventListener('scroll', () => {
+      window.addEventListener("scroll", () => {
         if (!ticking) {
           window.requestAnimationFrame(updateParallax);
           ticking = true;
         }
       });
     </script>
+
   </body>
 </html>
