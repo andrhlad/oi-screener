@@ -6,7 +6,7 @@
     <style>
       html, body {
         height: 100%;
-        overflow-y: scroll;  /* один глобальний скрол справа */
+        overflow-y: scroll;  /* глобальний скрол справа */
       }
 
       body {
@@ -16,6 +16,8 @@
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
+        color: #fff;
+        font-family: sans-serif;
       }
 
       .center {
@@ -24,7 +26,6 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        color: white;
         text-align: center;
         transform: translateY(-280px);
       }
@@ -80,9 +81,8 @@
         background-size: 220px 220px;
       }
 
-      /* чат без власного скролу */
       .scroll-inner {
-        padding: 0 8px;
+        padding: 0 8px;   /* без власного скролу */
       }
 
       .bot-msg {
@@ -93,6 +93,21 @@
         font-size: 13px;
         line-height: 1.3;
       }
+
+      /* додатковий блок внизу сторінки, щоб був скрол */
+      .bottom-section {
+        height: 800px;                 /* висота > екрана = гарантований скрол */
+        background: linear-gradient(to top, #000000ee, transparent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .bottom-section h2 {
+        margin: 0;
+        font-size: 28px;
+      }
     </style>
   </head>
   <body>
@@ -101,6 +116,7 @@
       <p>Welcome.</p>
     </div>
 
+    <!-- фіксований чат -->
     <div id="tg-chat">
       <div id="tg-chat-header">Pump&amp;Dump</div>
 
@@ -116,13 +132,13 @@
           <div class="bot-msg">Bot: Message 8.</div>
           <div class="bot-msg">Bot: Message 9.</div>
           <div class="bot-msg">Bot: Message 10.</div>
-          <div class="bot-msg">Bot: Message 11.</div>
-          <div class="bot-msg">Bot: Message 12.</div>
-          <div class="bot-msg">Bot: Message 13.</div>
-          <div class="bot-msg">Bot: Message 14.</div>
-          <div class="bot-msg">Bot: Message 15.</div>
         </div>
       </div>
+    </div>
+
+    <!-- новий нижній блок для створення вертикального скролу -->
+    <div class="bottom-section">
+      <h2>More crypto tools coming soon...</h2>
     </div>
   </body>
 </html>
