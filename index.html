@@ -14,7 +14,6 @@
         font-family: sans-serif;
       }
 
-      /* Верхній екран з основним фоном */
       .hero {
         height: 100vh;
         background: url("img/color.jpeg") no-repeat center top;
@@ -31,31 +30,12 @@
         margin-left: 100px;
       }
 
-      /* Нижній екран – інша картинка color1.jpeg */
       .repeat {
         height: 100vh;
         background: url("img/color1.jpeg") no-repeat center bottom;
         background-size: 100% auto;
-        display: flex;
-        align-items: flex-start;
-        justify-content: flex-start;
       }
 
-      .repeat-inner {
-        padding: 40px;
-      }
-
-      .repeat-inner h2 {
-        color: #00ff55;
-        margin-bottom: 16px;
-      }
-
-      .repeat-inner p {
-        line-height: 1.6;
-        margin: 0;
-      }
-
-      /* Чат */
       #tg-chat {
         position: fixed;
         bottom: 20px;
@@ -99,21 +79,14 @@
     </style>
   </head>
   <body>
-    <!-- Верхній екран -->
     <section class="hero">
       <h1>Crypto World</h1>
       <p>Welcome.</p>
     </section>
 
-    <!-- Продовження з іншим фоном -->
-    <section class="repeat">
-      <div class="repeat-inner">
-        <h2>Background continues</h2>
-        <p>Під цим текстом фон іде вже з картинки color1.jpeg.</p>
-      </div>
-    </section>
+    <!-- Другий екран без написів -->
+    <section class="repeat"></section>
 
-    <!-- Фіксований чат -->
     <div id="tg-chat">
       <div id="tg-chat-header">Pump&Dump</div>
       <div id="tg-chat-messages">
@@ -137,8 +110,8 @@
 
       window.addEventListener("scroll", () => {
         const y = window.scrollY;
-        // Чат їде вгору з тією ж швидкістю, що й скрол
-        chat.style.transform = `translateY(${-y}px)`;
+        // Чат рухається у протилежний бік від скролу
+        chat.style.transform = `translateY(${y}px)`;
       });
     </script>
   </body>
