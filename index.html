@@ -4,23 +4,28 @@
     <meta charset="UTF-8">
     <title>Crypto World</title>
     <style>
-      html, body {
+      /* один-єдиний скрол на body */
+      html {
         margin: 0;
+        padding: 0;
         height: 100%;
-        overflow-y: scroll;   /* глобальний скрол справа */
+        overflow: hidden;          /* html не скролиться */
       }
 
       body {
+        margin: 0;
+        min-height: 100vh;
+        overflow-y: auto;          /* скрол тільки тут */
         background-image: url("img/color.jpeg");
-        background-size: cover;
-        background-position: center;
+        background-size: cover;    /* фон розтягується на всю висоту */
+        background-position: center top;
         background-repeat: no-repeat;
         color: #fff;
         font-family: sans-serif;
       }
 
       .center {
-        height: 100vh;
+        min-height: 100vh;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -34,10 +39,8 @@
         margin-left: 100px;
       }
 
-      /* Pump&Dump chat window – тепер звичайний блок */
+      /* чат як звичайний блок, скролиться разом зі сторінкою */
       #tg-chat {
-        /* position: fixed;  <-- прибрали */
-        position: relative;   /* або можна взагалі без position */
         margin: 20px;
         width: 260px;
         height: 320px;
@@ -49,7 +52,6 @@
         border-radius: 14px;
         display: flex;
         flex-direction: column;
-        font-family: sans-serif;
       }
 
       #tg-chat-header {
@@ -92,18 +94,9 @@
         line-height: 1.3;
       }
 
-      /* великий нижній блок, щоб був скрол */
-      .test-block {
-        height: 1500px;
-        background: #000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .test-block h2 {
-        color: #fff;
-        font-size: 32px;
+      /* трохи додаткового простору внизу, щоб скрол взагалі був */
+      .bottom-space {
+        height: 400px;
       }
     </style>
   </head>
@@ -113,10 +106,8 @@
       <p>Welcome.</p>
     </div>
 
-    <!-- чат тепер частина потоку сторінки і скролиться разом з нею -->
     <div id="tg-chat">
       <div id="tg-chat-header">Pump&amp;Dump</div>
-
       <div id="tg-chat-messages">
         <div class="scroll-inner">
           <div class="bot-msg">Bot: Welcome to Pump&amp;Dump.</div>
@@ -133,9 +124,6 @@
       </div>
     </div>
 
-    <!-- тестовий блок для перевірки скролу -->
-    <div class="test-block">
-      <h2>TEST BLOCK FOR SCROLL</h2>
-    </div>
+    <div class="bottom-space"></div>
   </body>
 </html>
