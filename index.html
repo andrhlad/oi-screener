@@ -7,7 +7,7 @@
       html, body {
         margin: 0;
         height: 100%;
-        overflow-y: scroll;   /* один глобальний скрол справа */
+        overflow-y: scroll;   /* глобальний скрол справа */
       }
 
       body {
@@ -34,11 +34,11 @@
         margin-left: 100px;
       }
 
-      /* чат */
+      /* Pump&Dump chat window – тепер звичайний блок */
       #tg-chat {
-        position: fixed;
-        bottom: 20px;
-        left: 20px;
+        /* position: fixed;  <-- прибрали */
+        position: relative;   /* або можна взагалі без position */
+        margin: 20px;
         width: 260px;
         height: 320px;
         background: radial-gradient(circle at top left, #00ffcc20, #000000e0);
@@ -50,7 +50,6 @@
         display: flex;
         flex-direction: column;
         font-family: sans-serif;
-        z-index: 9999;
       }
 
       #tg-chat-header {
@@ -81,7 +80,7 @@
       }
 
       .scroll-inner {
-        padding: 0 8px;   /* без локального скролу */
+        padding: 0 8px;
       }
 
       .bot-msg {
@@ -93,9 +92,9 @@
         line-height: 1.3;
       }
 
-      /* ТЕСТОВИЙ НИЖНІЙ БЛОК, ЩОБ БУВ SCROLL */
+      /* великий нижній блок, щоб був скрол */
       .test-block {
-        height: 1500px;           /* велика висота для overflow */
+        height: 1500px;
         background: #000;
         display: flex;
         align-items: center;
@@ -114,7 +113,7 @@
       <p>Welcome.</p>
     </div>
 
-    <!-- фіксований чат -->
+    <!-- чат тепер частина потоку сторінки і скролиться разом з нею -->
     <div id="tg-chat">
       <div id="tg-chat-header">Pump&amp;Dump</div>
 
@@ -134,7 +133,7 @@
       </div>
     </div>
 
-    <!-- великий тестовий блок для перевірки скролу -->
+    <!-- тестовий блок для перевірки скролу -->
     <div class="test-block">
       <h2>TEST BLOCK FOR SCROLL</h2>
     </div>
