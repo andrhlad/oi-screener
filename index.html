@@ -12,16 +12,16 @@
         background: #000;
       }
 
-      /* Базове фонове зображення */
+      /* Базовий фон для першого екрану */
       .bg-image-setup {
         background-image: url("img/color.jpeg");
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center top;
-      }
-
-      body.bg-image-setup {
-        background-attachment: fixed;
+        background-attachment: scroll; /* якщо хочеш fixed – можеш змінити */
+        color: #fff;
+        font-family: sans-serif;
+        overflow-x: hidden;
       }
 
       /* Перший екран */
@@ -32,8 +32,6 @@
         justify-content: center;
         align-items: center;
         text-align: center;
-        color: #fff;
-        font-family: sans-serif;
       }
 
       .center h1 {
@@ -44,7 +42,7 @@
       /* Дзеркальна секція */
       .mirror-section {
         position: relative;
-        min-height: 150vh;
+        min-height: 120vh;
         overflow: hidden;
       }
 
@@ -55,24 +53,26 @@
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center bottom;
-        transform: scaleY(-1);
+        transform: scaleY(-1);           /* перевернуто вертикально */
         transform-origin: top;
         z-index: -1;
-
-        /* ФОН РУХАЄТЬСЯ ПРИ СКРОЛІ */
-        will-change: transform;
+        will-change: transform;          /* для плавного parallax */
       }
 
       .mirror-inner {
         position: relative;
         padding: 50px;
-        color: #fff;
-        font-family: sans-serif;
         max-width: 800px;
       }
-      
+
       .mirror-inner h2 {
         color: #00ff55;
+        margin-bottom: 16px;
+      }
+
+      .mirror-inner p {
+        line-height: 1.6;
+        margin-bottom: 12px;
       }
 
       /* Чат */
@@ -107,6 +107,7 @@
         overflow-y: auto;
         padding: 10px;
         background: #050711;
+        font-size: 13px;
       }
 
       .bot-msg {
@@ -114,18 +115,18 @@
         background: #0b0f1c;
         margin-bottom: 8px;
         border-radius: 6px;
-        font-size: 13px;
       }
     </style>
   </head>
 
   <body class="bg-image-setup">
-
+    <!-- Перший екран з основною картинкою -->
     <div class="center">
       <h1>Crypto World</h1>
       <p>Welcome.</p>
     </div>
 
+    <!-- Дзеркальна секція -->
     <section class="mirror-section">
       <div class="mirror-bg"></div>
 
@@ -133,14 +134,15 @@
         <h2>Mirror background zone</h2>
         <p>
           Ця секція починається відразу після першого 100vh. 
-          Фон за текстом — дзеркальна копія "color.jpeg".
+          Фон за текстом — дзеркальна копія "img/color.jpeg".
         </p>
         <p>
-          Якщо ви не бачите картинку — перевірте наявність файлу в папці img/.
+          Якщо не бачиш картинку внизу, перевір, що файл дійсно лежить у папці <code>img/color.jpeg</code>.
         </p>
       </div>
     </section>
 
+    <!-- Фіксований чат -->
     <div id="tg-chat">
       <div id="tg-chat-header">Pump&Dump</div>
       <div id="tg-chat-messages">
@@ -162,13 +164,12 @@
       window.addEventListener("scroll", () => {
         const y = window.scrollY;
 
-        // Дзеркальний фон рухається SLOW PARALLAX
+        // Дзеркальний фон – повільний parallax (0.3 можна підкрутити)
         mirror.style.transform = `scaleY(-1) translateY(${y * 0.3}px)`;
 
-        // Чат їде вгору
+        // Чат їде вгору з тією ж швидкістю, що й скрол
         chat.style.transform = `translateY(${-y}px)`;
       });
     </script>
-
   </body>
 </html>
