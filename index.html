@@ -8,14 +8,14 @@
         margin: 0;
         padding: 0;
         height: 100%;
-        overflow: hidden;          /* html не скролиться */
+        /* Видалено 'overflow: hidden;' - тепер загальний скрол працює */
       }
 
       body {
         margin: 0;
         min-height: 100vh;
-        overflow-y: auto;          /* один глобальний скрол тільки тут */
-        background-image: url("img/color.jpeg");
+        /* Видалено 'overflow-y: auto;' - тепер прокрутка йде від html за замовчуванням */
+        background-image: url("img/color.jpeg"); /* Переконайтеся, що файл 'img/color.jpeg' існує */
         background-size: cover;
         background-position: center top;
         background-repeat: no-repeat;
@@ -82,6 +82,8 @@
           radial-gradient(2px 2px at 40px 200px, #ff6bff, transparent);
         background-repeat: repeat;
         background-size: 220px 220px;
+        /* ДОДАНО: Вмикає прокрутку повідомлень у чаті */
+        overflow-y: auto; 
       }
 
       .scroll-inner {
@@ -96,17 +98,6 @@
         font-size: 13px;
         line-height: 1.3;
       }
-
-      /* Тестовий блок, який створює велику висоту сторінки */
-      .scroll-test {
-        height: 2000px;
-        background: #000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #0f0;
-        font-size: 32px;
-      }
     </style>
   </head>
   <body>
@@ -115,7 +106,6 @@
       <p>Welcome.</p>
     </div>
 
-    <!-- фіксований чат -->
     <div id="tg-chat">
       <div id="tg-chat-header">Pump&amp;Dump</div>
       <div id="tg-chat-messages">
@@ -130,13 +120,16 @@
           <div class="bot-msg">Bot: Message 8.</div>
           <div class="bot-msg">Bot: Message 9.</div>
           <div class="bot-msg">Bot: Message 10.</div>
+          <div class="bot-msg">Bot: Additional message 11.</div>
+          <div class="bot-msg">Bot: Additional message 12.</div>
+          <div class="bot-msg">Bot: Additional message 13.</div>
+          <div class="bot-msg">Bot: Additional message 14.</div>
         </div>
       </div>
     </div>
 
-    <!-- великий блок, щоб точно був скрол -->
-    <div class="scroll-test">
-      SCROLL TEST BLOCK
+    <div style="height: 2000px; background:#000;">
+      <h2 style="color:#0f0; padding:40px;">SCROLL TEST BLOCK (для загального скролу сайту)</h2>
     </div>
   </body>
 </html>
