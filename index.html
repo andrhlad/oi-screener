@@ -36,9 +36,10 @@
         background-size: 100% auto;
       }
 
+      /* Чат, тепер absolute */
       #tg-chat {
-        position: fixed;
-        bottom: 20px;
+        position: absolute;
+        top: 20px;
         left: 20px;
         width: 260px;
         height: 320px;
@@ -50,7 +51,6 @@
         color: #fff;
         z-index: 9999;
         backdrop-filter: blur(6px);
-        will-change: transform;
       }
 
       #tg-chat-header {
@@ -84,7 +84,7 @@
       <p>Welcome.</p>
     </section>
 
-    <!-- Другий екран без написів -->
+    <!-- Другий екран без текстів -->
     <section class="repeat"></section>
 
     <div id="tg-chat">
@@ -110,8 +110,8 @@
 
       window.addEventListener("scroll", () => {
         const y = window.scrollY;
-        // Чат рухається у протилежний бік від скролу
-        chat.style.transform = `translateY(${y}px)`;
+        // Протилежний напрямок: скролиш вниз — чат їде вгору
+        chat.style.top = `${20 - y}px`;
       });
     </script>
   </body>
