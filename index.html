@@ -17,16 +17,10 @@
         background-size: cover;
         background-position: center top;
         background-repeat: no-repeat;
-        background-attachment: fixed; /* ПАРАЛАКС ДЛЯ ФОНУ */
+        /* ФОН ДО КІНЦЯ САЙТУ - background-attachment: scroll */
+        background-attachment: scroll;
         color: #fff;
         font-family: sans-serif;
-      }
-
-      /* МОБІЛЬНА ПІДТРИМКА - вимикаємо fixed на мобільних */
-      @media (max-width: 768px) {
-        body {
-          background-attachment: scroll;
-        }
       }
 
       .center {
@@ -37,6 +31,8 @@
         align-items: center;
         text-align: center;
         transform: translateY(-280px);
+        position: relative;
+        z-index: 1;
       }
 
       .center h1 {
@@ -44,7 +40,7 @@
         margin-left: 100px;
       }
 
-      /* ФІКСОВАНИЙ ЧАТ З ПАРАЛАКСОМ */
+      /* ЧАТ З ПАРАЛАКСОМ */
       #tg-chat {
         position: fixed;
         bottom: 20px;
@@ -61,9 +57,7 @@
         flex-direction: column;
         font-family: sans-serif;
         z-index: 9999;
-        /* Початкова позиція для JS паралаксу */
-        transform: translateY(0px);
-        transition: transform 0.1s ease-out;
+        will-change: transform;
       }
 
       #tg-chat-header {
@@ -137,16 +131,28 @@
     </div>
 
     <div style="height: 2000px; background:#000;">
-      <h2 style="color:#0f0; padding:40px;">SCROLL TEST BLOCK (фон і чат рухаються з паралаксом)</h2>
+      <h2 style="color:#0f0; padding:40px;">SCROLL TEST BLOCK</h2>
     </div>
 
-    <!-- JAVASCRIPT ДЛЯ ПАРАЛАКСУ ЧАТУ -->
     <script>
-      window.addEventListener('scroll', () => {
+      let ticking = false;
+      
+      function updateParallax() {
         const scrolled = window.pageYOffset;
         const chat = document.getElementById('tg-chat');
-        // 0.4 = чат рухається повільніше за сторінку (паралакс)
-        chat.style.transform = `translateY(${scrolled * 0.4}px)`;
+        
+        // ТІЛЬКИ ЧАТ РУХАЄТЬСЯ ПОВІЛЬНО (паралакс)
+        const chatY = scrolled * 0.3;
+        chat.style.transform = `translateY(${chatY}px)`;
+        
+        ticking = false;
+      }
+      
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(updateParallax);
+          ticking = true;
+        }
       });
     </script>
   </body>
