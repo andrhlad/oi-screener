@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="eng">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>Crypto World</title>
@@ -13,11 +13,11 @@
       body {
         margin: 0;
         min-height: 100vh;
-        background-image: url("img/color.jpeg");
-        background-size: cover;
-        background-position: center top;
+        background-image: url("img/color.jpeg"); /* твоя картинка */
+        background-size: cover;                  /* покриває весь екран */
+        background-position: top center;
         background-repeat: no-repeat;
-        background-attachment: scroll;
+        background-attachment: scroll;           /* фон рухається разом зі скролом */
         color: #fff;
         font-family: sans-serif;
       }
@@ -39,7 +39,7 @@
         margin-left: 100px;
       }
 
-      /* ЧАТ з паралаксом */
+      /* Чат */
       #tg-chat {
         position: fixed;
         bottom: 20px;
@@ -129,7 +129,7 @@
       </div>
     </div>
 
-    <!-- прибрано чорний фон, тільки висота -->
+    <!-- просто великий блок, щоб був скрол -->
     <div style="height: 2000px;">
       <h2 style="color:#0f0; padding:40px;">SCROLL TEST BLOCK</h2>
     </div>
@@ -141,8 +141,8 @@
         const scrolled = window.pageYOffset;
         const chat = document.getElementById('tg-chat');
 
-        // рух у протилежний бік: при скролі вниз чат візуально їде вгору
-        const chatY = scrolled * -0.3;
+        // Та сама швидкість, що й сторінка, але у протилежний бік (ефект виїзду вгору)
+        const chatY = scrolled * -1;
         chat.style.transform = `translateY(${chatY}px)`;
 
         ticking = false;
@@ -150,7 +150,7 @@
 
       window.addEventListener('scroll', () => {
         if (!ticking) {
-          requestAnimationFrame(updateParallax);
+          window.requestAnimationFrame(updateParallax);
           ticking = true;
         }
       });
