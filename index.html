@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Mirror Simple</title>
+    <title>Crypto World Mirror</title>
     <style>
       html, body {
         margin: 0;
@@ -24,33 +24,39 @@
         justify-content: center;
       }
 
-      /* Дзеркальна секція: той самий фон, але ВЕСЬ блок перевернутий */
+      /* Дзеркальна секція: та сама картинка, але ВЕСЬ блок перевернутий */
       .mirror {
         height: 100vh;
         background: url("img/color.jpeg") no-repeat center bottom;
         background-size: 100% auto;
-        transform: scaleY(-1);       /* ВАЖЛИВО: перевертаємо секцію */
+        transform: scaleY(-1);       /* перевертаємо фон */
         transform-origin: top;
         display: flex;
         align-items: flex-start;
         justify-content: flex-start;
       }
 
-      /* Контент всередині – ще раз scaleY(-1), щоб текст був нормальним */
+      /* Контент усередині повертаємо назад, щоб текст був нормальний */
       .mirror-inner {
-        transform: scaleY(-1);       /* ВАЖЛИВО: повертаємо текст */
+        transform: scaleY(-1);
         transform-origin: top;
         padding: 40px;
       }
 
       .mirror-inner h2 {
         color: #00ff55;
+        margin-bottom: 16px;
+      }
+
+      .mirror-inner p {
+        line-height: 1.6;
+        margin: 0;
       }
     </style>
   </head>
   <body>
     <section class="hero">
-      <h1>TOP IMAGE</h1>
+      <h1>Crypto World</h1>
     </section>
 
     <section class="mirror">
