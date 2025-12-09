@@ -7,14 +7,13 @@
       html, body {
         margin: 0;
         padding: 0;
-        height: 100%;
         overflow-x: hidden;
         background: #000;
         color: #fff;
         font-family: sans-serif;
       }
 
-      .hero, .repeat {
+      .hero, .repeat, .extra {
         height: 100vh;
         display: flex;
         flex-direction: column;
@@ -37,6 +36,10 @@
       .repeat {
         background: url("img/color1.jpeg") no-repeat center bottom;
         background-size: cover;
+      }
+
+      .extra {
+        background: #000;
       }
 
       #tg-chat {
@@ -88,6 +91,8 @@
     </section>
 
     <section class="repeat"></section>
+
+    <section class="extra"></section>
 
     <div id="tg-chat">
       <div id="tg-chat-header">Pump&Dump</div>
