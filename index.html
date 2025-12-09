@@ -36,7 +36,7 @@
         background-size: 100% auto;
       }
 
-      /* Чат знову fixed */
+      /* Чат залишається в цьому кутку */
       #tg-chat {
         position: fixed;
         bottom: 20px;
@@ -107,19 +107,13 @@
 
     <script>
       const chat = document.querySelector("#tg-chat");
-      let lastScroll = window.scrollY;
+      let offset = 0;  // поточне зміщення чату
 
-      window.addEventListener("scroll", () => {
-        const current = window.scrollY;
-        const delta = current - lastScroll;     // наскільки прокрутили
-        lastScroll = current;
-
-        // рухаємо у протилежний бік від скролу
-        const currentOffset = parseFloat(chat.dataset.offset || "0");
-        const newOffset = currentOffset - delta;
-        chat.dataset.offset = newOffset;
-        chat.style.transform = `translateY(${newOffset}px)`;
-      });
+      window.addEventListener("wheel", (e) => {
+        // e.deltaY > 0 — крутимо вниз. Рухаємось у протилежний бік.
+        offset -= e.deltaY;
+        chat.style.transform = `translateY(${offset}px)`;
+      }, { passive: true });
     </script>
   </body>
 </html>
