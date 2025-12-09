@@ -8,18 +8,37 @@
         margin: 0;
         padding: 0;
         height: 100%;
+        background: #000; /* запасний фон */
       }
 
       body {
         margin: 0;
         min-height: 100vh;
-        background-image: url("img/color.jpeg"); /* твоя картинка */
-        background-size: cover;                  /* покриває весь екран */
+        position: relative;
+        background-color: #000;
+        background-image: url("img/color.jpeg"); /* основна картинка зверху */
+        background-size: cover;
         background-position: top center;
         background-repeat: no-repeat;
-        background-attachment: scroll;           /* фон рухається разом зі скролом */
         color: #fff;
         font-family: sans-serif;
+        overflow-x: hidden;
+      }
+
+      /* Перевернута копія фону під першою картинкою */
+      body::after {
+        content: "";
+        position: fixed;
+        left: 0;
+        top: 100vh;          /* одразу під першим екраном */
+        width: 100vw;
+        height: 100vh;       /* ще один екран висоти */
+        background-image: url("img/color.jpeg");
+        background-size: cover;
+        background-position: bottom center;
+        background-repeat: no-repeat;
+        transform: scaleY(-1);  /* переворот по вертикалі */
+        z-index: -1;            /* під усім контентом */
       }
 
       .center {
@@ -129,7 +148,7 @@
       </div>
     </div>
 
-    <!-- просто великий блок, щоб був скрол -->
+    <!-- Контент для скролу -->
     <div style="height: 2000px;">
       <h2 style="color:#0f0; padding:40px;">SCROLL TEST BLOCK</h2>
     </div>
@@ -141,7 +160,7 @@
         const scrolled = window.pageYOffset;
         const chat = document.getElementById('tg-chat');
 
-        // Та сама швидкість, що й сторінка, але у протилежний бік (ефект виїзду вгору)
+        // Та сама швидкість, що й скрол, але вгору
         const chatY = scrolled * -1;
         chat.style.transform = `translateY(${chatY}px)`;
 
