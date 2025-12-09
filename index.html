@@ -58,7 +58,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        padding-left: 26px; /* зміщення напису вправо */
+        padding-left: 26px; /* зсув напису вправо */
       }
 
       /* область повідомлень + фон зі "зірками" */
@@ -76,6 +76,10 @@
           radial-gradient(2px 2px at 40px 200px, #ff6bff, transparent);
         background-repeat: repeat;
         background-size: 220px 220px;
+
+        /* для Firefox (кольоровий скрол) */
+        scrollbar-width: thin;
+        scrollbar-color: #b400ff #050505;
       }
 
       /* стилі для повідомлень бота */
@@ -100,7 +104,7 @@
       #tg-chat-messages::-webkit-scrollbar-thumb {
         background: linear-gradient(180deg, #b400ff 0%, #ff6bff 100%);
         border-radius: 4px;
-        margin: 12px 0;           /* за рахунок відступів thumb виглядає значно коротшим */
+        margin: 12px 0;
         border: 2px solid transparent;
         background-clip: content-box;
       }
@@ -116,11 +120,20 @@
     <div id="tg-chat">
       <div id="tg-chat-header">Pump&amp;Dump</div>
 
-      <!-- тільки вхідні повідомлення бота; додаватимеш їх із JS/бекенда -->
+      <!-- тестові вхідні повідомлення бота -->
       <div id="tg-chat-messages">
-        <!-- приклад:
-        <div class="bot-msg">Bot: Hello, trader!</div>
-        -->
+        <div class="bot-msg">Bot: Welcome to Pump&amp;Dump.</div>
+        <div class="bot-msg">Bot: This is a test message.</div>
+        <div class="bot-msg">Bot: Scroll down to see more.</div>
+        <div class="bot-msg">Bot: Message 4.</div>
+        <div class="bot-msg">Bot: Message 5.</div>
+        <div class="bot-msg">Bot: Message 6.</div>
+        <div class="bot-msg">Bot: Message 7.</div>
+        <div class="bot-msg">Bot: Message 8.</div>
+        <div class="bot-msg">Bot: Message 9.</div>
+        <div class="bot-msg">Bot: Message 10.</div>
+        <div class="bot-msg">Bot: Message 11.</div>
+        <div class="bot-msg">Bot: Message 12.</div>
       </div>
     </div>
   </body>
