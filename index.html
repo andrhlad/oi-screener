@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Mirror Debug</title>
+    <title>Mirror Simple</title>
     <style>
       html, body {
         margin: 0;
@@ -14,48 +14,49 @@
         font-family: sans-serif;
       }
 
+      /* Верхня секція з фоном */
       .hero {
         height: 100vh;
-        background: #111;
+        background: url("img/color.jpeg") no-repeat center top;
+        background-size: 100% auto;
         display: flex;
         align-items: center;
         justify-content: center;
       }
 
+      /* Дзеркальна секція – той самий фон, але весь блок перевернутий */
       .mirror {
-        position: relative;
         height: 100vh;
-        overflow: hidden;
-        background: #222;
-      }
-
-      .mirror-bg {
-        position: absolute;
-        inset: 0;
-        /* Поки без картинки, тільки фон і рамка */
-        background: rgba(0, 255, 0, 0.2);
-        border: 5px solid red;
+        background: url("img/color.jpeg") no-repeat center bottom;
+        background-size: 100% auto;
         transform: scaleY(-1);
         transform-origin: top;
-        z-index: -1;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
       }
 
-      .mirror-content {
-        position: relative;
+      /* Контент усередині повертаємо назад */
+      .mirror-inner {
+        transform: scaleY(-1);
+        transform-origin: top;
         padding: 40px;
+      }
+
+      .mirror-inner h2 {
+        color: #00ff55;
       }
     </style>
   </head>
   <body>
     <section class="hero">
-      <h1>TOP</h1>
+      <h1>TOP IMAGE</h1>
     </section>
 
     <section class="mirror">
-      <div class="mirror-bg"></div>
-      <div class="mirror-content">
-        <h2>Mirror debug</h2>
-        <p>Під цим текстом має бути напівпрозорий зелений блок з червоною рамкою.</p>
+      <div class="mirror-inner">
+        <h2>Mirror zone</h2>
+        <p>Під цим текстом має бути дзеркальна копія фону.</p>
       </div>
     </section>
   </body>
