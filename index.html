@@ -103,7 +103,7 @@
 
     <!-- чат-віконце -->
     <div id="tg-chat">
-      <div id="tg-chat-header">Pump&amp;Dump</div>
+      <div id="tg-chat-header">Pump&Dump</div>
       <div id="tg-chat-messages"></div>
       <div id="tg-chat-input">
         <input id="tg-chat-text" type="text" placeholder="Type message..." />
@@ -116,6 +116,16 @@
       const sendBtn = document.getElementById('tg-chat-send');
       const box = document.getElementById('tg-chat-messages');
 
+      function sendMessage() {
+        const text = input.value.trim();
+        if (!text) return;
+        addMsg(text, 'me');
+        input.value = '';
+        input.focus(); // повертаємо фокус на інпут
+
+        // тут потім зробиш fetch POST на свій бекенд, який шле в Telegram Bot API
+      }
+
       function addMsg(text, from) {
         const div = document.createElement('div');
         div.textContent = (from === 'me' ? 'You: ' : 'Bot: ') + text;
@@ -123,14 +133,16 @@
         box.scrollTop = box.scrollHeight;
       }
 
-      sendBtn.onclick = () => {
-        const text = input.value.trim();
-        if (!text) return;
-        addMsg(text, 'me');
-        input.value = '';
+      // Кнопка Send
+      sendBtn.onclick = sendMessage;
 
-        // тут потім зробиш fetch POST на свій бекенд, який шле в Telegram Bot API
-      };
+      // Enter в інпуті
+      input.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault(); // блокуємо стандартну поведінку Enter
+          sendMessage();
+        }
+      });
     </script>
   </body>
 </html>
