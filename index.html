@@ -15,7 +15,7 @@
         margin: 0;
         min-height: 100vh;
         background-color: #000;
-        background-image: url("img/color.jpeg"); /* фон тільки зверху */
+        background-image: url("img/color.jpeg"); /* фон на першому екрані */
         background-size: 100% auto;
         background-position: top center;
         background-repeat: no-repeat;
@@ -38,14 +38,46 @@
         margin-left: 100px;
       }
 
-      /* Далі просто чорний фон з текстом */
+      /* блок після першого екрану (можна залишити коротким) */
       .content {
-        height: 1500px;
-        background: #000;
+        min-height: 200px;
+        background: transparent; /* тут ще видно низ першої картинки */
         padding: 40px;
       }
 
       .content h2 {
+        color: #0f0;
+      }
+
+      /* Дзеркальна секція ФОНУ нижче */
+      .mirror-section {
+        height: 100vh;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .mirror-bg {
+        position: absolute;
+        inset: 0;
+        background-image: url("img/color.jpeg");
+        background-size: 100% auto;
+        background-position: bottom center;
+        background-repeat: no-repeat;
+        transform: scaleY(-1);   /* перевертаємо фон */
+        transform-origin: top;
+        z-index: -1;
+      }
+
+      .mirror-inner {
+        height: 100%;
+        transform: scaleY(-1);   /* повертаємо контент у норму */
+        transform-origin: top;
+        display: flex;
+        align-items: flex-start;
+        padding: 40px;
+      }
+
+      .mirror-inner h2 {
         color: #0f0;
       }
 
@@ -110,16 +142,27 @@
     </style>
   </head>
   <body>
+    <!-- 1. Верхній екран з оригінальним фоном -->
     <div class="center">
       <h1>Crypto World</h1>
       <p>Welcome.</p>
     </div>
 
+    <!-- 2. Перехідний блок (ще трохи видно першу картинку) -->
     <div class="content">
       <h2>SCROLL TEST BLOCK</h2>
-      <p>Далі просто чорний фон без білого.</p>
+      <p>Тут ще видно низ першої картинки.</p>
     </div>
 
+    <!-- 3. Дзеркальна секція фону -->
+    <section class="mirror-section">
+      <div class="mirror-bg"></div>
+      <div class="mirror-inner">
+        <h2>Mirror background zone</h2>
+      </div>
+    </section>
+
+    <!-- Фіксований чат з паралаксом -->
     <div id="tg-chat">
       <div id="tg-chat-header">Pump&Dump</div>
       <div id="tg-chat-messages">
@@ -149,8 +192,7 @@
         const scrolled = window.pageYOffset;
         const chat = document.getElementById('tg-chat');
 
-        // чат їде вгору з тією ж швидкістю, що й скрол
-        const chatY = scrolled * -1;
+        const chatY = scrolled * -1; // чат їде вгору з тією ж швидкістю
         chat.style.transform = `translateY(${chatY}px)`;
 
         ticking = false;
