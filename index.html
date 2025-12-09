@@ -36,10 +36,10 @@
         background-size: 100% auto;
       }
 
-      /* Чат знову fixed */
+      /* Чат прив’язаний до сторінки, а не до вікна */
       #tg-chat {
-        position: fixed;
-        bottom: 20px;
+        position: absolute;   /* важливо */
+        top: 70vh;            /* стартова позиція біля низу першого екрану */
         left: 20px;
         width: 260px;
         height: 320px;
@@ -51,7 +51,6 @@
         color: #fff;
         z-index: 9999;
         backdrop-filter: blur(6px);
-        will-change: transform;
       }
 
       #tg-chat-header {
@@ -107,18 +106,13 @@
 
     <script>
       const chat = document.querySelector("#tg-chat");
-      let lastScroll = window.scrollY;
+      const startTop = chat.offsetTop;  // початкова позиція в пікселях
+      const speed = 1;                  // 1 = така ж швидкість, можеш змінити
 
       window.addEventListener("scroll", () => {
-        const current = window.scrollY;
-        const delta = current - lastScroll;     // наскільки прокрутили
-        lastScroll = current;
-
-        // рухаємо у протилежний бік від скролу
-        const currentOffset = parseFloat(chat.dataset.offset || "0");
-        const newOffset = currentOffset - delta;
-        chat.dataset.offset = newOffset;
-        chat.style.transform = `translateY(${newOffset}px)`;
+        const y = window.scrollY;       // наскільки сторінка прокручена
+        // Скролиш вниз (y зростає) → top зменшується → чат їде вгору, проти фону
+        chat.style.top = (startTop - y * speed) + "px";
       });
     </script>
   </body>
