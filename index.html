@@ -4,15 +4,13 @@
     <meta charset="UTF-8">
     <title>Crypto World</title>
     <style>
-      html {
+      html, body {
+        margin: 0;
         height: 100%;
-        overflow: hidden;        /* скрол у html вимкнено */
+        overflow-y: scroll;   /* один глобальний скрол справа */
       }
 
       body {
-        margin: 0;
-        min-height: 100vh;
-        overflow-y: scroll;      /* один глобальний скролбар */
         background-image: url("img/color.jpeg");
         background-size: cover;
         background-position: center;
@@ -36,7 +34,7 @@
         margin-left: 100px;
       }
 
-      /* Pump&Dump chat window */
+      /* чат */
       #tg-chat {
         position: fixed;
         bottom: 20px;
@@ -83,7 +81,7 @@
       }
 
       .scroll-inner {
-        padding: 0 8px;   /* без власного скролу */
+        padding: 0 8px;   /* без локального скролу */
       }
 
       .bot-msg {
@@ -95,19 +93,18 @@
         line-height: 1.3;
       }
 
-      /* великий нижній блок, щоб створити вертикальний overflow */
-      .bottom-section {
-        height: 1200px;  /* гарантовано більше за висоту екрана */
-        background: linear-gradient(to top, #000000ee, transparent);
+      /* ТЕСТОВИЙ НИЖНІЙ БЛОК, ЩОБ БУВ SCROLL */
+      .test-block {
+        height: 1500px;           /* велика висота для overflow */
+        background: #000;
         display: flex;
         align-items: center;
         justify-content: center;
-        text-align: center;
       }
 
-      .bottom-section h2 {
-        margin: 0;
-        font-size: 28px;
+      .test-block h2 {
+        color: #fff;
+        font-size: 32px;
       }
     </style>
   </head>
@@ -137,9 +134,9 @@
       </div>
     </div>
 
-    <!-- нижній блок, який додає висоту сторінці -->
-    <div class="bottom-section">
-      <h2>More crypto tools coming soon...</h2>
+    <!-- великий тестовий блок для перевірки скролу -->
+    <div class="test-block">
+      <h2>TEST BLOCK FOR SCROLL</h2>
     </div>
   </body>
 </html>
