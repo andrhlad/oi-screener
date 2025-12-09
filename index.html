@@ -15,7 +15,8 @@
         margin: 0;
         min-height: 100vh;
         background-color: #000;
-        background-image: url("img/color.jpeg"); /* фон на першому екрані */
+        /* Фон для першого екрану */
+        background-image: url("img/color.jpeg"); 
         background-size: 100% auto;
         background-position: top center;
         background-repeat: no-repeat;
@@ -25,7 +26,7 @@
       }
 
       .center {
-        height: 100vh; /* перший екран */
+        height: 100vh; /* Перший екран */
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -38,20 +39,10 @@
         margin-left: 100px;
       }
 
-      /* блок після першого екрану (можна залишити коротким) */
-      .content {
-        min-height: 200px;
-        background: transparent; /* тут ще видно низ першої картинки */
-        padding: 40px;
-      }
-
-      .content h2 {
-        color: #0f0;
-      }
-
-      /* Дзеркальна секція ФОНУ нижче */
+      /* Дзеркальна секція ФОНУ */
       .mirror-section {
-        height: 100vh;
+        /* Додамо мінімальну висоту, щоб було куди скролити */
+        min-height: 150vh; 
         position: relative;
         overflow: hidden;
       }
@@ -61,20 +52,29 @@
         inset: 0;
         background-image: url("img/color.jpeg");
         background-size: 100% auto;
-        background-position: bottom center;
+        /* Позиціонуємо знизу, щоб перевернути верхню частину картинки */
+        background-position: bottom center; 
         background-repeat: no-repeat;
-        transform: scaleY(-1);   /* перевертаємо фон */
+        transform: scaleY(-1);   /* Перевертаємо фон */
         transform-origin: top;
         z-index: -1;
       }
 
       .mirror-inner {
+        /* Знімаємо transform: scaleY(-1); з inner, 
+           оскільки він перевертав контент.
+           Якщо потрібно, щоб контент був дзеркальний - залиште.
+           Зараз він у нормальному вигляді. */
         height: 100%;
-        transform: scaleY(-1);   /* повертаємо контент у норму */
-        transform-origin: top;
         display: flex;
+        flex-direction: column;
         align-items: flex-start;
         padding: 40px;
+      }
+      
+      .mirror-inner p {
+          max-width: 600px;
+          line-height: 1.6;
       }
 
       .mirror-inner h2 {
@@ -142,27 +142,33 @@
     </style>
   </head>
   <body>
-    <!-- 1. Верхній екран з оригінальним фоном -->
     <div class="center">
       <h1>Crypto World</h1>
       <p>Welcome.</p>
     </div>
 
-    <!-- 2. Перехідний блок (ще трохи видно першу картинку) -->
-    <div class="content">
-      <h2>SCROLL TEST BLOCK</h2>
-      <p>Тут ще видно низ першої картинки.</p>
-    </div>
-
-    <!-- 3. Дзеркальна секція фону -->
     <section class="mirror-section">
       <div class="mirror-bg"></div>
       <div class="mirror-inner">
         <h2>Mirror background zone</h2>
+        <p>
+            Ця секція починається відразу після першого 100vh екрану. 
+            Фон, який ви бачите за цим текстом, є дзеркальною (перевернутою) 
+            копією фонового зображення "img/color.jpeg". Це досягається 
+            за допомогою CSS-властивості **transform: scaleY(-1)** для 
+            фонового елемента .mirror-bg. 
+            Контент (цей текст) залишається читабельним, оскільки він 
+            знаходиться в елементі .mirror-inner, до якого не застосовано 
+            жодних перетворень.
+        </p>
+        <p>
+            Завдяки встановленій мінімальній висоті (min-height: 150vh) 
+            ви зможете прокрутити вниз і побачити, як чат-блок слідує 
+            за скролом.
+        </p>
       </div>
     </section>
 
-    <!-- Фіксований чат з паралаксом -->
     <div id="tg-chat">
       <div id="tg-chat-header">Pump&Dump</div>
       <div id="tg-chat-messages">
@@ -192,7 +198,8 @@
         const scrolled = window.pageYOffset;
         const chat = document.getElementById('tg-chat');
 
-        const chatY = scrolled * -1; // чат їде вгору з тією ж швидкістю
+        // Чат їде вгору, створюючи ефект "нерухомого" елемента на прокручуваній сторінці
+        const chatY = scrolled * -1; 
         chat.style.transform = `translateY(${chatY}px)`;
 
         ticking = false;
