@@ -15,9 +15,10 @@
       }
 
       .hero {
+        position: relative; /* важливо, щоб absolute всередині прив’язувався до цієї секції */
         height: 100vh;
         background: url("img/color.jpeg") no-repeat center top;
-        background-size: cover; /* без чорних полів */
+        background-size: cover;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -28,20 +29,20 @@
       .hero h1 {
         align-self: flex-start;
         margin-left: 100px;
-        margin-top: -50px; /* трохи вище */
+        margin-top: -50px;
       }
 
       .repeat {
         height: 100vh;
         background: url("img/color1.jpeg") no-repeat center bottom;
-        background-size: cover; /* теж на весь екран */
+        background-size: cover;
       }
 
-      /* Фіксований чат */
+      /* Чат прив’язаний до першої секції з фоном */
       #tg-chat {
-        position: fixed;
-        bottom: 20px;
+        position: absolute;   /* відносно .hero */
         left: 20px;
+        bottom: 20px;
         width: 260px;
         height: 320px;
         background: rgba(0, 0, 0, 0.7);
@@ -50,9 +51,8 @@
         display: flex;
         flex-direction: column;
         color: #fff;
-        z-index: 9999;
+        z-index: 1;
         backdrop-filter: blur(6px);
-        will-change: transform; /* для плавності */
       }
 
       #tg-chat-header {
@@ -84,37 +84,27 @@
     <section class="hero">
       <h1>Crypto World</h1>
       <p>Welcome.</p>
+
+      <!-- Чат всередині hero, їде разом з фоном -->
+      <div id="tg-chat">
+        <div id="tg-chat-header">Pump&Dump</div>
+        <div id="tg-chat-messages">
+          <div class="bot-msg">Bot: Welcome to Pump&Dump.</div>
+          <div class="bot-msg">Bot: This is a test message.</div>
+          <div class="bot-msg">Bot: Scroll down to see more.</div>
+          <div class="bot-msg">Bot: Message 4.</div>
+          <div class="bot-msg">Bot: Message 5.</div>
+          <div class="bot-msg">Bot: Message 6.</div>
+          <div class="bot-msg">Bot: Message 7.</div>
+          <div class="bot-msg">Bot: Message 8.</div>
+          <div class="bot-msg">Bot: Message 9.</div>
+          <div class="bot-msg">Bot: Message 10.</div>
+          <div class="bot-msg">Bot: Additional message 11.</div>
+          <div class="bot-msg">Bot: Additional message 12.</div>
+        </div>
+      </div>
     </section>
 
     <section class="repeat"></section>
-
-    <div id="tg-chat">
-      <div id="tg-chat-header">Pump&Dump</div>
-      <div id="tg-chat-messages">
-        <div class="bot-msg">Bot: Welcome to Pump&Dump.</div>
-        <div class="bot-msg">Bot: This is a test message.</div>
-        <div class="bot-msg">Bot: Scroll down to see more.</div>
-        <div class="bot-msg">Bot: Message 4.</div>
-        <div class="bot-msg">Bot: Message 5.</div>
-        <div class="bot-msg">Bot: Message 6.</div>
-        <div class="bot-msg">Bot: Message 7.</div>
-        <div class="bot-msg">Bot: Message 8.</div>
-        <div class="bot-msg">Bot: Message 9.</div>
-        <div class="bot-msg">Bot: Message 10.</div>
-        <div class="bot-msg">Bot: Additional message 11.</div>
-        <div class="bot-msg">Bot: Additional message 12.</div>
-      </div>
-    </div>
-
-    <script>
-      const chat = document.querySelector("#tg-chat");
-      const speed = 0.5; // 0.5 = плавніше, 1 = така ж швидкість, як скрол
-
-      window.addEventListener("scroll", () => {
-        const y = window.scrollY;
-        // скролиш вниз → чат їде вгору (протилежний напрямок)
-        chat.style.transform = `translateY(${-y * speed}px)`;
-      });
-    </script>
   </body>
 </html>
