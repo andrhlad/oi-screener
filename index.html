@@ -14,7 +14,7 @@
         font-family: sans-serif;
       }
 
-      /* Верхня секція з фоном */
+      /* Верхня секція з оригінальним фоном */
       .hero {
         height: 100vh;
         background: url("img/color.jpeg") no-repeat center top;
@@ -24,21 +24,21 @@
         justify-content: center;
       }
 
-      /* Дзеркальна секція – той самий фон, але весь блок перевернутий */
+      /* Дзеркальна секція: той самий фон, але ВЕСЬ блок перевернутий */
       .mirror {
         height: 100vh;
         background: url("img/color.jpeg") no-repeat center bottom;
         background-size: 100% auto;
-        transform: scaleY(-1);
+        transform: scaleY(-1);       /* ВАЖЛИВО: перевертаємо секцію */
         transform-origin: top;
         display: flex;
         align-items: flex-start;
         justify-content: flex-start;
       }
 
-      /* Контент усередині повертаємо назад */
+      /* Контент всередині – ще раз scaleY(-1), щоб текст був нормальним */
       .mirror-inner {
-        transform: scaleY(-1);
+        transform: scaleY(-1);       /* ВАЖЛИВО: повертаємо текст */
         transform-origin: top;
         padding: 40px;
       }
@@ -56,7 +56,7 @@
     <section class="mirror">
       <div class="mirror-inner">
         <h2>Mirror zone</h2>
-        <p>Під цим текстом має бути дзеркальна копія фону.</p>
+        <p>Під цим текстом має бути ДЗЕРКАЛЬНА (перевернута) копія фону.</p>
       </div>
     </section>
   </body>
