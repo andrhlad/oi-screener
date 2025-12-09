@@ -4,57 +4,67 @@
     <meta charset="UTF-8" />
     <title>Crypto World</title>
     <style>
-      html {
+      html, body {
         margin: 0;
         padding: 0;
-        height: 100%;
-        background: #000;
+        min-height: 100%;
       }
 
       body {
-        margin: 0;
-        min-height: 100vh;
-        position: relative;
-        background-color: #000;
-        background-image: url("img/color.jpeg"); /* верхня картинка */
-        background-size: 100% auto;              /* без зуму, по ширині */
-        background-position: top center;
-        background-repeat: no-repeat;
+        background: #000; /* базовий чорний фон */
         color: #fff;
         font-family: sans-serif;
         overflow-x: hidden;
       }
 
-      /* Дзеркальна + перевернута картинка нижче */
-      body::after {
-        content: "";
-        position: fixed;
-        left: 0;
-        top: 80vh;              /* трохи раніше, ніж кінець першого екрана */
-        width: 100vw;
-        height: 140vh;          /* запас по висоті, щоб не було чорного */
+      .section-bg {
+        height: 100vh;
         background-image: url("img/color.jpeg");
-        background-size: 100% auto;
-        background-position: bottom center;
+        background-size: 100% auto;   /* без зуму, по ширині */
+        background-position: center top;
         background-repeat: no-repeat;
-        transform: scaleY(-1);  /* переворот по вертикалі */
-        z-index: -1;
+      }
+
+      /* Верхня нормальна секція */
+      .bg-top {
+        position: relative;
+        z-index: 1;
       }
 
       .center {
-        min-height: 100vh;
+        height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         text-align: center;
-        position: relative;
-        z-index: 1;
       }
 
       .center h1 {
         align-self: flex-start;
         margin-left: 100px;
+      }
+
+      /* Дзеркальна секція нижче */
+      .bg-mirror {
+        position: relative;
+        transform: scaleY(-1);  /* перевертаємо фон */
+        transform-origin: top;
+        z-index: 0;
+      }
+
+      /* Внутрішній контейнер, щоб контент був нормальний (ще раз перевертаємо) */
+      .bg-mirror-inner {
+        height: 100%;
+        transform: scaleY(-1);
+        transform-origin: top;
+        display: flex;
+        align-items: flex-end;
+      }
+
+      .bg-mirror-inner h2 {
+        margin: 40px;
+        color: #0f0;
       }
 
       /* Чат */
@@ -118,11 +128,22 @@
     </style>
   </head>
   <body>
-    <div class="center">
-      <h1>Crypto World</h1>
-      <p>Welcome.</p>
-    </div>
+    <!-- Верхній екран з картинкою -->
+    <section class="section-bg bg-top">
+      <div class="center">
+        <h1>Crypto World</h1>
+        <p>Welcome.</p>
+      </div>
+    </section>
 
+    <!-- Дзеркальний екран з тією ж картинкою -->
+    <section class="section-bg bg-mirror">
+      <div class="bg-mirror-inner">
+        <h2>SCROLL TEST BLOCK</h2>
+      </div>
+    </section>
+
+    <!-- Фіксований чат -->
     <div id="tg-chat">
       <div id="tg-chat-header">Pump&Dump</div>
       <div id="tg-chat-messages">
@@ -144,32 +165,5 @@
         </div>
       </div>
     </div>
-
-    <!-- Контент для скролу -->
-    <div style="height: 2000px;">
-      <h2 style="color:#0f0; padding:40px;">SCROLL TEST BLOCK</h2>
-    </div>
-
-    <script>
-      let ticking = false;
-
-      function updateParallax() {
-        const scrolled = window.pageYOffset;
-        const chat = document.getElementById('tg-chat');
-
-        // Та сама швидкість, що й скрол, але вгору
-        const chatY = scrolled * -1;
-        chat.style.transform = `translateY(${chatY}px)`;
-
-        ticking = false;
-      }
-
-      window.addEventListener('scroll', () => {
-        if (!ticking) {
-          window.requestAnimationFrame(updateParallax);
-          ticking = true;
-        }
-      });
-    </script>
   </body>
 </html>
