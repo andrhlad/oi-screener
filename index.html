@@ -16,9 +16,8 @@
 
       .hero {
         height: 100vh;
-        background: url("img/color.jpeg") no-repeat center center;
-        background-size: contain;   /* показати всю картинку цілком */
-        background-color: #000;
+        background: url("img/color.jpeg") no-repeat center top;
+        background-size: cover; /* без чорних полів */
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -29,16 +28,16 @@
       .hero h1 {
         align-self: flex-start;
         margin-left: 100px;
-        margin-top: -50px;
+        margin-top: -50px; /* трохи вище */
       }
 
       .repeat {
         height: 100vh;
-        background: url("img/color1.jpeg") no-repeat center center;
-        background-size: contain;   /* теж повний розмір без обрізання */
-        background-color: #000;
+        background: url("img/color1.jpeg") no-repeat center bottom;
+        background-size: cover; /* теж на весь екран */
       }
 
+      /* Фіксований чат */
       #tg-chat {
         position: fixed;
         bottom: 20px;
@@ -53,8 +52,7 @@
         color: #fff;
         z-index: 9999;
         backdrop-filter: blur(6px);
-        will-change: transform;
-        transform: translateY(-50px); /* підняв чат на ~5 см */
+        will-change: transform; /* для плавності */
       }
 
       #tg-chat-header {
@@ -109,7 +107,14 @@
     </div>
 
     <script>
-      // якщо буде потрібен рух чату проти скролу — можна додати тут JS
+      const chat = document.querySelector("#tg-chat");
+      const speed = 0.5; // 0.5 = плавніше, 1 = така ж швидкість, як скрол
+
+      window.addEventListener("scroll", () => {
+        const y = window.scrollY;
+        // скролиш вниз → чат їде вгору (протилежний напрямок)
+        chat.style.transform = `translateY(${-y * speed}px)`;
+      });
     </script>
   </body>
 </html>
