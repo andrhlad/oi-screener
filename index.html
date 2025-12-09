@@ -1,116 +1,95 @@
 <!DOCTYPE html>
-<html lang="eng">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>Crypto World</title>
     <style>
-      html {
+      html, body {
         margin: 0;
         padding: 0;
         height: 100%;
-        /* Видалено 'overflow: hidden;' - тепер загальний скрол працює */
-      }
-
-      body {
-        margin: 0;
-        min-height: 100vh;
-        /* Видалено 'overflow-y: auto;' - тепер прокрутка йде від html за замовчуванням */
-        background-image: url("img/color.jpeg"); /* Переконайтеся, що файл 'img/color.jpeg' існує */
-        background-size: cover;
-        background-position: center top;
-        background-repeat: no-repeat;
+        overflow-x: hidden;
+        background: #000;
         color: #fff;
         font-family: sans-serif;
       }
 
-      .center {
-        min-height: 100vh;
+      .hero {
+        height: 100vh;
+        background: url("img/color.jpeg") no-repeat center top;
+        background-size: 100% auto;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         text-align: center;
-        transform: translateY(-280px);
       }
 
-      .center h1 {
+      .hero h1 {
         align-self: flex-start;
         margin-left: 100px;
       }
 
-      /* фіксований чат у лівому нижньому куті */
+      .repeat {
+        height: 100vh;
+        background: url("img/color1.jpeg") no-repeat center bottom;
+        background-size: 100% auto;
+        position: relative;
+      }
+
+      /* Чат як звичайний блок у потоці */
       #tg-chat {
-        position: fixed;
-        bottom: 20px;
-        left: 20px;
+        position: relative;
+        margin-top: -120px;   /* підлаштуй по висоті, щоб було як тобі треба */
+        margin-left: 20px;
         width: 260px;
         height: 320px;
-        background: radial-gradient(circle at top left, #00ffcc20, #000000e0);
+        background: rgba(0, 0, 0, 0.7);
         border: 1px solid #00ffcc80;
-        box-shadow: 0 0 25px #00ffcc55;
-        backdrop-filter: blur(8px);
-        color: #fff;
         border-radius: 14px;
         display: flex;
         flex-direction: column;
-        font-family: sans-serif;
-        z-index: 9999;
+        color: #fff;
+        z-index: 1;
+        will-change: transform;
       }
 
       #tg-chat-header {
-        padding: 8px 12px;
-        background: #00d084;
+        padding: 10px;
+        background: #00e089;
         color: #000;
-        font-weight: 600;
+        font-weight: bold;
+        text-align: center;
         border-radius: 14px 14px 0 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding-left: 26px;
       }
 
       #tg-chat-messages {
         flex: 1;
-        padding: 8px 0;
+        /* без внутрішнього вертикального скролу, щоб справа був тільки один */
+        padding: 10px;
+        background: #050711;
         font-size: 13px;
-        background-color: #02040a;
-        background-image:
-          radial-gradient(2px 2px at 20px 30px, #b400ff, transparent),
-          radial-gradient(1.5px 1.5px at 80px 120px, #ff6bff, transparent),
-          radial-gradient(2px 2px at 140px 60px, #c05bff, transparent),
-          radial-gradient(1.5px 1.5px at 200px 180px, #b400ff, transparent),
-          radial-gradient(2px 2px at 40px 200px, #ff6bff, transparent);
-        background-repeat: repeat;
-        background-size: 220px 220px;
-        /* ДОДАНО: Вмикає прокрутку повідомлень у чаті */
-        overflow-y: auto; 
-      }
-
-      .scroll-inner {
-        padding: 0 8px;
       }
 
       .bot-msg {
-        margin-bottom: 8px;
         padding: 6px 8px;
-        background: #050711;
+        background: #0b0f1c;
+        margin-bottom: 8px;
         border-radius: 6px;
-        font-size: 13px;
-        line-height: 1.3;
       }
     </style>
   </head>
   <body>
-    <div class="center">
+    <section class="hero">
       <h1>Crypto World</h1>
       <p>Welcome.</p>
-    </div>
+    </section>
 
-    <div id="tg-chat">
-      <div id="tg-chat-header">Pump&amp;Dump</div>
-      <div id="tg-chat-messages">
-        <div class="scroll-inner">
-          <div class="bot-msg">Bot: Welcome to Pump&amp;Dump.</div>
+    <section class="repeat">
+      <div id="tg-chat">
+        <div id="tg-chat-header">Pump&Dump</div>
+        <div id="tg-chat-messages">
+          <div class="bot-msg">Bot: Welcome to Pump&Dump.</div>
           <div class="bot-msg">Bot: This is a test message.</div>
           <div class="bot-msg">Bot: Scroll down to see more.</div>
           <div class="bot-msg">Bot: Message 4.</div>
@@ -122,15 +101,19 @@
           <div class="bot-msg">Bot: Message 10.</div>
           <div class="bot-msg">Bot: Additional message 11.</div>
           <div class="bot-msg">Bot: Additional message 12.</div>
-          <div class="bot-msg">Bot: Additional message 13.</div>
-          <div class="bot-msg">Bot: Additional message 14.</div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div style="height: 2000px; background:#000;">
-      <h2 style="color:#0f0; padding:40px;">SCROLL TEST BLOCK (для загального скролу сайту)</h2>
-    </div>
+    <script>
+      const chat = document.querySelector("#tg-chat");
+      const speed = 1; // 1 = та сама швидкість, можна 0.5 / 2 тощо
+
+      window.addEventListener("scroll", () => {
+        const y = window.scrollY;
+        // скролиш вниз — чат їде вгору (проти напряму прокрутки та руху фону)
+        chat.style.transform = `translateY(${-y * speed}px)`;
+      });
+    </script>
   </body>
 </html>
-
