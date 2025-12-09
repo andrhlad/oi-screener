@@ -58,13 +58,14 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        padding-left: 26px;
+        padding-left: 26px; /* зсув напису вправо */
       }
 
-      /* зовнішній блок фону (без власного скролу) */
+      /* область повідомлень + фон зі "зірками" */
       #tg-chat-messages {
         flex: 1;
-        padding: 8px 0;
+        padding: 8px;
+        overflow-y: auto;
         font-size: 13px;
         background-color: #02040a;
         background-image:
@@ -75,17 +76,13 @@
           radial-gradient(2px 2px at 40px 200px, #ff6bff, transparent);
         background-repeat: repeat;
         background-size: 220px 220px;
-      }
 
-      /* внутрішній блок, який реально скролиться */
-      .scroll-inner {
-        height: 100%;
-        overflow-y: auto;
-        padding: 0 8px;
-        scrollbar-width: thin;                    /* Firefox */
+        /* для Firefox (кольоровий скрол) */
+        scrollbar-width: thin;
         scrollbar-color: #b400ff #050505;
       }
 
+      /* стилі для повідомлень бота */
       .bot-msg {
         margin-bottom: 8px;
         padding: 6px 8px;
@@ -95,24 +92,21 @@
         line-height: 1.3;
       }
 
-      /* WebKit-скролбар саме для .scroll-inner */
-      .scroll-inner::-webkit-scrollbar {
+      /* кастомний скролбар: вузький, візуально коротший, градієнт 50/50 */
+      #tg-chat-messages::-webkit-scrollbar {
         width: 6px;
       }
 
-      .scroll-inner::-webkit-scrollbar-track {
+      #tg-chat-messages::-webkit-scrollbar-track {
         background: #050505;
       }
 
-      /* thumb візуально коротший через inset box-shadow */
-      .scroll-inner::-webkit-scrollbar-thumb {
+      #tg-chat-messages::-webkit-scrollbar-thumb {
         background: linear-gradient(180deg, #b400ff 0%, #ff6bff 100%);
         border-radius: 4px;
+        margin: 12px 0;
         border: 2px solid transparent;
         background-clip: content-box;
-        box-shadow:
-          0 12px 0 0 #050505 inset,
-          0 -12px 0 0 #050505 inset;
       }
     </style>
   </head>
@@ -122,24 +116,24 @@
       <p>Welcome.</p>
     </div>
 
+    <!-- чат-віконце -->
     <div id="tg-chat">
       <div id="tg-chat-header">Pump&amp;Dump</div>
 
+      <!-- тестові вхідні повідомлення бота -->
       <div id="tg-chat-messages">
-        <div class="scroll-inner">
-          <div class="bot-msg">Bot: Welcome to Pump&amp;Dump.</div>
-          <div class="bot-msg">Bot: This is a test message.</div>
-          <div class="bot-msg">Bot: Scroll down to see more.</div>
-          <div class="bot-msg">Bot: Message 4.</div>
-          <div class="bot-msg">Bot: Message 5.</div>
-          <div class="bot-msg">Bot: Message 6.</div>
-          <div class="bot-msg">Bot: Message 7.</div>
-          <div class="bot-msg">Bot: Message 8.</div>
-          <div class="bot-msg">Bot: Message 9.</div>
-          <div class="bot-msg">Bot: Message 10.</div>
-          <div class="bot-msg">Bot: Message 11.</div>
-          <div class="bot-msg">Bot: Message 12.</div>
-        </div>
+        <div class="bot-msg">Bot: Welcome to Pump&amp;Dump.</div>
+        <div class="bot-msg">Bot: This is a test message.</div>
+        <div class="bot-msg">Bot: Scroll down to see more.</div>
+        <div class="bot-msg">Bot: Message 4.</div>
+        <div class="bot-msg">Bot: Message 5.</div>
+        <div class="bot-msg">Bot: Message 6.</div>
+        <div class="bot-msg">Bot: Message 7.</div>
+        <div class="bot-msg">Bot: Message 8.</div>
+        <div class="bot-msg">Bot: Message 9.</div>
+        <div class="bot-msg">Bot: Message 10.</div>
+        <div class="bot-msg">Bot: Message 11.</div>
+        <div class="bot-msg">Bot: Message 12.</div>
       </div>
     </div>
   </body>
