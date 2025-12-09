@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Crypto World Mirror</title>
+    <title>Crypto World Background</title>
     <style>
       html, body {
         margin: 0;
@@ -14,7 +14,7 @@
         font-family: sans-serif;
       }
 
-      /* Верхня секція з оригінальним фоном */
+      /* Верхня секція з фоном */
       .hero {
         height: 100vh;
         background: url("img/color.jpeg") no-repeat center top;
@@ -24,33 +24,23 @@
         justify-content: center;
       }
 
-      /* Дзеркальна секція: та сама картинка, але ВЕСЬ блок перевернутий */
-      .mirror {
+      /* Нижня секція – продовження того ж фону */
+      .repeat {
         height: 100vh;
         background: url("img/color.jpeg") no-repeat center bottom;
         background-size: 100% auto;
-        transform: scaleY(-1);       /* перевертаємо фон */
-        transform-origin: top;
         display: flex;
         align-items: flex-start;
         justify-content: flex-start;
       }
 
-      /* Контент усередині повертаємо назад, щоб текст був нормальний */
-      .mirror-inner {
-        transform: scaleY(-1);
-        transform-origin: top;
+      .repeat-inner {
         padding: 40px;
       }
 
-      .mirror-inner h2 {
+      .repeat-inner h2 {
         color: #00ff55;
         margin-bottom: 16px;
-      }
-
-      .mirror-inner p {
-        line-height: 1.6;
-        margin: 0;
       }
     </style>
   </head>
@@ -59,10 +49,10 @@
       <h1>Crypto World</h1>
     </section>
 
-    <section class="mirror">
-      <div class="mirror-inner">
-        <h2>Mirror zone</h2>
-        <p>Під цим текстом має бути ДЗЕРКАЛЬНА (перевернута) копія фону.</p>
+    <section class="repeat">
+      <div class="repeat-inner">
+        <h2>Background continues</h2>
+        <p>Під цим текстом фон просто продовжується тією ж картинкою без чорних дір.</p>
       </div>
     </section>
   </body>
