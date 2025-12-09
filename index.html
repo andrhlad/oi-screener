@@ -8,19 +8,25 @@
         margin: 0;
         padding: 0;
         height: 100%;
-        /* Видалено 'overflow: hidden;' - тепер загальний скрол працює */
       }
 
       body {
         margin: 0;
         min-height: 100vh;
-        /* Видалено 'overflow-y: auto;' - тепер прокрутка йде від html за замовчуванням */
-        background-image: url("img/color.jpeg"); /* Переконайтеся, що файл 'img/color.jpeg' існує */
+        background-image: url("img/color.jpeg");
         background-size: cover;
         background-position: center top;
         background-repeat: no-repeat;
+        background-attachment: fixed; /* ПАРАЛАКС ДЛЯ ФОНУ */
         color: #fff;
         font-family: sans-serif;
+      }
+
+      /* МОБІЛЬНА ПІДТРИМКА - вимикаємо fixed на мобільних */
+      @media (max-width: 768px) {
+        body {
+          background-attachment: scroll;
+        }
       }
 
       .center {
@@ -38,7 +44,7 @@
         margin-left: 100px;
       }
 
-      /* фіксований чат у лівому нижньому куті */
+      /* ФІКСОВАНИЙ ЧАТ З ПАРАЛАКСОМ */
       #tg-chat {
         position: fixed;
         bottom: 20px;
@@ -55,6 +61,9 @@
         flex-direction: column;
         font-family: sans-serif;
         z-index: 9999;
+        /* Початкова позиція для JS паралаксу */
+        transform: translateY(0px);
+        transition: transform 0.1s ease-out;
       }
 
       #tg-chat-header {
@@ -82,7 +91,6 @@
           radial-gradient(2px 2px at 40px 200px, #ff6bff, transparent);
         background-repeat: repeat;
         background-size: 220px 220px;
-        /* ДОДАНО: Вмикає прокрутку повідомлень у чаті */
         overflow-y: auto; 
       }
 
@@ -107,10 +115,10 @@
     </div>
 
     <div id="tg-chat">
-      <div id="tg-chat-header">Pump&amp;Dump</div>
+      <div id="tg-chat-header">Pump&Dump</div>
       <div id="tg-chat-messages">
         <div class="scroll-inner">
-          <div class="bot-msg">Bot: Welcome to Pump&amp;Dump.</div>
+          <div class="bot-msg">Bot: Welcome to Pump&Dump.</div>
           <div class="bot-msg">Bot: This is a test message.</div>
           <div class="bot-msg">Bot: Scroll down to see more.</div>
           <div class="bot-msg">Bot: Message 4.</div>
@@ -129,7 +137,17 @@
     </div>
 
     <div style="height: 2000px; background:#000;">
-      <h2 style="color:#0f0; padding:40px;">SCROLL TEST BLOCK (для загального скролу сайту)</h2>
+      <h2 style="color:#0f0; padding:40px;">SCROLL TEST BLOCK (фон і чат рухаються з паралаксом)</h2>
     </div>
+
+    <!-- JAVASCRIPT ДЛЯ ПАРАЛАКСУ ЧАТУ -->
+    <script>
+      window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const chat = document.getElementById('tg-chat');
+        // 0.4 = чат рухається повільніше за сторінку (паралакс)
+        chat.style.transform = `translateY(${scrolled * 0.4}px)`;
+      });
+    </script>
   </body>
 </html>
