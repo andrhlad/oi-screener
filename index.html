@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Mirror Test</title>
+    <title>Mirror Debug</title>
     <style>
       html, body {
         margin: 0;
@@ -14,29 +14,28 @@
         font-family: sans-serif;
       }
 
-      /* 1. Верхня секція з фоном */
       .hero {
         height: 100vh;
-        background: url("img/color.jpeg") no-repeat center top;
-        background-size: 100% auto;
+        background: #111;
         display: flex;
         align-items: center;
         justify-content: center;
       }
 
-      /* 2. Дзеркальна секція */
       .mirror {
         position: relative;
         height: 100vh;
         overflow: hidden;
+        background: #222;
       }
 
       .mirror-bg {
         position: absolute;
         inset: 0;
-        background: url("img/color.jpeg") no-repeat center bottom;
-        background-size: 100% auto;
-        transform: scaleY(-1);   /* переворот */
+        /* Поки без картинки, тільки фон і рамка */
+        background: rgba(0, 255, 0, 0.2);
+        border: 5px solid red;
+        transform: scaleY(-1);
         transform-origin: top;
         z-index: -1;
       }
@@ -45,22 +44,18 @@
         position: relative;
         padding: 40px;
       }
-
-      .mirror-content h2 {
-        color: #00ff55;
-      }
     </style>
   </head>
   <body>
     <section class="hero">
-      <h1>TOP IMAGE</h1>
+      <h1>TOP</h1>
     </section>
 
     <section class="mirror">
       <div class="mirror-bg"></div>
       <div class="mirror-content">
-        <h2>Mirror zone</h2>
-        <p>Тут має бути дзеркальна картинка під текстом.</p>
+        <h2>Mirror debug</h2>
+        <p>Під цим текстом має бути напівпрозорий зелений блок з червоною рамкою.</p>
       </div>
     </section>
   </body>
