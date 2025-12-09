@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="eng">
   <head>
     <meta charset="UTF-8">
     <title>Crypto World</title>
@@ -18,15 +18,67 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: center;   /* центр для всього блоку */
+        align-items: center;
         color: white;
         text-align: center;
         transform: translateY(-280px);
       }
 
       .center h1 {
-        align-self: flex-start; /* тільки заголовок ліворуч */
-        margin-left: 100px;      /* відступ від лівого краю */
+        align-self: flex-start;
+        margin-left: 100px;
+      }
+
+      /* віконце чату зліва внизу */
+      #tg-chat {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        width: 260px;
+        height: 320px;
+        background: rgba(0,0,0,0.9);
+        color: #fff;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        font-family: sans-serif;
+        z-index: 9999;
+      }
+
+      #tg-chat-header {
+        padding: 8px 12px;
+        background: #00d084;
+        color: #000;
+        font-weight: 600;
+        border-radius: 10px 10px 0 0;
+      }
+
+      #tg-chat-messages {
+        flex: 1;
+        padding: 8px;
+        overflow-y: auto;
+        font-size: 13px;
+      }
+
+      #tg-chat-input {
+        display: flex;
+        padding: 6px;
+        gap: 4px;
+      }
+
+      #tg-chat-text {
+        flex: 1;
+        border-radius: 6px;
+        border: none;
+        padding: 6px;
+      }
+
+      #tg-chat-send {
+        padding: 6px 10px;
+        border-radius: 6px;
+        border: none;
+        background: #00d084;
+        cursor: pointer;
       }
     </style>
   </head>
@@ -35,6 +87,37 @@
       <h1>Crypto World</h1>
       <p>Welcome.</p>
     </div>
+
+    <!-- чат-віконце -->
+    <div id="tg-chat">
+      <div id="tg-chat-header">Chat</div>
+      <div id="tg-chat-messages"></div>
+      <div id="tg-chat-input">
+        <input id="tg-chat-text" type="text" placeholder="Type message..." />
+        <button id="tg-chat-send">Send</button>
+      </div>
+    </div>
+
+    <script>
+      const input = document.getElementById('tg-chat-text');
+      const sendBtn = document.getElementById('tg-chat-send');
+      const box = document.getElementById('tg-chat-messages');
+
+      function addMsg(text, from) {
+        const div = document.createElement('div');
+        div.textContent = (from === 'me' ? 'You: ' : 'Bot: ') + text;
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+      }
+
+      sendBtn.onclick = () => {
+        const text = input.value.trim();
+        if (!text) return;
+        addMsg(text, 'me');
+        input.value = '';
+
+        // тут потім зробиш fetch POST на свій бекенд, який шле в Telegram Bot API [web:13]
+      };
+    </script>
   </body>
 </html>
-
