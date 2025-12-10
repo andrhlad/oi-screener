@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Crypto World </title>
+    <title>Crypto World</title>
     <style>
       html, body {
         margin: 0;
@@ -20,13 +20,13 @@
         justify-content: center;
         align-items: center;
         text-align: center;
-        position: relative; /* для псевдоелементів */
+        position: relative;
         overflow: hidden;
       }
 
-      /* 1-й екран */
+      /* 1-й екран: color3 */
       .hero {
-        background: url("img/color.jpeg") no-repeat center top;
+        background: url("img/color3.png") no-repeat center top;
         background-size: cover;
       }
 
@@ -43,7 +43,6 @@
         z-index: 1;
       }
 
-      /* низ 1-ї секції плавно в темряву */
       .hero::after {
         content: "";
         position: absolute;
@@ -55,13 +54,12 @@
         pointer-events: none;
       }
 
-      /* 2-й екран */
+      /* 2-й екран: color4 */
       .repeat {
-        background: url("img/color1.jpeg") no-repeat center bottom;
+        background: url("img/color4.png") no-repeat center bottom;
         background-size: cover;
       }
 
-      /* верх 2-ї — з темряви в картинку */
       .repeat::before {
         content: "";
         position: absolute;
@@ -73,7 +71,6 @@
         pointer-events: none;
       }
 
-      /* низ 2-ї — в темряву перед 3-ю */
       .repeat::after {
         content: "";
         position: absolute;
@@ -85,13 +82,12 @@
         pointer-events: none;
       }
 
-      /* 3-й екран */
+      /* 3-й екран: знову color3 */
       .extra {
         background: url("img/color3.png") no-repeat center center;
         background-size: cover;
       }
 
-      /* верх 3-ї — з темряви в color3 */
       .extra::before {
         content: "";
         position: absolute;
@@ -103,7 +99,6 @@
         pointer-events: none;
       }
 
-      /* Telegram‑чат з паралаксом */
       #tg-chat {
         position: fixed;
         bottom: 20px;
@@ -176,7 +171,7 @@
 
     <script>
       const chat = document.querySelector("#tg-chat");
-      const parallaxFactor = 0.5; // швидкість паралаксу
+      const parallaxFactor = 0.77;
 
       function updateChatPosition() {
         const scrollDistance = window.scrollY;
