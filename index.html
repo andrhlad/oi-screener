@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Crypto World - Тест Фонів та Паралаксу</title>
+    <title>Crypto World </title>
     <style>
       html, body {
         margin: 0;
@@ -20,8 +20,11 @@
         justify-content: center;
         align-items: center;
         text-align: center;
+        position: relative; /* для псевдоелементів */
+        overflow: hidden;
       }
 
+      /* 1-й екран */
       .hero {
         background: url("img/color.jpeg") no-repeat center top;
         background-size: cover;
@@ -31,18 +34,76 @@
         align-self: flex-start;
         margin-left: 100px;
         margin-top: -50px;
+        position: relative;
+        z-index: 1;
       }
 
+      .hero p {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* низ 1-ї секції плавно в темряву */
+      .hero::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 50%;
+        background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000 100%);
+        pointer-events: none;
+      }
+
+      /* 2-й екран */
       .repeat {
         background: url("img/color1.jpeg") no-repeat center bottom;
         background-size: cover;
       }
 
+      /* верх 2-ї — з темряви в картинку */
+      .repeat::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 50%;
+        background: linear-gradient(to bottom, #000 0%, rgba(0,0,0,0) 100%);
+        pointer-events: none;
+      }
+
+      /* низ 2-ї — в темряву перед 3-ю */
+      .repeat::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 50%;
+        background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000 100%);
+        pointer-events: none;
+      }
+
+      /* 3-й екран */
       .extra {
         background: url("img/color3.png") no-repeat center center;
         background-size: cover;
       }
 
+      /* верх 3-ї — з темряви в color3 */
+      .extra::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 50%;
+        background: linear-gradient(to bottom, #000 0%, rgba(0,0,0,0) 100%);
+        pointer-events: none;
+      }
+
+      /* Telegram‑чат з паралаксом */
       #tg-chat {
         position: fixed;
         bottom: 20px;
@@ -115,7 +176,7 @@
 
     <script>
       const chat = document.querySelector("#tg-chat");
-      const parallaxFactor = 0.5;
+      const parallaxFactor = 0.5; // швидкість паралаксу
 
       function updateChatPosition() {
         const scrollDistance = window.scrollY;
