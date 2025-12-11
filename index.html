@@ -101,10 +101,10 @@
         pointer-events: none;
       }
 
-      /* Чат тепер частина сторінки, не fixed */
+      /* Чат у page-wrap, 10vh від верху */
       #tg-chat {
-        position: absolute; /* було fixed */
-        bottom: 20px;
+        position: absolute;
+        top: 10vh;      /* ~5–7 см від верху на більшості екранів [web:82][web:93] */
         left: 20px;
         width: 260px;
         height: 320px;
@@ -114,7 +114,7 @@
         display: flex;
         flex-direction: column;
         color: #fff;
-        z-index: 10; /* над фоном, але в межах page-wrap */
+        z-index: 10;
         backdrop-filter: blur(6px);
       }
 
@@ -154,7 +154,7 @@
 
       <section class="extra"></section>
 
-      <!-- Чат “пришитий” до page-wrap -->
+      <!-- Чат “пришитий” до page-wrap, 10vh від верху -->
       <div id="tg-chat">
         <div id="tg-chat-header">Pump&Dump</div>
         <div id="tg-chat-messages">
@@ -169,7 +169,7 @@
       let lastMessage = "";
 
       function connectSSE() {
-        // Якщо бек на тому ж домені/порті — можна просто "/signals"
+        // Якщо бек на тому ж домені/порті — можна просто "/signals" [web:13]
         source = new EventSource("http://localhost:5000/signals");
 
         source.onmessage = function(event) {
