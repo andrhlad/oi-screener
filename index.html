@@ -13,6 +13,11 @@
         font-family: sans-serif;
       }
 
+      .page-wrap {
+        position: relative;
+        min-height: 300vh; /* просто щоб було що скролити */
+      }
+
       .hero, .repeat, .extra {
         height: 100vh;
         display: flex;
@@ -96,8 +101,9 @@
         pointer-events: none;
       }
 
+      /* Чат тепер частина сторінки, не fixed */
       #tg-chat {
-        position: fixed;
+        position: absolute; /* було fixed */
         bottom: 20px;
         left: 20px;
         width: 260px;
@@ -108,9 +114,8 @@
         display: flex;
         flex-direction: column;
         color: #fff;
-        z-index: 9999;
+        z-index: 10; /* над фоном, але в межах page-wrap */
         backdrop-filter: blur(6px);
-        will-change: transform;
       }
 
       #tg-chat-header {
@@ -139,31 +144,32 @@
     </style>
   </head>
   <body>
-    <section class="hero">
-      <h1>Crypto World</h1>
-      <p>Welcome.</p>
-    </section>
+    <div class="page-wrap">
+      <section class="hero">
+        <h1>Crypto World</h1>
+        <p>Welcome.</p>
+      </section>
 
-    <section class="repeat"></section>
+      <section class="repeat"></section>
 
-    <section class="extra"></section>
+      <section class="extra"></section>
 
-    <div id="tg-chat">
-      <div id="tg-chat-header">Pump&Dump</div>
-      <div id="tg-chat-messages">
-        <div class="bot-msg">Bot: Welcome to Pump&Dump.</div>
+      <!-- Чат “пришитий” до page-wrap -->
+      <div id="tg-chat">
+        <div id="tg-chat-header">Pump&Dump</div>
+        <div id="tg-chat-messages">
+          <div class="bot-msg">Bot: Welcome to Pump&Dump.</div>
+        </div>
       </div>
     </div>
 
     <script>
       const chatMessages = document.querySelector("#tg-chat-messages");
-      const chat = document.querySelector("#tg-chat");
-      const parallaxFactor = 0.3;
-
       let source;
       let lastMessage = "";
 
       function connectSSE() {
+        // Якщо бек на тому ж домені/порті — можна просто "/signals"
         source = new EventSource("http://localhost:5000/signals");
 
         source.onmessage = function(event) {
@@ -193,33 +199,7 @@
         }
       }
 
-      // rAF-паралакс
-      let latestScrollY = 0;
-      let ticking = false;
-
-      function onScroll() {
-        latestScrollY = window.scrollY;
-        if (!ticking) {
-          window.requestAnimationFrame(() => {
-            const translateY_value = -latestScrollY * parallaxFactor;
-            chat.style.transform = `translateY(${translateY_value}px)`;
-            ticking = false;
-          });
-          ticking = true;
-        }
-      }
-
-      function initParallaxChat() {
-        // початкова позиція
-        latestScrollY = window.scrollY;
-        const translateY_value = -latestScrollY * parallaxFactor;
-        chat.style.transform = `translateY(${translateY_value}px)`;
-
-        window.addEventListener("scroll", onScroll, { passive: true });
-      }
-
       connectSSE();
-      initParallaxChat();
     </script>
   </body>
 </html>
