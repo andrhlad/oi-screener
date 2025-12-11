@@ -170,18 +170,52 @@
     </div>
 
     <script>
+      const chatMessages = document.querySelector("#tg-chat-messages");
       const chat = document.querySelector("#tg-chat");
-      const parallaxFactor = 1;
+      const parallaxFactor = 0.3;
 
+      let source;
+
+      // Підключення до SSE
+      function connectSSE() {
+        source = new EventSource('http://localhost:5000/signals');
+        
+        source.onmessage = function(event) {
+          const message = event.data;
+          addMessage(message);
+        };
+        
+        source.onerror = function() {
+          console.log('SSE reconnect...');
+          setTimeout(connectSSE, 3000);
+        };
+      }
+
+      // Додає нове повідомлення в чат
+      function addMessage(text) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'bot-msg';
+        msgDiv.textContent = text;
+        chatMessages.appendChild(msgDiv);
+        
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        if (chatMessages.children.length > 50) {
+          chatMessages.removeChild(chatMessages.firstChild);
+        }
+      }
+
+      // Паралакс ефект
       function updateChatPosition() {
         const scrollDistance = window.scrollY;
         const translateY_value = -scrollDistance * parallaxFactor;
         chat.style.transform = `translateY(${translateY_value}px)`;
       }
 
+      // Старт
+      connectSSE();
       window.addEventListener("scroll", updateChatPosition, { passive: true });
       updateChatPosition();
     </script>
   </body>
 </html>
-
