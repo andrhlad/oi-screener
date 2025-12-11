@@ -101,10 +101,10 @@
         pointer-events: none;
       }
 
-      /* Чат у page-wrap, 10vh від верху */
+      /* Чат у page-wrap, опущений нижче (25vh від верху) */
       #tg-chat {
         position: absolute;
-        top: 10vh;      /* ~5–7 см від верху на більшості екранів [web:82][web:93] */
+        top: 25vh;      /* було 10vh, тепер нижче ~на кілька см [web:106][web:110] */
         left: 20px;
         width: 260px;
         height: 320px;
@@ -154,7 +154,7 @@
 
       <section class="extra"></section>
 
-      <!-- Чат “пришитий” до page-wrap, 10vh від верху -->
+      <!-- Чат “пришитий” до page-wrap, 25vh від верху -->
       <div id="tg-chat">
         <div id="tg-chat-header">Pump&Dump</div>
         <div id="tg-chat-messages">
