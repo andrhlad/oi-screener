@@ -24,7 +24,6 @@
         overflow: hidden;
       }
 
-      /* 1-й екран: color3 */
       .hero {
         background: url("img/color3.png") no-repeat center top;
         background-size: cover;
@@ -54,7 +53,6 @@
         pointer-events: none;
       }
 
-      /* 2-й екран: color4 */
       .repeat {
         background: url("img/color4.png") no-repeat center bottom;
         background-size: cover;
@@ -82,7 +80,6 @@
         pointer-events: none;
       }
 
-      /* 3-й екран: знову color3 */
       .extra {
         background: url("img/color3.png") no-repeat center center;
         background-size: cover;
@@ -155,17 +152,6 @@
       <div id="tg-chat-header">Pump&Dump</div>
       <div id="tg-chat-messages">
         <div class="bot-msg">Bot: Welcome to Pump&Dump.</div>
-        <div class="bot-msg">Bot: This is a test message.</div>
-        <div class="bot-msg">Bot: Scroll down to see more.</div>
-        <div class="bot-msg">Bot: Message 4.</div>
-        <div class="bot-msg">Bot: Message 5.</div>
-        <div class="bot-msg">Bot: Message 6.</div>
-        <div class="bot-msg">Bot: Message 7.</div>
-        <div class="bot-msg">Bot: Message 8.</div>
-        <div class="bot-msg">Bot: Message 9.</div>
-        <div class="bot-msg">Bot: Message 10.</div>
-        <div class="bot-msg">Bot: Additional message 11.</div>
-        <div class="bot-msg">Bot: Additional message 12.</div>
       </div>
     </div>
 
@@ -175,44 +161,44 @@
       const parallaxFactor = 0.3;
 
       let source;
+      let lastMessage = "";
 
-      // Підключення до SSE
       function connectSSE() {
-        source = new EventSource('http://localhost:5000/signals');
-        
+        source = new EventSource("http://localhost:5000/signals");
+
         source.onmessage = function(event) {
           const message = event.data;
           addMessage(message);
         };
-        
+
         source.onerror = function() {
-          console.log('SSE reconnect...');
+          console.log("SSE reconnect...");
           setTimeout(connectSSE, 3000);
         };
       }
 
-      // Додає нове повідомлення в чат
       function addMessage(text) {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = 'bot-msg';
+        if (!text || text === lastMessage) return;  // фільтр дублів
+        lastMessage = text;
+
+        const msgDiv = document.createElement("div");
+        msgDiv.className = "bot-msg";
         msgDiv.textContent = text;
         chatMessages.appendChild(msgDiv);
-        
+
         chatMessages.scrollTop = chatMessages.scrollHeight;
-        
+
         if (chatMessages.children.length > 50) {
           chatMessages.removeChild(chatMessages.firstChild);
         }
       }
 
-      // Паралакс ефект
       function updateChatPosition() {
         const scrollDistance = window.scrollY;
         const translateY_value = -scrollDistance * parallaxFactor;
         chat.style.transform = `translateY(${translateY_value}px)`;
       }
 
-      // Старт
       connectSSE();
       window.addEventListener("scroll", updateChatPosition, { passive: true });
       updateChatPosition();
