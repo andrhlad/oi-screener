@@ -178,7 +178,7 @@
       }
 
       function addMessage(text) {
-        if (!text || text === lastMessage) return;  // фільтр дублів
+        if (!text || text === lastMessage) return;
         lastMessage = text;
 
         const msgDiv = document.createElement("div");
@@ -193,15 +193,33 @@
         }
       }
 
-      function updateChatPosition() {
-        const scrollDistance = window.scrollY;
-        const translateY_value = -scrollDistance * parallaxFactor;
+      // rAF-паралакс
+      let latestScrollY = 0;
+      let ticking = false;
+
+      function onScroll() {
+        latestScrollY = window.scrollY;
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            const translateY_value = -latestScrollY * parallaxFactor;
+            chat.style.transform = `translateY(${translateY_value}px)`;
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }
+
+      function initParallaxChat() {
+        // початкова позиція
+        latestScrollY = window.scrollY;
+        const translateY_value = -latestScrollY * parallaxFactor;
         chat.style.transform = `translateY(${translateY_value}px)`;
+
+        window.addEventListener("scroll", onScroll, { passive: true });
       }
 
       connectSSE();
-      window.addEventListener("scroll", updateChatPosition, { passive: true });
-      updateChatPosition();
+      initParallaxChat();
     </script>
   </body>
 </html>
