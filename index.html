@@ -101,6 +101,7 @@
         pointer-events: none;
       }
 
+      /* Чат тільки для перегляду */
       #tg-chat {
         position: absolute;
         top: 49vh;
@@ -160,8 +161,6 @@
 
     <script>
       const chatMessages = document.querySelector("#tg-chat-messages");
-      let source;
-      let lastId = null;
 
       function addMessage(text) {
         if (!text) return;
@@ -170,48 +169,20 @@
         msgDiv.textContent = text;
         chatMessages.appendChild(msgDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
-        if (chatMessages.children.length > 200) {
-          chatMessages.removeChild(chatMessages.firstChild);
-        }
       }
 
       function loadHistory() {
-        fetch("http://localhost:5000/history?hours=36")
+        fetch("http://127.0.0.1:5000/history?hours=36")
           .then(r => r.json())
           .then(data => {
+            console.log("history:", data);
             chatMessages.innerHTML = "";
-            data.forEach(msg => {
-              addMessage(msg.text);
-              lastId = msg.id;
-            });
+            data.forEach(msg => addMessage(msg.text));
           })
           .catch(err => console.error("history error", err));
       }
 
-      function connectSSE() {
-        source = new EventSource("http://localhost:5000/signals");
-
-        source.onmessage = function (event) {
-          try {
-            const payload = JSON.parse(event.data);
-            if (lastId === null || payload.id > lastId) {
-              addMessage(payload.text);
-              lastId = payload.id;
-            }
-          } catch (e) {
-            console.error("bad sse payload", e);
-          }
-        };
-
-        source.onerror = function () {
-          console.log("SSE reconnect...");
-          source.close();
-          setTimeout(connectSSE, 3000);
-        };
-      }
-
       loadHistory();
-      connectSSE();
     </script>
   </body>
 </html>
