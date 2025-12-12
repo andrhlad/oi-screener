@@ -15,7 +15,7 @@
 
       .page-wrap {
         position: relative;
-        min-height: 300vh; /* просто щоб було що скролити */
+        min-height: 300vh;
       }
 
       .hero, .repeat, .extra {
@@ -101,13 +101,12 @@
         pointer-events: none;
       }
 
-      /* Чат у page-wrap, ще нижче: 40vh від верху */
       #tg-chat {
         position: absolute;
-        top: 49vh;      /* було 25vh, тепер ще ~7 см вниз [web:101][web:108] */
+        top: 49vh;
         left: 20px;
         width: 260px;
-        height: 320px;
+        height: 360px;
         background: rgba(0, 0, 0, 0.7);
         border: 1px solid #00ffcc80;
         border-radius: 14px;
@@ -141,6 +140,35 @@
         margin-bottom: 8px;
         border-radius: 6px;
       }
+
+      #tg-chat-input-wrap {
+        display: flex;
+        padding: 6px 8px 10px 8px;
+        gap: 6px;
+        background: #050711;
+        border-radius: 0 0 14px 14px;
+      }
+
+      #tg-chat-input {
+        flex: 1;
+        padding: 4px 6px;
+        border-radius: 6px;
+        border: 1px solid #333;
+        background: #02030a;
+        color: #fff;
+        font-size: 12px;
+      }
+
+      #tg-chat-send {
+        padding: 4px 8px;
+        border-radius: 6px;
+        border: none;
+        background: #00e089;
+        color: #000;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 12px;
+      }
     </style>
   </head>
   <body>
@@ -151,56 +179,91 @@
       </section>
 
       <section class="repeat"></section>
-
       <section class="extra"></section>
 
-      <!-- Чат “пришитий” до page-wrap, 40vh від верху -->
       <div id="tg-chat">
         <div id="tg-chat-header">Pump&Dump</div>
-        <div id="tg-chat-messages">
-          <div class="bot-msg">Bot: Welcome to Pump&Dump.</div>
+        <div id="tg-chat-messages"></div>
+        <div id="tg-chat-input-wrap">
+          <input id="tg-chat-input" type="text" placeholder="Message..." />
+          <button id="tg-chat-send">Send</button>
         </div>
       </div>
     </div>
 
     <script>
       const chatMessages = document.querySelector("#tg-chat-messages");
+      const input = document.querySelector("#tg-chat-input");
+      const sendBtn = document.querySelector("#tg-chat-send");
       let source;
-      let lastMessage = "";
-
-      function connectSSE() {
-        // Якщо бек на тому ж домені/порті — можна просто "/signals" [web:13]
-        source = new EventSource("http://localhost:5000/signals");
-
-        source.onmessage = function(event) {
-          const message = event.data;
-          addMessage(message);
-        };
-
-        source.onerror = function() {
-          console.log("SSE reconnect...");
-          setTimeout(connectSSE, 3000);
-        };
-      }
+      let lastId = null;
 
       function addMessage(text) {
-        if (!text || text === lastMessage) return;
-        lastMessage = text;
-
+        if (!text) return;
         const msgDiv = document.createElement("div");
         msgDiv.className = "bot-msg";
         msgDiv.textContent = text;
         chatMessages.appendChild(msgDiv);
-
         chatMessages.scrollTop = chatMessages.scrollHeight;
-
-        if (chatMessages.children.length > 50) {
+        if (chatMessages.children.length > 200) {
           chatMessages.removeChild(chatMessages.firstChild);
         }
       }
 
+      function loadHistory() {
+        fetch("http://localhost:5000/history?hours=36")
+          .then(r => r.json())
+          .then(data => {
+            chatMessages.innerHTML = "";
+            data.forEach(msg => {
+              addMessage(msg.text);
+              lastId = msg.id;
+            });
+          })
+          .catch(err => console.error("history error", err));
+      }
+
+      function connectSSE() {
+        source = new EventSource("http://localhost:5000/signals");
+
+        source.onmessage = function (event) {
+          try {
+            const payload = JSON.parse(event.data);
+            // тільки нові
+            if (lastId === null || payload.id > lastId) {
+              addMessage(payload.text);
+              lastId = payload.id;
+            }
+          } catch (e) {
+            console.error("bad sse payload", e);
+          }
+        };
+
+        source.onerror = function () {
+          console.log("SSE reconnect...");
+          source.close();
+          setTimeout(connectSSE, 3000);
+        };
+      }
+
+      function sendMessage() {
+        const text = input.value.trim();
+        if (!text) return;
+        fetch("http://localhost:5000/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text })
+        }).catch(err => console.error("send error", err));
+        input.value = "";
+      }
+
+      sendBtn.addEventListener("click", sendMessage);
+      input.addEventListener("keydown", e => {
+        if (e.key === "Enter") sendMessage();
+      });
+
+      loadHistory();
       connectSSE();
     </script>
   </body>
 </html>
-
