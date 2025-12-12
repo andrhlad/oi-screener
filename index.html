@@ -140,35 +140,6 @@
         margin-bottom: 8px;
         border-radius: 6px;
       }
-
-      #tg-chat-input-wrap {
-        display: flex;
-        padding: 6px 8px 10px 8px;
-        gap: 6px;
-        background: #050711;
-        border-radius: 0 0 14px 14px;
-      }
-
-      #tg-chat-input {
-        flex: 1;
-        padding: 4px 6px;
-        border-radius: 6px;
-        border: 1px solid #333;
-        background: #02030a;
-        color: #fff;
-        font-size: 12px;
-      }
-
-      #tg-chat-send {
-        padding: 4px 8px;
-        border-radius: 6px;
-        border: none;
-        background: #00e089;
-        color: #000;
-        font-weight: bold;
-        cursor: pointer;
-        font-size: 12px;
-      }
     </style>
   </head>
   <body>
@@ -184,17 +155,11 @@
       <div id="tg-chat">
         <div id="tg-chat-header">Pump&Dump</div>
         <div id="tg-chat-messages"></div>
-        <div id="tg-chat-input-wrap">
-          <input id="tg-chat-input" type="text" placeholder="Message..." />
-          <button id="tg-chat-send">Send</button>
-        </div>
       </div>
     </div>
 
     <script>
       const chatMessages = document.querySelector("#tg-chat-messages");
-      const input = document.querySelector("#tg-chat-input");
-      const sendBtn = document.querySelector("#tg-chat-send");
       let source;
       let lastId = null;
 
@@ -229,7 +194,6 @@
         source.onmessage = function (event) {
           try {
             const payload = JSON.parse(event.data);
-            // тільки нові
             if (lastId === null || payload.id > lastId) {
               addMessage(payload.text);
               lastId = payload.id;
@@ -245,22 +209,6 @@
           setTimeout(connectSSE, 3000);
         };
       }
-
-      function sendMessage() {
-        const text = input.value.trim();
-        if (!text) return;
-        fetch("http://localhost:5000/send", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text })
-        }).catch(err => console.error("send error", err));
-        input.value = "";
-      }
-
-      sendBtn.addEventListener("click", sendMessage);
-      input.addEventListener("keydown", e => {
-        if (e.key === "Enter") sendMessage();
-      });
 
       loadHistory();
       connectSSE();
