@@ -101,6 +101,7 @@
         pointer-events: none;
       }
 
+      /* Чат */
       #tg-chat {
         position: absolute;
         top: 49vh;
@@ -160,13 +161,13 @@
 
     <script>
       const chatMessages = document.querySelector("#tg-chat-messages");
-      let lastMessageId = null; // запам'ятовуємо останній id
+      let lastMessageId = 0; // останній показаний id
 
       function addMessageObj(msg) {
         if (!msg || !msg.text) return;
 
-        // якщо цей id уже додавали — пропускаємо
-        if (lastMessageId !== null && msg.id <= lastMessageId) {
+        // не додаємо, якщо це той самий або старіший id
+        if (msg.id <= lastMessageId) {
           return;
         }
         lastMessageId = msg.id;
@@ -178,7 +179,6 @@
         chatMessages.scrollTop = chatMessages.scrollHeight;
       }
 
-      // 1) Історія
       function loadHistory() {
         fetch("http://127.0.0.1:5000/history?hours=36")
           .then(r => r.json())
@@ -189,7 +189,6 @@
           .catch(err => console.error("history error", err));
       }
 
-      // 2) Live-сигнали
       function subscribeSignals() {
         const ev = new EventSource("http://127.0.0.1:5000/signals");
 
