@@ -101,7 +101,6 @@
         pointer-events: none;
       }
 
-      /* Чат тільки для перегляду */
       #tg-chat {
         position: absolute;
         top: 49vh;
@@ -161,36 +160,43 @@
 
     <script>
       const chatMessages = document.querySelector("#tg-chat-messages");
+      let lastMessageId = null; // запам'ятовуємо останній id
 
-      function addMessage(text) {
-        if (!text) return;
+      function addMessageObj(msg) {
+        if (!msg || !msg.text) return;
+
+        // якщо цей id уже додавали — пропускаємо
+        if (lastMessageId !== null && msg.id <= lastMessageId) {
+          return;
+        }
+        lastMessageId = msg.id;
+
         const msgDiv = document.createElement("div");
         msgDiv.className = "bot-msg";
-        msgDiv.textContent = text;
+        msgDiv.textContent = msg.text;
         chatMessages.appendChild(msgDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
       }
 
-      // 1) Підтягнути історію з БД
+      // 1) Історія
       function loadHistory() {
         fetch("http://127.0.0.1:5000/history?hours=36")
           .then(r => r.json())
           .then(data => {
             chatMessages.innerHTML = "";
-            data.forEach(msg => addMessage(msg.text));
+            data.forEach(msg => addMessageObj(msg));
           })
           .catch(err => console.error("history error", err));
       }
 
-      // 2) Підписатися на live-сигнали через SSE
+      // 2) Live-сигнали
       function subscribeSignals() {
         const ev = new EventSource("http://127.0.0.1:5000/signals");
 
         ev.onmessage = (e) => {
           try {
-            // backend /signals віддає {"id", "text", "ts"}
-            const msg = JSON.parse(e.data);
-            addMessage(msg.text);
+            const msg = JSON.parse(e.data); // {"id","text","ts"}
+            addMessageObj(msg);
           } catch (err) {
             console.error("signals parse error", err, e.data);
           }
@@ -198,8 +204,6 @@
 
         ev.onerror = (err) => {
           console.error("signals error", err);
-          // опціонально: перезавантажити сторінку або закрити стрім
-          // ev.close();
         };
       }
 
@@ -207,4 +211,4 @@
       subscribeSignals();
     </script>
   </body>
-</
+</html>
