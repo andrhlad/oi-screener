@@ -166,8 +166,8 @@
       function addMessageObj(msg) {
         if (!msg || !msg.text) return;
 
-        // не додаємо, якщо це той самий або старіший id
         if (msg.id <= lastMessageId) {
+          console.log("skip duplicate id", msg.id);
           return;
         }
         lastMessageId = msg.id;
@@ -180,9 +180,11 @@
       }
 
       function loadHistory() {
+        console.log("loadHistory start");
         fetch("http://127.0.0.1:5000/history?hours=36")
           .then(r => r.json())
           .then(data => {
+            console.log("history length", data.length);
             chatMessages.innerHTML = "";
             data.forEach(msg => addMessageObj(msg));
           })
@@ -190,11 +192,17 @@
       }
 
       function subscribeSignals() {
+        console.log("create EventSource");
         const ev = new EventSource("http://127.0.0.1:5000/signals");
+
+        ev.onopen = () => {
+          console.log("SSE open");
+        };
 
         ev.onmessage = (e) => {
           try {
             const msg = JSON.parse(e.data); // {"id","text","ts"}
+            console.log("SSE message", msg.id, msg.text);
             addMessageObj(msg);
           } catch (err) {
             console.error("signals parse error", err, e.data);
