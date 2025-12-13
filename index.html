@@ -171,18 +171,40 @@
         chatMessages.scrollTop = chatMessages.scrollHeight;
       }
 
+      // 1) Підтягнути історію з БД
       function loadHistory() {
         fetch("http://127.0.0.1:5000/history?hours=36")
           .then(r => r.json())
           .then(data => {
-            console.log("history:", data);
             chatMessages.innerHTML = "";
             data.forEach(msg => addMessage(msg.text));
           })
           .catch(err => console.error("history error", err));
       }
 
+      // 2) Підписатися на live-сигнали через SSE
+      function subscribeSignals() {
+        const ev = new EventSource("http://127.0.0.1:5000/signals");
+
+        ev.onmessage = (e) => {
+          try {
+            // backend /signals віддає {"id", "text", "ts"}
+            const msg = JSON.parse(e.data);
+            addMessage(msg.text);
+          } catch (err) {
+            console.error("signals parse error", err, e.data);
+          }
+        };
+
+        ev.onerror = (err) => {
+          console.error("signals error", err);
+          // опціонально: перезавантажити сторінку або закрити стрім
+          // ev.close();
+        };
+      }
+
       loadHistory();
+      subscribeSignals();
     </script>
   </body>
-</html>
+</
