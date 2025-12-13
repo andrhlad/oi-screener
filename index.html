@@ -1,221 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Crypto World</title>
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        overflow-x: hidden;
-        background: #000;
-        color: #fff;
-        font-family: sans-serif;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <title>Crypto World</title>
 
-      .page-wrap {
-        position: relative;
-        min-height: 300vh;
-      }
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: #fff;
+      font-family: sans-serif;
+      overflow-x: hidden;
+    }
 
-      .hero, .repeat, .extra {
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-      }
+    .page-wrap {
+      min-height: 300vh;
+      position: relative;
+    }
 
-      .hero {
-        background: url("img/color3.png") no-repeat center top;
-        background-size: cover;
-      }
+    section {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
 
-      .hero h1 {
-        align-self: flex-start;
-        margin-left: 100px;
-        margin-top: -50px;
-        position: relative;
-        z-index: 1;
-      }
+    .hero {
+      background: url("img/color3.png") no-repeat center / cover;
+    }
 
-      .hero p {
-        position: relative;
-        z-index: 1;
-      }
+    .repeat {
+      background: url("img/color4.png") no-repeat center / cover;
+    }
 
-      .hero::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        top: 50%;
-        background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000 100%);
-        pointer-events: none;
-      }
+    .extra {
+      background: url("img/color3.png") no-repeat center / cover;
+    }
 
-      .repeat {
-        background: url("img/color4.png") no-repeat center bottom;
-        background-size: cover;
-      }
+    /* ===== CHAT ===== */
 
-      .repeat::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 50%;
-        background: linear-gradient(to bottom, #000 0%, rgba(0,0,0,0) 100%);
-        pointer-events: none;
-      }
+    #tg-chat {
+      position: fixed;
+      top: 50%;
+      left: 20px;
+      transform: translateY(-50%);
+      width: 260px;
+      height: 360px;
+      background: rgba(0,0,0,0.7);
+      border: 1px solid #00ffcc80;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      backdrop-filter: blur(6px);
+    }
 
-      .repeat::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        top: 50%;
-        background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000 100%);
-        pointer-events: none;
-      }
+    #tg-chat-header {
+      background: #00e089;
+      color: #000;
+      font-weight: bold;
+      padding: 10px;
+      text-align: center;
+      border-radius: 14px 14px 0 0;
+    }
 
-      .extra {
-        background: url("img/color3.png") no-repeat center center;
-        background-size: cover;
-      }
+    #tg-chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+      background: #050711;
+      font-size: 13px;
+    }
 
-      .extra::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 50%;
-        background: linear-gradient(to bottom, #000 0%, rgba(0,0,0,0) 100%);
-        pointer-events: none;
-      }
+    .bot-msg {
+      background: #0b0f1c;
+      margin-bottom: 8px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
 
-      /* Чат */
-      #tg-chat {
-        position: absolute;
-        top: 49vh;
-        left: 20px;
-        width: 260px;
-        height: 360px;
-        background: rgba(0, 0, 0, 0.7);
-        border: 1px solid #00ffcc80;
-        border-radius: 14px;
-        display: flex;
-        flex-direction: column;
-        color: #fff;
-        z-index: 10;
-        backdrop-filter: blur(6px);
-      }
+<body>
+<div class="page-wrap">
 
-      #tg-chat-header {
-        padding: 10px;
-        background: #00e089;
-        color: #000;
-        font-weight: bold;
-        text-align: center;
-        border-radius: 14px 14px 0 0;
-      }
+  <section class="hero">
+    <h1>Crypto World</h1>
+  </section>
 
-      #tg-chat-messages {
-        flex: 1;
-        overflow-y: auto;
-        padding: 10px;
-        background: #050711;
-        font-size: 13px;
-      }
+  <section class="repeat"></section>
+  <section class="extra"></section>
 
-      .bot-msg {
-        padding: 6px 8px;
-        background: #0b0f1c;
-        margin-bottom: 8px;
-        border-radius: 6px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="page-wrap">
-      <section class="hero">
-        <h1>Crypto World</h1>
-        <p>Welcome.</p>
-      </section>
+  <div id="tg-chat">
+    <div id="tg-chat-header">Pump & Dump</div>
+    <div id="tg-chat-messages"></div>
+  </div>
 
-      <section class="repeat"></section>
-      <section class="extra"></section>
+</div>
 
-      <div id="tg-chat">
-        <div id="tg-chat-header">Pump&Dump</div>
-        <div id="tg-chat-messages"></div>
-      </div>
-    </div>
+<script>
+  const chat = document.getElementById("tg-chat-messages");
+  let lastId = 0;
 
-    <script>
-      const chatMessages = document.querySelector("#tg-chat-messages");
-      let lastMessageId = 0; // останній показаний id
+  function addMessage(msg) {
+    if (!msg || msg.id <= lastId) return;
+    lastId = msg.id;
 
-      function addMessageObj(msg) {
-        if (!msg || !msg.text) return;
+    const div = document.createElement("div");
+    div.className = "bot-msg";
+    div.textContent = msg.text;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+  }
 
-        if (msg.id <= lastMessageId) {
-          console.log("skip duplicate id", msg.id);
-          return;
-        }
-        lastMessageId = msg.id;
+  async function loadHistory() {
+    const r = await fetch("http://127.0.0.1:5000/history?hours=36");
+    const data = await r.json();
+    chat.innerHTML = "";
+    data.forEach(addMessage);
+  }
 
-        const msgDiv = document.createElement("div");
-        msgDiv.className = "bot-msg";
-        msgDiv.textContent = msg.text;
-        chatMessages.appendChild(msgDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      }
+  function subscribe() {
+    const es = new EventSource("http://127.0.0.1:5000/signals");
 
-      function loadHistory() {
-        console.log("loadHistory start");
-        fetch("http://127.0.0.1:5000/history?hours=36")
-          .then(r => r.json())
-          .then(data => {
-            console.log("history length", data.length);
-            chatMessages.innerHTML = "";
-            data.forEach(msg => addMessageObj(msg));
-          })
-          .catch(err => console.error("history error", err));
-      }
+    es.onmessage = (e) => {
+      try {
+        addMessage(JSON.parse(e.data));
+      } catch {}
+    };
 
-      function subscribeSignals() {
-        console.log("create EventSource");
-        const ev = new EventSource("http://127.0.0.1:5000/signals");
+    es.onerror = () => {
+      es.close();
+      setTimeout(subscribe, 3000);
+    };
+  }
 
-        ev.onopen = () => {
-          console.log("SSE open");
-        };
-
-        ev.onmessage = (e) => {
-          try {
-            const msg = JSON.parse(e.data); // {"id","text","ts"}
-            console.log("SSE message", msg.id, msg.text);
-            addMessageObj(msg);
-          } catch (err) {
-            console.error("signals parse error", err, e.data);
-          }
-        };
-
-        ev.onerror = (err) => {
-          console.error("signals error", err);
-        };
-      }
-
-      loadHistory();
-      subscribeSignals();
-    </script>
-  </body>
+  loadHistory().then(subscribe);
+</script>
+</body>
 </html>
