@@ -1,144 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Crypto World</title>
+    <meta charset="UTF-8" />
+    <title>Crypto World</title>
 
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: #000;
-      color: #fff;
-      font-family: sans-serif;
-      overflow-x: hidden;
-    }
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #fff;
+            font-family: sans-serif;
+            overflow-x: hidden;
+        }
 
-    .page-wrap {
-      min-height: 300vh;
-      position: relative;
-    }
+        .page-wrap {
+            min-height: 300vh;
+            position: relative;
+        }
 
-    section {
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+        section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .hero {
-      background: url("img/color3.png") no-repeat center / cover;
-    }
+        .hero {
+            /* Припускаємо, що це ваш основний фон з "Crypto World" */
+            background: url("img/color3.png") no-repeat center / cover;
+        }
 
-    .repeat {
-      background: url("img/color4.png") no-repeat center / cover;
-    }
+        .repeat {
+            background: url("img/color4.png") no-repeat center / cover;
+        }
 
-    .extra {
-      background: url("img/color3.png") no-repeat center / cover;
-    }
+        .extra {
+            background: url("img/color3.png") no-repeat center / cover;
+        }
 
-    /* ===== CHAT ===== */
+        /* ===== ЧАТ (Telegram-подібний) ===== */
 
-    #tg-chat {
-      position: fixed;
-      top: 50%;
-      left: 20px;
-      transform: translateY(-50%);
-      width: 260px;
-      height: 360px;
-      background: rgba(0,0,0,0.7);
-      border: 1px solid #00ffcc80;
-      border-radius: 14px;
-      display: flex;
-      flex-direction: column;
-      z-index: 100;
-      backdrop-filter: blur(6px);
-    }
+        #tg-chat {
+            position: fixed;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            width: 260px;
+            height: 360px;
+            /* Основна прозора панель, щоб бачити фон сайту */
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #00ffcc80;
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            /* Додає ефект розмиття фону */
+            backdrop-filter: blur(6px);
+        }
 
-    #tg-chat-header {
-      background: #00e089;
-      color: #000;
-      font-weight: bold;
-      padding: 10px;
-      text-align: center;
-      border-radius: 14px 14px 0 0;
-    }
+        #tg-chat-header {
+            /* Стиль як на прикладі: Фіолетовий заголовок */
+            background: #9933ff; 
+            color: #fff;
+            font-weight: bold;
+            padding: 10px;
+            text-align: center;
+            border-radius: 14px 14px 0 0;
+            font-size: 14px;
+        }
 
-    #tg-chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px;
-      background: #050711;
-      font-size: 13px;
-    }
+        #tg-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            font-size: 13px;
+            
+            /* --- КОСМІЧНИЙ ФОН ЧАТУ (як на сподобаному прикладі) --- */
+            /* Змініть URL, якщо ім'я файлу інше */
+            background-image: url("img/space_chat_bg.png"); 
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            /* Додаємо напівпрозорий шар для підвищення контрасту тексту */
+            background-color: rgba(0, 0, 0, 0.3); 
+            background-blend-mode: overlay; 
+        }
 
-    .bot-msg {
-      background: #0b0f1c;
-      margin-bottom: 8px;
-      padding: 6px 8px;
-      border-radius: 6px;
-      white-space: pre-wrap;
-    }
-  </style>
+        /* Стилі для повідомлень */
+        .bot-msg {
+            /* Зроблено прозорим, щоб фон чату був помітний */
+            background: rgba(11, 15, 28, 0.7); 
+            margin-bottom: 8px;
+            padding: 6px 8px;
+            border-radius: 6px;
+            white-space: pre-wrap;
+            /* Можна додати тонкий фіолетовий або неоновий акцент */
+            border-left: 3px solid #9933ff; 
+        }
+    </style>
 </head>
 
 <body>
 <div class="page-wrap">
 
-  <section class="hero">
-    <h1>Crypto World</h1>
-  </section>
+    <section class="hero">
+        <h1>Crypto World</h1>
+    </section>
 
-  <section class="repeat"></section>
-  <section class="extra"></section>
+    <section class="repeat"></section>
+    <section class="extra"></section>
 
-  <div id="tg-chat">
-    <div id="tg-chat-header">Pump & Dump</div>
-    <div id="tg-chat-messages"></div>
-  </div>
+    <div id="tg-chat">
+        <div id="tg-chat-header">Trading World</div> <div id="tg-chat-messages"></div>
+    </div>
 
 </div>
 
 <script>
-  const chat = document.getElementById("tg-chat-messages");
-  let lastId = 0;
+    const chat = document.getElementById("tg-chat-messages");
+    let lastId = 0;
 
-  function addMessage(msg) {
-    if (!msg || msg.id <= lastId) return;
-    lastId = msg.id;
+    function addMessage(msg) {
+        if (!msg || msg.id <= lastId) return;
+        lastId = msg.id;
 
-    const div = document.createElement("div");
-    div.className = "bot-msg";
-    // використовуємо HTML з web_msg
-    div.innerHTML = msg.text;
-    chat.appendChild(div);
-    chat.scrollTop = chat.scrollHeight;
-  }
+        const div = document.createElement("div");
+        div.className = "bot-msg";
+        // використовуємо HTML з web_msg
+        div.innerHTML = msg.text;
+        chat.appendChild(div);
+        chat.scrollTop = chat.scrollHeight;
+    }
 
-  async function loadHistory() {
-    const r = await fetch("http://127.0.0.1:5000/history?hours=36");
-    const data = await r.json();
-    chat.innerHTML = "";
-    data.forEach(addMessage);
-  }
+    async function loadHistory() {
+        const r = await fetch("http://127.0.0.1:5000/history?hours=36");
+        const data = await r.json();
+        chat.innerHTML = "";
+        data.forEach(addMessage);
+    }
 
-  function subscribe() {
-    const es = new EventSource("http://127.0.0.1:5000/signals");
+    function subscribe() {
+        const es = new EventSource("http://127.0.0.1:5000/signals");
 
-    es.onmessage = (e) => {
-      try {
-        addMessage(JSON.parse(e.data));
-      } catch {}
-    };
+        es.onmessage = (e) => {
+            try {
+                addMessage(JSON.parse(e.data));
+            } catch {}
+        };
 
-    es.onerror = () => {
-      es.close();
-      setTimeout(subscribe, 3000);
-    };
-  }
+        es.onerror = () => {
+            es.close();
+            setTimeout(subscribe, 3000);
+        };
+    }
 
-  loadHistory().then(subscribe);
+    loadHistory().then(subscribe);
 </script>
 </body>
 </html>
