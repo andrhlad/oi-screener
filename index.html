@@ -101,6 +101,13 @@
         .exchange-name.bybit {
             color: #ffffff;
         }
+
+        /* щоб посилання успадковувало колір біржі */
+        .exchange-name a,
+        .exchange-name a:visited {
+            color: inherit;
+            text-decoration: none;
+        }
     </style>
 </head>
 
@@ -125,15 +132,12 @@
     const chat = document.getElementById("tg-chat-messages");
     let lastId = 0;
 
-    // msg.text тепер має містити span з класами exchange-name binance/bybit
-    // наприклад:
-    // "🟡 <span class='exchange-name binance'>BINANCE</span> 📣 ..."
+    // msg.text вже містить HTML зі span.exchange-name binance/bybit
 
     function addMessage(msg) {
         if (!msg || msg.id <= lastId) return;
         lastId = msg.id;
 
-        // Лог у консоль, щоб побачити, який HTML реально приходить
         console.log('msg.text:', msg.text);
 
         const div = document.createElement("div");
