@@ -79,8 +79,8 @@
             background-position: center;
 
             /* освітлюємо картинку, але залишаємо її */
-            background-color: rgba(255, 255, 255, 0.29); /* підбери 0.3–0.6 як подобається */
-            background-blend-mode: screen; /* можна спробувати також lighten */
+            background-color: rgba(255, 255, 255, 0.29);
+            background-blend-mode: screen;
         }
 
         /* Стилі для повідомлень */
@@ -91,6 +91,19 @@
             border-radius: 6px;
             white-space: pre-wrap;
             border-left: 3px solid #9933ff;
+        }
+
+        /* Назви бірж */
+        .exchange-name {
+            font-weight: 700;
+        }
+
+        .exchange-name.binance {
+            color: #F3BA2F; /* офіційний жовтий Binance */
+        }
+
+        .exchange-name.bybit {
+            color: #ffffff; /* білий для Bybit */
         }
     </style>
 </head>
@@ -115,6 +128,10 @@
 <script>
     const chat = document.getElementById("tg-chat-messages");
     let lastId = 0;
+
+    // msg.text тепер має містити span з класами exchange-name binance/bybit
+    // наприклад:
+    // "<span class='exchange-name binance'>BINANCE</span> AIXBT +2.04% over 10 m"
 
     function addMessage(msg) {
         if (!msg || msg.id <= lastId) return;
@@ -153,6 +170,3 @@
 </script>
 </body>
 </html>
-
-
-
