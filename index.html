@@ -102,10 +102,16 @@
             color: #ffffff;
         }
 
-        /* щоб посилання успадковувало колір біржі */
         .exchange-name a,
         .exchange-name a:visited {
             color: inherit;
+            text-decoration: none;
+        }
+
+        /* усі CoinGlass-посилання білі */
+        .coinglass-link,
+        .coinglass-link:visited {
+            color: #ffffff;
             text-decoration: none;
         }
     </style>
@@ -132,7 +138,7 @@
     const chat = document.getElementById("tg-chat-messages");
     let lastId = 0;
 
-    // msg.text вже містить HTML зі span.exchange-name binance/bybit
+    // msg.text має містити HTML з <a class="coinglass-link">CoinGlass</a>
 
     function addMessage(msg) {
         if (!msg || msg.id <= lastId) return;
@@ -173,4 +179,3 @@
 </script>
 </body>
 </html>
-
