@@ -72,18 +72,15 @@
             padding: 10px;
             font-size: 13px;
 
-            /* ФОН ЧАТУ = картинка chat.jpg */
             background-image: url("img/chat.jpg");
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
 
-            /* освітлюємо картинку, але залишаємо її */
             background-color: rgba(255, 255, 255, 0.29);
             background-blend-mode: screen;
         }
 
-        /* Стилі для повідомлень */
         .bot-msg {
             background: rgba(11, 15, 28, 0.7);
             margin-bottom: 8px;
@@ -93,17 +90,16 @@
             border-left: 3px solid #9933ff;
         }
 
-        /* Назви бірж */
         .exchange-name {
             font-weight: 700;
         }
 
         .exchange-name.binance {
-            color: #F3BA2F; /* офіційний жовтий Binance */
+            color: #F3BA2F;
         }
 
         .exchange-name.bybit {
-            color: #ffffff; /* білий для Bybit */
+            color: #ffffff;
         }
     </style>
 </head>
@@ -131,11 +127,14 @@
 
     // msg.text тепер має містити span з класами exchange-name binance/bybit
     // наприклад:
-    // "<span class='exchange-name binance'>BINANCE</span> AIXBT +2.04% over 10 m"
+    // "🟡 <span class='exchange-name binance'>BINANCE</span> 📣 ..."
 
     function addMessage(msg) {
         if (!msg || msg.id <= lastId) return;
         lastId = msg.id;
+
+        // Лог у консоль, щоб побачити, який HTML реально приходить
+        console.log('msg.text:', msg.text);
 
         const div = document.createElement("div");
         div.className = "bot-msg";
