@@ -38,11 +38,11 @@
             background: url("img/color3.png") no-repeat center / cover;
         }
 
-        /* ===== ЧАТ (Telegram-подібний) ===== */
+        /* ===== ЛІВИЙ ЧАТ (Pump&Dump) ===== */
 
         #tg-chat {
             position: fixed;
-            top: 350px;              /* сильніше опущений вниз */
+            top: 350px;
             left: 20px;
             width: 260px;
             height: 360px;
@@ -113,6 +113,42 @@
             color: #ffffff;
             text-decoration: none;
         }
+
+        /* ===== ПРАВИЙ ВЕРХНІЙ ЧАТ (Leaders) ===== */
+
+        #leaders-chat {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 320px;
+            max-height: 260px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #2CC7BD80;
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            z-index: 110;
+            backdrop-filter: blur(6px);
+            font-size: 13px;
+        }
+
+        #leaders-header {
+            background: #2CC7BD;
+            color: #fff;
+            font-weight: bold;
+            padding: 10px;
+            text-align: center;
+            border-radius: 14px 14px 0 0;
+            font-size: 14px;
+        }
+
+        #leaders-messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            white-space: pre-wrap; /* зберігаємо \n */
+            background: rgba(0, 0, 0, 0.4);
+        }
     </style>
 </head>
 
@@ -126,18 +162,24 @@
     <section class="repeat"></section>
     <section class="extra"></section>
 
+    <!-- Лівий Pump&Dump чат -->
     <div id="tg-chat">
         <div id="tg-chat-header">Pump&Dump</div>
         <div id="tg-chat-messages"></div>
     </div>
 
+    <!-- Правий верхній чат (лідери росту/падіння) -->
+    <div id="leaders-chat">
+        <div id="leaders-header">Leaders</div>
+        <div id="leaders-messages"></div>
+    </div>
+
 </div>
 
 <script>
+    // ===== ЛІВИЙ ЧАТ: Pump&Dump (як було) =====
     const chat = document.getElementById("tg-chat-messages");
     let lastId = 0;
-
-    // msg.text має містити HTML з <a class="coinglass-link">CoinGlass</a>
 
     function addMessage(msg) {
         if (!msg || msg.id <= lastId) return;
@@ -174,7 +216,29 @@
         };
     }
 
+    // ===== ПРАВИЙ ЧАТ: Leaders (глобальні лідери росту/падіння) =====
+    const leadersBox = document.getElementById("leaders-messages");
+
+    async function loadLeaders() {
+        try {
+            const r = await fetch("http://127.0.0.1:5000/leaders");
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            const text = await r.text();
+            leadersBox.textContent = text;
+        } catch (e) {
+            console.error("Leaders error:", e);
+            leadersBox.textContent = "Error loading leaders…";
+        }
+    }
+
+    function startLeadersLoop() {
+        loadLeaders();
+        setInterval(loadLeaders, 10000); // оновлювати кожні 10 секунд (налаштовується)
+    }
+
+    // Старт: Pump&Dump + Leaders
     loadHistory().then(subscribe);
+    startLeadersLoop();
 </script>
 </body>
 </html>
