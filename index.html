@@ -107,7 +107,6 @@
             text-decoration: none;
         }
 
-        /* усі CoinGlass-посилання білі */
         .coinglass-link,
         .coinglass-link:visited {
             color: #ffffff;
@@ -146,8 +145,18 @@
             flex: 1;
             padding: 10px;
             overflow-y: auto;
-            white-space: pre-wrap; /* зберігаємо \n */
+            white-space: pre;           /* зберігаємо усі пробіли/відступи */
             background: rgba(0, 0, 0, 0.4);
+            font-family: "Courier New", monospace;  /* рівні колонки */
+        }
+
+        #leaders-messages a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        #leaders-messages a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -171,13 +180,13 @@
     <!-- Правий верхній чат (лідери росту/падіння) -->
     <div id="leaders-chat">
         <div id="leaders-header">Leaders</div>
-        <div id="leaders-messages"></div>
+        <div id="leaders-messages">Loading leaders…</div>
     </div>
 
 </div>
 
 <script>
-    // ===== ЛІВИЙ ЧАТ: Pump&Dump (як було) =====
+    // ===== ЛІВИЙ ЧАТ: Pump&Dump =====
     const chat = document.getElementById("tg-chat-messages");
     let lastId = 0;
 
@@ -216,7 +225,7 @@
         };
     }
 
-    // ===== ПРАВИЙ ЧАТ: Leaders (глобальні лідери росту/падіння) =====
+    // ===== ПРАВИЙ ЧАТ: Leaders =====
     const leadersBox = document.getElementById("leaders-messages");
 
     async function loadLeaders() {
@@ -224,7 +233,7 @@
             const r = await fetch("http://127.0.0.1:5000/leaders");
             if (!r.ok) throw new Error("HTTP " + r.status);
             const text = await r.text();
-            leadersBox.textContent = text;
+            leadersBox.innerHTML = text;   // важливо: HTML, а не текст
         } catch (e) {
             console.error("Leaders error:", e);
             leadersBox.textContent = "Error loading leaders…";
@@ -233,7 +242,7 @@
 
     function startLeadersLoop() {
         loadLeaders();
-        setInterval(loadLeaders, 10000); // оновлювати кожні 10 секунд (налаштовується)
+        setInterval(loadLeaders, 10000);
     }
 
     // Старт: Pump&Dump + Leaders
