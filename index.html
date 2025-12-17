@@ -39,7 +39,6 @@
         }
 
         /* ===== ЛІВИЙ ЧАТ (Pump&Dump) ===== */
-
         #tg-chat {
             position: fixed;
             top: 350px;
@@ -70,12 +69,10 @@
             overflow-y: auto;
             padding: 10px;
             font-size: 13px;
-
             background-image: url("img/25.jpg");
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
-
             background-color: rgba(255, 255, 255, 0.29);
             background-blend-mode: screen;
         }
@@ -113,8 +110,7 @@
             text-decoration: none;
         }
 
-        /* ===== ПРАВИЙ ВЕРХНІЙ ЧАТ (Leaders) ===== */
-
+        /* ===== ПРАВИЙ ВЕРХНІЙ ЧАТ (Gainers) ===== */
         #leaders-chat {
             position: fixed;
             top: 20px;
@@ -141,13 +137,12 @@
             font-size: 14px;
         }
 
-        /* ВСЕ, що всередині leaders-messages, у моноширинному шрифті */
         #leaders-messages,
         #leaders-messages a {
             flex: 1;
             padding: 10px;
             overflow-y: auto;
-            white-space: pre;           /* зберігаємо пробіли/переноси */
+            white-space: pre;
             background: rgba(0, 0, 0, 0.4);
             font-family: "Courier New", monospace;
             font-size: 13px;
@@ -158,16 +153,58 @@
         #leaders-messages a:hover {
             text-decoration: underline;
         }
+
+        /* ===== ПРАВИЙ НИЖНІЙ ЧАТ (Decliners) ===== */
+        #decliners-chat {
+            position: fixed;
+            top: 300px;
+            right: 20px;
+            width: 320px;
+            max-height: 260px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #FF475780;
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            z-index: 110;
+            backdrop-filter: blur(6px);
+            font-size: 13px;
+        }
+
+        #decliners-header {
+            background: linear-gradient(135deg, #FF4757, #FF6B7A);
+            color: #fff;
+            font-weight: bold;
+            padding: 10px;
+            text-align: center;
+            border-radius: 14px 14px 0 0;
+            font-size: 14px;
+        }
+
+        #decliners-messages,
+        #decliners-messages a {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            white-space: pre;
+            background: rgba(0, 0, 0, 0.4);
+            font-family: "Courier New", monospace;
+            font-size: 13px;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        #decliners-messages a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 
 <body>
 <div class="page-wrap">
-
     <section class="hero">
         <h1>Crypto World</h1>
     </section>
-
     <section class="repeat"></section>
     <section class="extra"></section>
 
@@ -177,12 +214,17 @@
         <div id="tg-chat-messages"></div>
     </div>
 
-    <!-- Правий верхній чат (лідери росту/падіння) -->
+    <!-- Правий верхній чат (Gainers) -->
     <div id="leaders-chat">
         <div id="leaders-header">Top 10 Gainers</div>
-        <div id="leaders-messages">Loading leaders…</div>
+        <div id="leaders-messages">Loading gainers…</div>
     </div>
 
+    <!-- Правий нижній чат (Decliners) -->
+    <div id="decliners-chat">
+        <div id="decliners-header">Top 10 by 24h Decline</div>
+        <div id="decliners-messages">Loading decliners…</div>
+    </div>
 </div>
 
 <script>
@@ -223,7 +265,7 @@
         };
     }
 
-    // ===== ПРАВИЙ ЧАТ: Leaders =====
+    // ===== ПРАВИЙ ВЕРХНІЙ ЧАТ: Gainers =====
     const leadersBox = document.getElementById("leaders-messages");
 
     async function loadLeaders() {
@@ -231,22 +273,35 @@
             const r = await fetch("http://127.0.0.1:5000/leaders");
             if (!r.ok) throw new Error("HTTP " + r.status);
             const text = await r.text();
-            leadersBox.innerHTML = text;   // HTML, щоб <a> працювали
+            leadersBox.innerHTML = text;
         } catch (e) {
             console.error("Leaders error:", e);
-            leadersBox.textContent = "Error loading leaders…";
+            leadersBox.textContent = "Error loading gainers…";
+        }
+    }
+
+    // ===== ПРАВИЙ НИЖНІЙ ЧАТ: Decliners =====
+    const declinersBox = document.getElementById("decliners-messages");
+
+    async function loadDecliners() {
+        try {
+            const r = await fetch("http://127.0.0.1:5000/decliners");
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            const text = await r.text();
+            declinersBox.innerHTML = text;
+        } catch (e) {
+            console.error("Decliners error:", e);
+            declinersBox.textContent = "Error loading decliners…";
         }
     }
 
     function startLeadersLoop() {
         loadLeaders();
-        setInterval(loadLeaders, 10000);
+        loadDecliners();
+        setInterval(() => {
+            loadLeaders();
+            loadDecliners();
+        }, 10000);
     }
 
-    // Старт: Pump&Dump + Leaders
-    loadHistory().then(subscribe);
-    startLeadersLoop();
-</script>
-</body>
-</html>
-
+    // Ст
