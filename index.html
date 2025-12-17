@@ -141,16 +141,16 @@
             font-size: 14px;
         }
 
-        #leaders-messages {
+        /* ВСЕ, що всередині leaders-messages, у моноширинному шрифті */
+        #leaders-messages,
+        #leaders-messages a {
             flex: 1;
             padding: 10px;
             overflow-y: auto;
-            white-space: pre;           /* зберігаємо усі пробіли/відступи */
+            white-space: pre;           /* зберігаємо пробіли/переноси */
             background: rgba(0, 0, 0, 0.4);
-            font-family: "Courier New", monospace;  /* рівні колонки */
-        }
-
-        #leaders-messages a {
+            font-family: "Courier New", monospace;
+            font-size: 13px;
             color: #ffffff;
             text-decoration: none;
         }
@@ -194,8 +194,6 @@
         if (!msg || msg.id <= lastId) return;
         lastId = msg.id;
 
-        console.log('msg.text:', msg.text);
-
         const div = document.createElement("div");
         div.className = "bot-msg";
         div.innerHTML = msg.text;
@@ -233,7 +231,7 @@
             const r = await fetch("http://127.0.0.1:5000/leaders");
             if (!r.ok) throw new Error("HTTP " + r.status);
             const text = await r.text();
-            leadersBox.innerHTML = text;   // важливо: HTML, а не текст
+            leadersBox.innerHTML = text;   // HTML, щоб <a> працювали
         } catch (e) {
             console.error("Leaders error:", e);
             leadersBox.textContent = "Error loading leaders…";
