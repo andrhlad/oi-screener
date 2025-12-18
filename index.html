@@ -144,8 +144,9 @@
             padding: 10px;
             overflow-y: auto;
             background: rgba(0, 0, 0, 0.4);
-            font-family: sans-serif;  /* той самий шрифт */
-            font-size: 13px;          /* той самий розмір */
+            white-space: pre-wrap;                 /* зберігаємо \n */
+            font-family: "Courier New", monospace; /* моноширинний шрифт для колонок */
+            font-size: 13px;
             color: #ffffff;
         }
 
@@ -190,8 +191,9 @@
             padding: 10px;
             overflow-y: auto;
             background: rgba(0, 0, 0, 0.4);
-            font-family: sans-serif;  /* той самий шрифт */
-            font-size: 13px;          /* той самий розмір */
+            white-space: pre-wrap;                 /* зберігаємо \n */
+            font-family: "Courier New", monospace; /* той самий моношрифт */
+            font-size: 13px;
             color: #ffffff;
         }
 
@@ -317,7 +319,6 @@
         }, 10000);
     }
 
-    // Старт
     window.addEventListener('load', () => {
         loadHistory();
         subscribe();
