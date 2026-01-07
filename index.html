@@ -17,32 +17,102 @@
       --shadow-soft: 0 8px 20px rgba(15, 23, 42, 0.06);
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; }
-    body { background: var(--bg); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
 
     /* Topbar */
-    .topbar { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
-    .topbar-inner { max-width: 1280px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
     .logo { font-weight: 700; font-size: 20px; }
-    .clock { display: flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 999px; border: 1px solid var(--border); background: #fff; font-size: 13px; }
+    .clock {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      box-shadow: var(--shadow-soft);
+      font-size: 13px;
+    }
+    .clock-time { font-weight: 600; }
+    .clock-meta { color: var(--text-muted); font-size: 11px; line-height: 1.2; }
 
     /* Layout */
-    .content { max-width: 1280px; margin: 18px auto; padding: 0 24px 40px; display: grid; grid-template-columns: 280px 320px 1fr; gap: 16px; flex: 1; }
+    .content {
+      max-width: 1280px;
+      margin: 18px auto;
+      padding: 0 24px 40px;
+      display: grid;
+      grid-template-columns: 280px 320px 1fr;
+      gap: 16px;
+      align-items: flex-start;
+      flex: 1;
+    }
+
     @media (max-width: 1100px) { .content { grid-template-columns: 1fr; } }
     .column { display: flex; flex-direction: column; gap: 16px; }
 
-    /* Card & Chat Styles */
-    .card { background: var(--card-bg); border-radius: var(--radius-card); border: 1px solid var(--border); box-shadow: var(--shadow-soft); padding: 14px 16px; overflow: hidden; }
-    .card-header { margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+    /* Card & Chat */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      padding: 14px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     .card-title { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
     .card-sub { font-size: 11px; color: var(--text-muted); font-weight: normal; }
 
-    /* Chat Container */
-    #pump-chat { height: 260px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; scroll-behavior: smooth; }
+    #pump-chat {
+      height: 250px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
     #pump-chat::-webkit-scrollbar { width: 4px; }
     #pump-chat::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
 
-    .pump-item { padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; background: #f9fafb; border-radius: 10px; border: 1px solid #f1f5f9; animation: slideIn 0.3s ease-out; }
+    .pump-item {
+      padding: 10px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f9fafb;
+      border-radius: 10px;
+      border: 1px solid #f1f5f9;
+      animation: fadeIn 0.3s ease-out;
+    }
     .pump-item.is-up { border-left: 3px solid var(--green); }
     .pump-item.is-down { border-left: 3px solid var(--red); background: #fef2f2; }
     .pump-symbol { font-weight: 600; font-size: 13px; }
@@ -51,22 +121,22 @@
     .up { color: var(--green); }
     .down { color: var(--red); }
 
-    @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Components Styles */
+    /* Items */
     .news-item { padding: 8px 0; border-top: 1px solid #f1f2f6; }
     .news-title { font-size: 13px; }
     .news-meta { font-size: 11px; color: var(--text-muted); }
-    .row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; border-bottom: 1px solid #f3f4f6; }
+    .row { display: flex; justify-content: space-between; padding: 7px 0; font-size: 13px; border-bottom: 1px solid #f3f4f6; }
     .tag-exchange { background: #eef2ff; color: #4f46e5; font-size: 10px; padding: 2px 6px; border-radius: 999px; }
-    .oi-item { padding: 10px; background: #f9fafb; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+    .oi-item { padding: 10px 12px; border-radius: 10px; background: #f9fafb; border: 1px solid #edf1f7; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 
-    /* FOOTER - ЯК НА КАРТИНЦІ 2 */
-    .footer { border-top: 1px solid var(--border); padding: 20px 24px 26px; background: #fff; margin-top: auto; }
-    .footer-inner { max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-    .footer-info h4 { font-size: 13px; font-weight: 600; margin-bottom: 4px; color: var(--text-main); }
-    .footer-info p { font-size: 12px; color: var(--text-muted); }
-    .made-with { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border); font-size: 11px; color: var(--text-muted); }
+    /* Footer - Картинка 2 */
+    .footer { border-top: 1px solid var(--border); padding: 24px 0; background: #fff; margin-top: auto; }
+    .footer-inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
+    .footer-about h4 { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+    .footer-about p { font-size: 12px; color: var(--text-muted); }
+    .made-with { padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border); font-size: 11px; color: var(--text-muted); }
   </style>
 </head>
 <body>
@@ -76,7 +146,7 @@
       <div class="logo">Crypto World</div>
       <div class="clock">
         <div class="clock-time" id="clock-time">00:00:00</div>
-        <div style="font-size: 11px; color: var(--text-muted)">Європа<br>UTC+2</div>
+        <div class="clock-meta">Європа<br>UTC+2</div>
       </div>
     </div>
   </header>
@@ -84,17 +154,20 @@
   <main class="content">
     <div class="column">
       <div class="card">
-        <div class="card-header"><div class="card-title">Новини <span class="card-sub">Останні</span></div></div>
-        <div class="news-item"><div class="news-title">Bitcoin оновив максимум</div><div class="news-meta">2 год тому</div></div>
-        <div class="news-item"><div class="news-title">Оновлення Ethereum</div><div class="news-meta">4 год тому</div></div>
+        <div class="card-header"><div class="card-title">Новини <span class="card-sub">Останні заголовки</span></div></div>
+        <div class="news-item"><div class="news-title">Bitcoin оновив історичний максимум</div><div class="news-meta">2 год тому</div></div>
+        <div class="news-item"><div class="news-title">Ethereum готується до оновлення</div><div class="news-meta">4 год тому</div></div>
       </div>
 
       <div class="card">
-        <div class="card-header">
-          <div class="card-title">Сигнали Бота <span class="card-sub">±5% за 5 хв</span></div>
-        </div>
-        <div id="pump-chat">
-          </div>
+        <div class="card-header"><div class="card-title">Делістинг / Лістинг</div></div>
+        <div class="row"><span>ARB</span><span class="tag-exchange">Binance · 1 год тому</span></div>
+        <div class="row"><span>USDC</span><span class="tag-exchange">Bybit · 3 год тому</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Памп & Дамп<span class="card-sub">±5% за 5 хв</span></div></div>
+        <div id="pump-chat"></div>
       </div>
     </div>
 
@@ -109,66 +182,51 @@
           <div><div style="font-weight:600; font-size:13px">ETH <span class="tag-exchange">Bybit</span></div><div style="font-size:12px; color:var(--text-muted)">$1.8B</div></div>
           <div style="color:var(--green); font-weight:600">+6.2%</div>
         </div>
+        <div class="oi-item">
+          <div><div style="font-weight:600; font-size:13px">SOL <span class="tag-exchange">Binance</span></div><div style="font-size:12px; color:var(--text-muted)">$450M</div></div>
+          <div style="color:var(--green); font-weight:600">+7.1%</div>
+        </div>
       </div>
     </div>
 
     <div class="column">
       <div class="card">
-        <div class="card-header"><div class="card-title">Ліквідації <span class="card-sub">> $20k</span></div></div>
+        <div class="card-header"><div class="card-title">Ліквідації<span class="card-sub">> $20k</span></div></div>
         <div class="row"><span>BTC Long</span><span style="color:var(--red); font-weight:700">$125k</span></div>
         <div class="row"><span>ETH Short</span><span style="color:var(--green); font-weight:700">$89k</span></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Топ Гейнери (24г)</div></div>
+        <div class="row"><span>SOL</span><span style="color:var(--green); font-weight:700">+24.5%</span></div>
+        <div class="row"><span>AVAX</span><span style="color:var(--green); font-weight:700">+19.8%</span></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Топ Лузери (24г)</div></div>
+        <div class="row"><span>LUNA</span><span style="color:var(--red); font-weight:700">-18.4%</span></div>
+        <div class="row"><span>APE</span><span style="color:var(--red); font-weight:700">-15.2%</span></div>
       </div>
     </div>
   </main>
 
   <footer class="footer">
     <div class="footer-inner">
-      <div class="footer-info">
-        <h4>Про нас</h4>
-        <p>Реал-тайм аналітика крипторинку</p>
-      </div>
+      <div class="footer-about"><h4>Про нас</h4><p>Реал-тайм аналітика крипторинку</p></div>
       <div class="made-with">Зроблено з ♥ для трейдерів</div>
     </div>
   </footer>
 
   <script>
-    // 1. Годинник
     function updateClock() {
       document.getElementById('clock-time').textContent = new Date().toLocaleTimeString('uk-UA', {hour12: false});
     }
-    setInterval(updateClock, 1000);
-    updateClock();
+    setInterval(updateClock, 1000); updateClock();
 
-    // 2. Логіка чату бота
     const chat = document.getElementById('pump-chat');
-    const coins = ['BTC', 'ETH', 'SOL', 'AVAX', 'XRP', 'ADA'];
+    const coins = ['BTC', 'ETH', 'SOL', 'AVAX', 'XRP'];
     const exchanges = ['Binance', 'Bybit', 'OKX'];
 
     function addSignal() {
-      const coin = coins[Math.floor(Math.random() * coins.length)];
-      const ex = exchanges[Math.floor(Math.random() * exchanges.length)];
-      const change = (Math.random() * 8 + 5).toFixed(1);
-      const isUp = Math.random() > 0.4;
-      const time = new Date().toLocaleTimeString('uk-UA', {hour: '2-digit', minute:'2-digit'});
-
+      const isUp = Math.random() > 0.5;
       const html = `
         <div class="pump-item ${isUp ? 'is-up' : 'is-down'}">
-          <div><span class="pump-symbol">${coin}</span><span class="pump-exchange">${ex} • ${time}</span></div>
-          <div class="pump-change ${isUp ? 'up' : 'down'}">${isUp ? '+' : '-'}${change}%</div>
-        </div>`;
-      
-      chat.insertAdjacentHTML('beforeend', html);
-      chat.scrollTop = chat.scrollHeight;
-
-      if (chat.children.length > 10) chat.removeChild(chat.firstChild);
-      
-      // Наступне повідомлення через випадковий час
-      setTimeout(addSignal, Math.random() * 5000 + 2000);
-    }
-
-    // Запускаємо перші сигнали
-    addSignal();
-    setTimeout(addSignal, 1500);
-  </script>
-</body>
-</html>
+          <div><span class="pump-symbol">${coins[Math.floor(Math.random()*coins.length)]}</span>
