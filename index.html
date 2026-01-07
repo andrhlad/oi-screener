@@ -36,7 +36,6 @@
       flex-direction: column;
     }
 
-    /* Topbar */
     .topbar {
       position: sticky;
       top: 0;
@@ -75,7 +74,6 @@
       line-height: 1.2;
     }
 
-    /* Layout */
     .content {
       max-width: 1280px;
       margin: 18px auto;
@@ -92,7 +90,6 @@
 
     .column { display: flex; flex-direction: column; gap: 16px; }
 
-    /* Card */
     .card {
       background: var(--card-bg);
       border-radius: var(--radius-card);
@@ -122,7 +119,7 @@
     }
 
     .spinner {
-      display: none; /* Приховано за замовчуванням */
+      display: none; /* Вимкнено анімацію */
       width: 14px;
       height: 14px;
       border: 2px solid #e5e7eb;
@@ -135,7 +132,6 @@
       to { transform: rotate(360deg); }
     }
 
-    /* News */
     .news-item {
       padding: 8px 0;
       border-top: 1px solid #f1f2f6;
@@ -144,7 +140,6 @@
     .news-title { font-size: 13px; margin-bottom: 3px; }
     .news-meta { font-size: 11px; color: var(--text-muted); }
 
-    /* Row */
     .row {
       display: flex;
       justify-content: space-between;
@@ -153,10 +148,8 @@
       font-size: 13px;
     }
     .row + .row { border-top: 1px solid #f3f4f6; }
-    .tag { font-size: 10px; padding: 2px 6px; border-radius: 999px; background: #f3f4f6; color: var(--text-muted); }
-    .tag-exchange { background: #eef2ff; color: #4f46e5; font-size: 10px; }
+    .tag-exchange { background: #eef2ff; color: #4f46e5; font-size: 10px; padding: 2px 6px; border-radius: 999px; }
 
-    /* Pump list */
     .pump-list { margin-top: 4px; border-radius: 12px; overflow: hidden; border: 1px solid #f1f5f9; }
     .pump-item {
       padding: 10px 12px;
@@ -175,7 +168,6 @@
     .pump-change.up { color: var(--green); }
     .pump-change.down { color: var(--red); }
 
-    /* OI list */
     .oi-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
     .oi-item {
       padding: 10px 12px;
@@ -197,7 +189,6 @@
     .oi-value { font-size: 12px; color: var(--text-muted); }
     .oi-change { font-size: 12px; font-weight: 600; color: var(--green); }
 
-    /* Liquidations */
     .liq-item {
       padding: 10px 12px;
       border-radius: 10px;
@@ -209,18 +200,12 @@
       font-size: 13px;
       margin-top: 6px;
     }
-    .liq-side {
-      font-size: 11px;
-      padding: 2px 6px;
-      border-radius: 999px;
-      text-transform: uppercase;
-    }
+    .liq-side { font-size: 11px; padding: 2px 6px; border-radius: 999px; text-transform: uppercase; }
     .liq-long { background: #dcfce7; color: #166534; }
     .liq-short { background: #fee2e2; color: #b91c1c; }
     .liq-amount { font-weight: 700; color: #b45309; }
     .liq-meta { font-size: 11px; color: var(--text-muted); }
 
-    /* Top items */
     .top-list { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
     .top-item {
       padding: 12px;
@@ -238,7 +223,6 @@
     .top-price.red { color: var(--red); }
     .top-meta { font-size: 11px; color: var(--text-muted); }
 
-    /* Footer */
     .footer {
       border-top: 1px solid var(--border);
       padding: 20px 24px 26px;
@@ -286,44 +270,25 @@
       <section class="column">
         <div class="card" id="news-card">
           <div class="card-header">
-            <div class="card-title">Новини<span class="card-sub">Останні заголовки</span></div>
+            <div class="card-title">Новини <span class="card-sub">Останні заголовки</span></div>
           </div>
           <div class="card-content">
-            <div class="news-item">
-              <div class="news-title">Bitcoin оновив історичний максимум</div>
-              <div class="news-meta">2 год тому</div>
-            </div>
-            <div class="news-item">
-              <div class="news-title">Ethereum готується до оновлення</div>
-              <div class="news-meta">4 год тому</div>
-            </div>
-            <div class="news-item">
-              <div class="news-title">Нові правила в ЄС</div>
-              <div class="news-meta">6 год тому</div>
-            </div>
+            <div class="news-item"><div class="news-title">Bitcoin оновив історичний максимум</div><div class="news-meta">2 год тому</div></div>
+            <div class="news-item"><div class="news-title">Ethereum готується до оновлення</div><div class="news-meta">4 год тому</div></div>
+            <div class="news-item"><div class="news-title">Нові правила в ЄС</div><div class="news-meta">6 год тому</div></div>
           </div>
         </div>
 
         <div class="card" id="list-card">
-          <div class="card-header">
-            <div class="card-title">Делістинг / Лістинг</div>
-          </div>
+          <div class="card-header"><div class="card-title">Делістинг / Лістинг</div></div>
           <div class="card-content">
-            <div class="row">
-              <span>ARB</span>
-              <span class="tag-exchange">Binance · 1 год тому</span>
-            </div>
-            <div class="row">
-              <span>USDC</span>
-              <span class="tag-exchange">Bybit · 3 год тому</span>
-            </div>
+            <div class="row"><span>ARB</span><span class="tag-exchange">Binance · 1 год тому</span></div>
+            <div class="row"><span>USDC</span><span class="tag-exchange">Bybit · 3 год тому</span></div>
           </div>
         </div>
 
         <div class="card" id="pump-card">
-          <div class="card-header">
-            <div class="card-title">Памп & Дамп<span class="card-sub">±5% за 5 хв</span></div>
-          </div>
+          <div class="card-header"><div class="card-title">Памп & Дамп<span class="card-sub">±5% за 5 хв</span></div></div>
           <div class="card-content">
             <div class="pump-list">
               <div class="pump-item is-up">
@@ -342,23 +307,21 @@
       <section class="column">
         <div class="card" id="oi-card">
           <div class="card-header">
-            <div class="card-title">Open Interest<span class="card-sub">+5% за 15 хв</span></div>
+            <div class="card-title">Open Interest <span class="card-sub">+5% за 15 хв</span></div>
           </div>
           <div class="card-content">
             <div class="oi-list">
               <div class="oi-item">
-                <div>
-                  <div class="oi-symbol">BTC <span class="oi-exchange">Binance</span></div>
-                  <div class="oi-value">$2.3B</div>
-                </div>
+                <div><div class="oi-symbol">BTC <span class="oi-exchange">Binance</span></div><div class="oi-value">$2.3B</div></div>
                 <div class="oi-change">+5.8%</div>
               </div>
               <div class="oi-item">
-                <div>
-                  <div class="oi-symbol">ETH <span class="oi-exchange">Bybit</span></div>
-                  <div class="oi-value">$1.8B</div>
-                </div>
+                <div><div class="oi-symbol">ETH <span class="oi-exchange">Bybit</span></div><div class="oi-value">$1.8B</div></div>
                 <div class="oi-change">+6.2%</div>
+              </div>
+              <div class="oi-item">
+                <div><div class="oi-symbol">SOL <span class="oi-exchange">Binance</span></div><div class="oi-value">$450M</div></div>
+                <div class="oi-change">+7.1%</div>
               </div>
             </div>
           </div>
@@ -367,29 +330,46 @@
 
       <section class="column">
         <div class="card" id="liq-card">
-          <div class="card-header">
-            <div class="card-title">Ліквідації<span class="card-sub">> $20k</span></div>
-          </div>
+          <div class="card-header"><div class="card-title">Ліквідації<span class="card-sub">> $20k</span></div></div>
           <div class="card-content">
             <div class="liq-item">
-              <div>
-                <div class="card-title">BTC <span class="liq-side liq-long">Long</span></div>
-                <div class="liq-meta">Binance · 14:50</div>
-              </div>
+              <div><div class="card-title">BTC <span class="liq-side liq-long">Long</span></div><div class="liq-meta">Binance · 14:50</div></div>
               <div class="liq-amount">$125k</div>
+            </div>
+            <div class="liq-item">
+              <div><div class="card-title">ETH <span class="liq-side liq-short">Short</span></div><div class="liq-meta">Bybit · 14:40</div></div>
+              <div class="liq-amount">$89k</div>
             </div>
           </div>
         </div>
 
         <div class="card" id="gainers-card">
-          <div class="card-header">
-            <div class="card-title">Топ Гейнери (24г)</div>
-          </div>
+          <div class="card-header"><div class="card-title">Топ Гейнери (24г)</div></div>
           <div class="card-content">
             <div class="top-list">
               <div class="top-item green">
                 <div>SOL<br><span class="top-meta">Vol: $2.3B</span></div>
                 <div>$142.85<br><span class="top-price green">+24.5%</span></div>
+              </div>
+              <div class="top-item green">
+                <div>AVAX<br><span class="top-meta">Vol: $890M</span></div>
+                <div>$38.92<br><span class="top-price green">+19.8%</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="losers-card">
+          <div class="card-header"><div class="card-title">Топ Лузери (24г)</div></div>
+          <div class="card-content">
+            <div class="top-list">
+              <div class="top-item red">
+                <div>LUNA<br><span class="top-meta">Vol: $1.2B</span></div>
+                <div>$0.82<br><span class="top-price red">-18.4%</span></div>
+              </div>
+              <div class="top-item red">
+                <div>APE<br><span class="top-meta">Vol: $780M</span></div>
+                <div>$3.45<br><span class="top-price red">-15.2%</span></div>
               </div>
             </div>
           </div>
@@ -399,17 +379,13 @@
 
     <footer class="footer">
       <div class="footer-inner">
-        <div>
-          <div class="footer-card-title">Про нас</div>
-          <p>Реал-тайм аналітика крипторинку з основних бірж</p>
-        </div>
+        <div><div class="footer-card-title">Про нас</div><p>Реал-тайм аналітика крипторинку</p></div>
         <div class="made-with">Зроблено з ♥ для трейдерів</div>
       </div>
     </footer>
   </div>
 
   <script>
-    // Оновлення годинника
     function updateClock() {
       const now = new Date();
       document.getElementById('clock-time').textContent = now.toLocaleTimeString('uk-UA', {hour12: false});
