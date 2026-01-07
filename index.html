@@ -1,331 +1,738 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>Crypto World</title>
+  <meta charset="UTF-8" />
+  <title>Crypto World</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #f7f7f9;
+      --card-bg: #ffffff;
+      --border: #e4e6ef;
+      --text-main: #222;
+      --text-muted: #8f95a3;
+      --green: #16a34a;
+      --red: #dc2626;
+      --yellow: #fbbf24;
+      --radius-card: 14px;
+      --shadow-soft: 0 8px 20px rgba(15, 23, 42, 0.06);
+    }
 
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            background: #000;
-            color: #fff;
-            font-family: sans-serif;
-            overflow-x: hidden;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+    }
 
-        .page-wrap {
-            min-height: 300vh;
-            position: relative;
-        }
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+    }
 
-        section {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    .app {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-        .hero {
-            background: url("img/color3.png") no-repeat center / cover;
-        }
+    /* Top bar */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: #ffffffee;
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-weight: 700;
+      font-size: 20px;
+    }
+    .clock {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      box-shadow: var(--shadow-soft);
+      font-size: 13px;
+    }
+    .clock-time {
+      font-weight: 600;
+    }
+    .clock-meta {
+      color: var(--text-muted);
+      font-size: 11px;
+      line-height: 1.2;
+    }
 
-        .repeat {
-            background: url("img/color4.png") no-repeat center / cover;
-        }
+    /* Layout */
+    .content {
+      max-width: 1280px;
+      margin: 18px auto 32px;
+      padding: 0 24px 40px;
+      display: grid;
+      grid-template-columns: 280px 320px 1fr;
+      gap: 16px;
+      align-items: flex-start;
+    }
 
-        .extra {
-            background: url("img/color3.png") no-repeat center / cover;
-        }
+    @media (max-width: 1100px) {
+      .content {
+        grid-template-columns: 1fr;
+      }
+    }
 
-        /* ===== ЛІВИЙ ЧАТ (Pump&Dump) ===== */
-        #tg-chat {
-            position: fixed;
-            top: 350px;
-            left: 20px;
-            width: 260px;
-            height: 360px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid #2CC7BD80;
-            border-radius: 14px;
-            display: flex;
-            flex-direction: column;
-            z-index: 100;
-            backdrop-filter: blur(6px);
-        }
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
 
-        #tg-chat-header {
-            background: #2CC7BD;
-            color: #fff;
-            font-weight: bold;
-            padding: 10px;
-            text-align: center;
-            border-radius: 14px 14px 0 0;
-            font-size: 14px;
-        }
+    /* Card */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      padding: 14px 16px;
+    }
 
-        #tg-chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px;
-            font-size: 13px;
-            background-image: url("img/25.jpg");
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center;
-            background-color: rgba(255, 255, 255, 0.29);
-            background-blend-mode: screen;
-        }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-pill {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: #4f46e5;
+    }
+    .card-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
 
-        .bot-msg {
-            background: rgba(11, 15, 28, 0.58);
-            margin-bottom: 8px;
-            padding: 6px 8px;
-            border-radius: 6px;
-            white-space: pre-wrap;
-            border-left: 3px solid #2CC7BD;
-            font-family: sans-serif;
-            font-size: 13px;
-            color: #fff;
-        }
+    /* News */
+    .news-item {
+      padding: 8px 0;
+      border-top: 1px solid #f1f2f6;
+    }
+    .news-item:first-child {
+      border-top: none;
+    }
+    .news-title {
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+    .news-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
 
-        .exchange-name {
-            font-weight: 700;
-        }
+    /* Simple list w/ tag */
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      font-size: 13px;
+    }
+    .row + .row {
+      border-top: 1px solid #f3f4f6;
+    }
+    .tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      color: var(--text-muted);
+    }
+    .tag-exchange {
+      background: #eef2ff;
+      color: #4f46e5;
+      font-size: 10px;
+    }
 
-        .exchange-name.binance {
-            color: #F3BA2F;
-        }
+    /* Pump & Dump list */
+    .pump-list {
+      margin-top: 4px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #f1f5f9;
+    }
+    .pump-item {
+      padding: 10px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f9fafb;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .pump-item:last-child {
+      border-bottom: none;
+    }
+    .pump-item.is-up {
+      border-left: 3px solid var(--green);
+    }
+    .pump-item.is-down {
+      border-left: 3px solid var(--red);
+      background: #fef2f2;
+    }
+    .pump-asset {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .pump-symbol {
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .pump-exchange {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .pump-change {
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .pump-change.up {
+      color: var(--green);
+    }
+    .pump-change.down {
+      color: var(--red);
+    }
 
-        .exchange-name.bybit {
-            color: #ffffff;
-        }
+    /* Open interest card */
+    .oi-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .oi-item {
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #f9fafb;
+      border: 1px solid #edf1f7;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .oi-left {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .oi-symbol {
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .oi-exchange {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: #4f46e5;
+    }
+    .oi-value {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .oi-change {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--green);
+    }
 
-        .exchange-name a,
-        .exchange-name a:visited {
-            color: inherit;
-            text-decoration: none;
-        }
+    /* Liquidations / Gainers / Losers */
+    .liquidation-item,
+    .top-item {
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #f3f4f6;
+      background: #fffbeb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+    }
+    .liquidation-item + .liquidation-item {
+      margin-top: 6px;
+    }
+    .liq-side {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .liq-long {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .liq-short {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+    .liq-amount {
+      font-weight: 700;
+      color: #b45309;
+    }
+    .liq-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
 
-        .coinglass-link,
-        .coinglass-link:visited {
-            color: #ffffff;
-            text-decoration: none;
-        }
+    .top-item {
+      background: #ecfdf3;
+      border-color: #bbf7d0;
+    }
+    .top-item.red {
+      background: #fef2f2;
+      border-color: #fecaca;
+    }
+    .top-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .top-symbol {
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .top-price {
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .top-price.green {
+      color: var(--green);
+    }
+    .top-price.red {
+      color: var(--red);
+    }
+    .top-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
 
-        /* ===== ПРАВИЙ ВЕРХНІЙ ЧАТ (Gainers) ===== */
-        #leaders-chat {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 320px;
-            max-height: 260px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid #2CC7BD80;
-            border-radius: 14px;
-            display: flex;
-            flex-direction: column;
-            z-index: 110;
-            backdrop-filter: blur(6px);
-        }
-
-        #leaders-header {
-            background: #2CC7BD;
-            color: #fff;
-            font-weight: bold;
-            padding: 10px;
-            text-align: center;
-            border-radius: 14px 14px 0 0;
-            font-size: 14px;
-        }
-
-        #leaders-messages {
-            flex: 1;
-            padding: 10px;
-            overflow-y: auto;
-            /* зелений напівпрозорий фон для лідерів */
-            background: rgba(0, 128, 0, 0.75);
-            white-space: pre-wrap;
-            font-family: "Courier New", monospace;
-            font-size: 13px;
-            color: #ffffff;
-        }
-
-        #leaders-messages a,
-        #leaders-messages a:visited {
-            color: #ffffff;
-            text-decoration: none;
-        }
-
-        #leaders-messages a:hover {
-            text-decoration: underline;
-        }
-
-        /* ===== ПРАВИЙ НИЖНІЙ ЧАТ (Decliners) ===== */
-        #decliners-chat {
-            position: fixed;
-            top: 300px;
-            right: 20px;
-            width: 320px;
-            max-height: 260px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid #FF475780;
-            border-radius: 14px;
-            display: flex;
-            flex-direction: column;
-            z-index: 110;
-            backdrop-filter: blur(6px);
-        }
-
-        #decliners-header {
-            background: linear-gradient(135deg, #FF4757, #FF6B7A);
-            color: #fff;
-            font-weight: bold;
-            padding: 10px;
-            text-align: center;
-            border-radius: 14px 14px 0 0;
-            font-size: 14px;
-        }
-
-        #decliners-messages {
-            flex: 1;
-            padding: 10px;
-            overflow-y: auto;
-            /* червоний напівпрозорий фон для падінь */
-            background: rgba(139, 0, 0, 0.8);
-            white-space: pre-wrap;
-            font-family: "Courier New", monospace;
-            font-size: 13px;
-            color: #ffffff;
-        }
-
-        #decliners-messages a,
-        #decliners-messages a:visited {
-            color: #ffffff;
-            text-decoration: none;
-        }
-
-        #decliners-messages a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 20px 24px 26px;
+      margin-top: auto;
+      background: #fff;
+    }
+    .footer-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .footer-card-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+    .made-with {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: 11px;
+      align-self: flex-end;
+    }
+  </style>
 </head>
-
 <body>
-<div class="page-wrap">
-    <section class="hero">
-        <h1>Crypto World</h1>
-    </section>
-    <section class="repeat"></section>
-    <section class="extra"></section>
+  <div class="app">
+    <!-- Top bar -->
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="logo">Crypto World</div>
+        <div class="clock">
+          <div class="clock-time">02:33:21 PM</div>
+          <div class="clock-meta">
+            Kiev, Europe<br />
+            UTC+2
+          </div>
+        </div>
+      </div>
+    </header>
 
-    <!-- Лівий Pump&Dump чат -->
-    <div id="tg-chat">
-        <div id="tg-chat-header">Pump&Dump</div>
-        <div id="tg-chat-messages"></div>
-    </div>
+    <!-- Main grid -->
+    <main class="content">
+      <!-- Left column -->
+      <section class="column">
+        <!-- News -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              News
+              <span class="card-sub">Latest market headlines</span>
+            </div>
+          </div>
+          <div class="news-item">
+            <div class="news-title">
+              Bitcoin reaches new all‑time high
+            </div>
+            <div class="news-meta">2h ago · Global</div>
+          </div>
+          <div class="news-item">
+            <div class="news-title">
+              Ethereum upgrade scheduled for Q2
+            </div>
+            <div class="news-meta">4h ago · Protocol</div>
+          </div>
+          <div class="news-item">
+            <div class="news-title">
+              New regulations announced in EU
+            </div>
+            <div class="news-meta">6h ago · Regulation</div>
+          </div>
+        </div>
 
-    <!-- Правий верхній чат (Gainers) -->
-    <div id="leaders-chat">
-        <div id="leaders-header">Top 10 Gainers 24h</div>
-        <div id="leaders-messages">Loading gainers…</div>
-    </div>
+        <!-- Delisting / Listing -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Delisting / Listing</div>
+          </div>
+          <div class="row">
+            <span>ARB</span>
+            <span class="tag-exchange">Binance · 1h ago</span>
+          </div>
+          <div class="row">
+            <span>USDC</span>
+            <span class="tag-exchange">Bybit · 3h ago</span>
+          </div>
+        </div>
 
-    <!-- Правий нижній чат (Decliners) -->
-    <div id="decliners-chat">
-        <div id="decliners-header">Top 10 Decliners 24h</div>
-        <div id="decliners-messages">Loading decliners…</div>
-    </div>
-</div>
+        <!-- Pump & Dump -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              Pump &amp; Dump
+              <span class="card-sub">±5% in last 5 min</span>
+            </div>
+          </div>
+          <div class="pump-list">
+            <div class="pump-item is-up">
+              <div class="pump-asset">
+                <span class="pump-symbol">BTC</span>
+                <span class="pump-exchange">Binance</span>
+              </div>
+              <div class="pump-change up">+11.5%</div>
+            </div>
+            <div class="pump-item is-down">
+              <div class="pump-asset">
+                <span class="pump-symbol">ETH</span>
+                <span class="pump-exchange">Bybit</span>
+              </div>
+              <div class="pump-change down">‑9.8%</div>
+            </div>
+            <div class="pump-item is-up">
+              <div class="pump-asset">
+                <span class="pump-symbol">SOL</span>
+                <span class="pump-exchange">Binance</span>
+              </div>
+              <div class="pump-change up">+15.2%</div>
+            </div>
+            <div class="pump-item is-down">
+              <div class="pump-asset">
+                <span class="pump-symbol">DOGE</span>
+                <span class="pump-exchange">Bybit</span>
+              </div>
+              <div class="pump-change down">‑12.3%</div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-<script>
-    // ===== ЛІВИЙ ЧАТ: Pump&Dump =====
-    const chat = document.getElementById("tg-chat-messages");
-    let lastId = 0;
+      <!-- Middle column -->
+      <section class="column">
+        <!-- Open interest -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              Open Interest
+              <span class="card-sub">5% increase in 15 min</span>
+            </div>
+          </div>
+          <div class="oi-list">
+            <div class="oi-item">
+              <div class="oi-left">
+                <div class="oi-symbol">
+                  BTC
+                  <span class="oi-exchange">Binance</span>
+                </div>
+                <div class="oi-value">$2.3B</div>
+              </div>
+              <div class="oi-change">+5.8%</div>
+            </div>
+            <div class="oi-item">
+              <div class="oi-left">
+                <div class="oi-symbol">
+                  ETH
+                  <span class="oi-exchange">Bybit</span>
+                </div>
+                <div class="oi-value">$1.8B</div>
+              </div>
+              <div class="oi-change">+6.2%</div>
+            </div>
+            <div class="oi-item">
+              <div class="oi-left">
+                <div class="oi-symbol">
+                  SOL
+                  <span class="oi-exchange">Binance</span>
+                </div>
+                <div class="oi-value">$450M</div>
+              </div>
+              <div class="oi-change">+7.1%</div>
+            </div>
+            <div class="oi-item">
+              <div class="oi-left">
+                <div class="oi-symbol">
+                  XRP
+                  <span class="oi-exchange">Bybit</span>
+                </div>
+                <div class="oi-value">$320M</div>
+              </div>
+              <div class="oi-change">+5.3%</div>
+            </div>
+            <div class="oi-item">
+              <div class="oi-left">
+                <div class="oi-symbol">
+                  DOGE
+                  <span class="oi-exchange">Binance</span>
+                </div>
+                <div class="oi-value">$280M</div>
+              </div>
+              <div class="oi-change">+8.9%</div>
+            </div>
+            <div class="oi-item">
+              <div class="oi-left">
+                <div class="oi-symbol">
+                  ADA
+                  <span class="oi-exchange">Bybit</span>
+                </div>
+                <div class="oi-value">$210M</div>
+              </div>
+              <div class="oi-change">+6.7%</div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-    function addMessage(msg) {
-        if (!msg || msg.id <= lastId) return;
-        lastId = msg.id;
+      <!-- Right column -->
+      <section class="column">
+        <!-- Liquidations -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              Liquidation
+              <span class="card-sub">Events above $20,000</span>
+            </div>
+          </div>
+          <div class="liquidation-item">
+            <div>
+              <div class="card-title">
+                BTC
+                <span class="liq-side liq-long">Long</span>
+              </div>
+              <div class="liq-meta">Binance · 14:50:18</div>
+            </div>
+            <div class="liq-amount">$125,000</div>
+          </div>
+          <div class="liquidation-item">
+            <div>
+              <div class="card-title">
+                ETH
+                <span class="liq-side liq-short">Short</span>
+              </div>
+              <div class="liq-meta">Bybit · 14:40:33</div>
+            </div>
+            <div class="liq-amount">$89,000</div>
+          </div>
+          <div class="liquidation-item">
+            <div>
+              <div class="card-title">
+                SOL
+                <span class="liq-side liq-long">Long</span>
+              </div>
+              <div class="liq-meta">Binance · 14:30:42</div>
+            </div>
+            <div class="liq-amount">$45,000</div>
+          </div>
+        </div>
 
-        const div = document.createElement("div");
-        div.className = "bot-msg";
-        div.innerHTML = msg.text;
-        chat.appendChild(div);
-        chat.scrollTop = chat.scrollHeight;
-    }
+        <!-- Top gainers -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Top 10 Gainers (24h)</div>
+          </div>
+          <div class="column" style="gap:8px;">
+            <div class="top-item">
+              <div class="top-left">
+                <span class="top-symbol">SOL</span>
+                <span class="top-meta">Vol: $2.3B</span>
+              </div>
+              <div>
+                <div class="top-price green">$142.85</div>
+                <div class="top-meta">+24.5%</div>
+              </div>
+            </div>
+            <div class="top-item">
+              <div class="top-left">
+                <span class="top-symbol">AVAX</span>
+                <span class="top-meta">Vol: $890M</span>
+              </div>
+              <div>
+                <div class="top-price green">$38.92</div>
+                <div class="top-meta">+19.8%</div>
+              </div>
+            </div>
+            <div class="top-item">
+              <div class="top-left">
+                <span class="top-symbol">NEAR</span>
+                <span class="top-meta">Vol: $450M</span>
+              </div>
+              <div>
+                <div class="top-price green">$6.45</div>
+                <div class="top-meta">+18.2%</div>
+              </div>
+            </div>
+            <div class="top-item">
+              <div class="top-left">
+                <span class="top-symbol">ALGO</span>
+                <span class="top-meta">Vol: $320M</span>
+              </div>
+              <div>
+                <div class="top-price green">$0.28</div>
+                <div class="top-meta">+16.7%</div>
+              </div>
+            </div>
+            <div class="top-item">
+              <div class="top-left">
+                <span class="top-symbol">FTM</span>
+                <span class="top-meta">Vol: $210M</span>
+              </div>
+              <div>
+                <div class="top-price green">$0.52</div>
+                <div class="top-meta">+15.3%</div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-    async function loadHistory() {
-        try {
-            const r = await fetch("http://127.0.0.1:5000/history?hours=36");
-            if (!r.ok) throw new Error("HTTP " + r.status);
-            const data = await r.json();
-            chat.innerHTML = "";
-            data.forEach(addMessage);
-        } catch (e) {
-            console.error("History load error:", e);
-            chat.innerHTML = "Error loading history...";
-        }
-    }
+        <!-- Top losers -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Top 10 Losers (24h)</div>
+          </div>
+          <div class="column" style="gap:8px;">
+            <div class="top-item red">
+              <div class="top-left">
+                <span class="top-symbol">LUNA</span>
+                <span class="top-meta">Vol: $1.2B</span>
+              </div>
+              <div>
+                <div class="top-price red">$0.82</div>
+                <div class="top-meta">‑18.4%</div>
+              </div>
+            </div>
+            <div class="top-item red">
+              <div class="top-left">
+                <span class="top-symbol">APE</span>
+                <span class="top-meta">Vol: $780M</span>
+              </div>
+              <div>
+                <div class="top-price red">$3.45</div>
+                <div class="top-meta">‑15.2%</div>
+              </div>
+            </div>
+            <div class="top-item red">
+              <div class="top-left">
+                <span class="top-symbol">SAND</span>
+                <span class="top-meta">Vol: $560M</span>
+              </div>
+              <div>
+                <div class="top-price red">$0.58</div>
+                <div class="top-meta">‑14.8%</div>
+              </div>
+            </div>
+            <div class="top-item red">
+              <div class="top-left">
+                <span class="top-symbol">MANA</span>
+                <span class="top-meta">Vol: $420M</span>
+              </div>
+              <div>
+                <div class="top-price red">$0.42</div>
+                <div class="top-meta">‑12.9%</div>
+              </div>
+            </div>
+            <div class="top-item red">
+              <div class="top-left">
+                <span class="top-symbol">AXS</span>
+                <span class="top-meta">Vol: $340M</span>
+              </div>
+              <div>
+                <div class="top-price red">$7.23</div>
+                <div class="top-meta">‑11.5%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
 
-    function subscribe() {
-        const es = new EventSource("http://127.0.0.1:5000/signals");
-
-        es.onmessage = (e) => {
-            try {
-                addMessage(JSON.parse(e.data));
-            } catch {}
-        };
-
-        es.onerror = () => {
-            es.close();
-            setTimeout(subscribe, 3000);
-        };
-    }
-
-    // ===== ПРАВИЙ ВЕРХНІЙ ЧАТ: Gainers =====
-    const leadersBox = document.getElementById("leaders-messages");
-
-    async function loadGainers() {
-        try {
-            const r = await fetch("http://127.0.0.1:5000/gainers");
-            if (!r.ok) throw new Error("HTTP " + r.status);
-            const text = await r.text();
-            leadersBox.innerHTML = text;
-        } catch (e) {
-            console.error("Gainers error:", e);
-            leadersBox.textContent = "Error loading gainers…";
-        }
-    }
-
-    // ===== ПРАВИЙ НИЖНІЙ ЧАТ: Decliners =====
-    const declinersBox = document.getElementById("decliners-messages");
-
-    async function loadLosers() {
-        try {
-            const r = await fetch("http://127.0.0.1:5000/losers");
-            if (!r.ok) throw new Error("HTTP " + r.status);
-            const text = await r.text();
-            declinersBox.innerHTML = text;
-        } catch (e) {
-            console.error("Decliners error:", e);
-            declinersBox.textContent = "Error loading decliners…";
-        }
-    }
-
-    function startLeadersLoop() {
-        loadGainers();
-        loadLosers();
-        setInterval(() => {
-            loadGainers();
-            loadLosers();
-        }, 10000);
-    }
-
-    window.addEventListener('load', () => {
-        loadHistory();
-        subscribe();
-        startLeadersLoop();
-    });
-</script>
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <div>
+          <div class="footer-card-title">About us</div>
+          <p>
+            Crypto World provides real‑time analytics and signals from major
+            crypto exchanges to help traders make informed decisions.
+          </p>
+        </div>
+        <div>
+          <div class="footer-card-title">Contacts</div>
+          <p>Email: info@cryptoworld.com<br />Support: support@cryptoworld.com</p>
+        </div>
+        <div class="made-with">Built with ♥</div>
+      </div>
+    </footer>
+  </div>
 </body>
 </html>
