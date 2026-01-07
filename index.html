@@ -92,7 +92,7 @@
 
     .column { display: flex; flex-direction: column; gap: 16px; }
 
-    /* Card з АНІМАЦІЄЮ */
+    /* Card */
     .card {
       background: var(--card-bg);
       border-radius: var(--radius-card);
@@ -101,18 +101,6 @@
       padding: 14px 16px;
       position: relative;
       overflow: hidden;
-    }
-
-    .card.loading {
-      opacity: 0.7;
-      background: linear-gradient(90deg, #f9fafb 25%, #f0f2f5 50%, #f9fafb 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-    }
-
-    @keyframes shimmer {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
     }
 
     .card-header {
@@ -133,9 +121,8 @@
       color: var(--text-muted);
     }
 
-    /* 🟢 КОЛІЩАТКО СПІНЕР */
     .spinner {
-      display: none;
+      display: none; /* Приховано за замовчуванням */
       width: 14px;
       height: 14px;
       border: 2px solid #e5e7eb;
@@ -147,9 +134,6 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
-
-    .card.loading .spinner { display: inline-block; }
-    .card.loading .card-content { opacity: 0.3; }
 
     /* News */
     .news-item {
@@ -288,29 +272,21 @@
 </head>
 <body>
   <div class="app">
-    <!-- Topbar -->
     <header class="topbar">
       <div class="topbar-inner">
         <div class="logo">Crypto World</div>
         <div class="clock">
-          <div class="clock-time" id="clock-time">14:33:21</div>
-          <div class="clock-meta">Київ, Україна<br>UTC+2</div>
+          <div class="clock-time" id="clock-time">--:--:--</div>
+          <div class="clock-meta">Європа<br>UTC+2</div>
         </div>
       </div>
     </header>
 
-    <!-- Content -->
     <main class="content">
-      <!-- Лівий стовпець -->
       <section class="column">
-        <!-- News -->
         <div class="card" id="news-card">
           <div class="card-header">
-            <div class="card-title">
-              Новини
-              <span class="card-sub">Останні заголовки</span>
-            </div>
-            <div class="spinner"></div>
+            <div class="card-title">Новини<span class="card-sub">Останні заголовки</span></div>
           </div>
           <div class="card-content">
             <div class="news-item">
@@ -328,11 +304,9 @@
           </div>
         </div>
 
-        <!-- Delisting/Listing -->
         <div class="card" id="list-card">
           <div class="card-header">
             <div class="card-title">Делістинг / Лістинг</div>
-            <div class="spinner"></div>
           </div>
           <div class="card-content">
             <div class="row">
@@ -346,11 +320,9 @@
           </div>
         </div>
 
-        <!-- Pump & Dump -->
         <div class="card" id="pump-card">
           <div class="card-header">
             <div class="card-title">Памп & Дамп<span class="card-sub">±5% за 5 хв</span></div>
-            <div class="spinner"></div>
           </div>
           <div class="card-content">
             <div class="pump-list">
@@ -367,16 +339,10 @@
         </div>
       </section>
 
-      <!-- Середній стовпець -->
       <section class="column">
-        <!-- Open Interest -->
         <div class="card" id="oi-card">
           <div class="card-header">
-            <div class="card-title">
-              Open Interest
-              <span class="card-sub">+5% за 15 хв</span>
-            </div>
-            <div class="spinner"></div>
+            <div class="card-title">Open Interest<span class="card-sub">+5% за 15 хв</span></div>
           </div>
           <div class="card-content">
             <div class="oi-list">
@@ -394,25 +360,15 @@
                 </div>
                 <div class="oi-change">+6.2%</div>
               </div>
-              <div class="oi-item">
-                <div>
-                  <div class="oi-symbol">SOL <span class="oi-exchange">Binance</span></div>
-                  <div class="oi-value">$450M</div>
-                </div>
-                <div class="oi-change">+7.1%</div>
-              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Правий стовпець -->
       <section class="column">
-        <!-- Liquidations -->
         <div class="card" id="liq-card">
           <div class="card-header">
             <div class="card-title">Ліквідації<span class="card-sub">> $20k</span></div>
-            <div class="spinner"></div>
           </div>
           <div class="card-content">
             <div class="liq-item">
@@ -422,21 +378,12 @@
               </div>
               <div class="liq-amount">$125k</div>
             </div>
-            <div class="liq-item">
-              <div>
-                <div class="card-title">ETH <span class="liq-side liq-short">Short</span></div>
-                <div class="liq-meta">Bybit · 14:40</div>
-              </div>
-              <div class="liq-amount">$89k</div>
-            </div>
           </div>
         </div>
 
-        <!-- Top Gainers -->
         <div class="card" id="gainers-card">
           <div class="card-header">
             <div class="card-title">Топ Гейнери (24г)</div>
-            <div class="spinner"></div>
           </div>
           <div class="card-content">
             <div class="top-list">
@@ -444,37 +391,12 @@
                 <div>SOL<br><span class="top-meta">Vol: $2.3B</span></div>
                 <div>$142.85<br><span class="top-price green">+24.5%</span></div>
               </div>
-              <div class="top-item green">
-                <div>AVAX<br><span class="top-meta">Vol: $890M</span></div>
-                <div>$38.92<br><span class="top-price green">+19.8%</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Top Losers -->
-        <div class="card" id="losers-card">
-          <div class="card-header">
-            <div class="card-title">Топ Лузери (24г)</div>
-            <div class="spinner"></div>
-          </div>
-          <div class="card-content">
-            <div class="top-list">
-              <div class="top-item red">
-                <div>LUNA<br><span class="top-meta">Vol: $1.2B</span></div>
-                <div>$0.82<br><span class="top-price red">-18.4%</span></div>
-              </div>
-              <div class="top-item red">
-                <div>APE<br><span class="top-meta">Vol: $780M</span></div>
-                <div>$3.45<br><span class="top-price red">-15.2%</span></div>
-              </div>
             </div>
           </div>
         </div>
       </section>
     </main>
 
-    <!-- Footer -->
     <footer class="footer">
       <div class="footer-inner">
         <div>
@@ -487,22 +409,6 @@
   </div>
 
   <script>
-    // 🟢 ГОЛОВНИЙ СКРИПТ - КОЛІЩАТКА КРУТЯТЬСЯ АВТОМАТИЧНО!
-    const cards = ['news-card', 'list-card', 'pump-card', 'oi-card', 'liq-card', 'gainers-card', 'losers-card'];
-
-    function toggleAllCards() {
-      cards.forEach(id => {
-        const card = document.getElementById(id);
-        card.classList.toggle('loading');
-      });
-    }
-
-    // Крутить 3 сек, пауза 2 сек, повтор
-    setInterval(toggleAllCards, 5000);
-
-    // Початковий запуск
-    toggleAllCards();
-
     // Оновлення годинника
     function updateClock() {
       const now = new Date();
