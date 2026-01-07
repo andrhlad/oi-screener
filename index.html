@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Crypto World</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     :root {
       --bg: #f7f7f9;
@@ -22,8 +22,7 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-        "Segoe UI", sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
     }
 
     body {
@@ -37,12 +36,12 @@
       flex-direction: column;
     }
 
-    /* Top bar */
+    /* Topbar */
     .topbar {
       position: sticky;
       top: 0;
       z-index: 20;
-      background: #ffffffee;
+      background: rgba(255,255,255,0.95);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border);
     }
@@ -69,9 +68,7 @@
       box-shadow: var(--shadow-soft);
       font-size: 13px;
     }
-    .clock-time {
-      font-weight: 600;
-    }
+    .clock-time { font-weight: 600; }
     .clock-meta {
       color: var(--text-muted);
       font-size: 11px;
@@ -81,7 +78,7 @@
     /* Layout */
     .content {
       max-width: 1280px;
-      margin: 18px auto 32px;
+      margin: 18px auto;
       padding: 0 24px 40px;
       display: grid;
       grid-template-columns: 280px 320px 1fr;
@@ -90,24 +87,32 @@
     }
 
     @media (max-width: 1100px) {
-      .content {
-        grid-template-columns: 1fr;
-      }
+      .content { grid-template-columns: 1fr; }
     }
 
-    .column {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
+    .column { display: flex; flex-direction: column; gap: 16px; }
 
-    /* Card */
+    /* Card з АНІМАЦІЄЮ */
     .card {
       background: var(--card-bg);
       border-radius: var(--radius-card);
       border: 1px solid var(--border);
       box-shadow: var(--shadow-soft);
       padding: 14px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card.loading {
+      opacity: 0.7;
+      background: linear-gradient(90deg, #f9fafb 25%, #f0f2f5 50%, #f9fafb 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
 
     .card-header {
@@ -123,36 +128,39 @@
       align-items: center;
       gap: 6px;
     }
-    .card-pill {
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: #eef2ff;
-      color: #4f46e5;
-    }
     .card-sub {
       font-size: 11px;
       color: var(--text-muted);
     }
+
+    /* 🟢 КОЛІЩАТКО СПІНЕР */
+    .spinner {
+      display: none;
+      width: 14px;
+      height: 14px;
+      border: 2px solid #e5e7eb;
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .card.loading .spinner { display: inline-block; }
+    .card.loading .card-content { opacity: 0.3; }
 
     /* News */
     .news-item {
       padding: 8px 0;
       border-top: 1px solid #f1f2f6;
     }
-    .news-item:first-child {
-      border-top: none;
-    }
-    .news-title {
-      font-size: 13px;
-      margin-bottom: 3px;
-    }
-    .news-meta {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
+    .news-item:first-child { border-top: none; }
+    .news-title { font-size: 13px; margin-bottom: 3px; }
+    .news-meta { font-size: 11px; color: var(--text-muted); }
 
-    /* Simple list w/ tag */
+    /* Row */
     .row {
       display: flex;
       justify-content: space-between;
@@ -160,31 +168,12 @@
       padding: 6px 0;
       font-size: 13px;
     }
-    .row + .row {
-      border-top: 1px solid #f3f4f6;
-    }
-    .tag {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 2px 6px;
-      border-radius: 999px;
-      background: #f3f4f6;
-      color: var(--text-muted);
-    }
-    .tag-exchange {
-      background: #eef2ff;
-      color: #4f46e5;
-      font-size: 10px;
-    }
+    .row + .row { border-top: 1px solid #f3f4f6; }
+    .tag { font-size: 10px; padding: 2px 6px; border-radius: 999px; background: #f3f4f6; color: var(--text-muted); }
+    .tag-exchange { background: #eef2ff; color: #4f46e5; font-size: 10px; }
 
-    /* Pump & Dump list */
-    .pump-list {
-      margin-top: 4px;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid #f1f5f9;
-    }
+    /* Pump list */
+    .pump-list { margin-top: 4px; border-radius: 12px; overflow: hidden; border: 1px solid #f1f5f9; }
     .pump-item {
       padding: 10px 12px;
       display: flex;
@@ -193,47 +182,17 @@
       background: #f9fafb;
       border-bottom: 1px solid #f1f5f9;
     }
-    .pump-item:last-child {
-      border-bottom: none;
-    }
-    .pump-item.is-up {
-      border-left: 3px solid var(--green);
-    }
-    .pump-item.is-down {
-      border-left: 3px solid var(--red);
-      background: #fef2f2;
-    }
-    .pump-asset {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .pump-symbol {
-      font-weight: 600;
-      font-size: 13px;
-    }
-    .pump-exchange {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-    .pump-change {
-      font-size: 13px;
-      font-weight: 600;
-    }
-    .pump-change.up {
-      color: var(--green);
-    }
-    .pump-change.down {
-      color: var(--red);
-    }
+    .pump-item:last-child { border-bottom: none; }
+    .pump-item.is-up { border-left: 3px solid var(--green); }
+    .pump-item.is-down { border-left: 3px solid var(--red); background: #fef2f2; }
+    .pump-symbol { font-weight: 600; font-size: 13px; }
+    .pump-exchange { font-size: 11px; color: var(--text-muted); }
+    .pump-change { font-size: 13px; font-weight: 600; }
+    .pump-change.up { color: var(--green); }
+    .pump-change.down { color: var(--red); }
 
-    /* Open interest card */
-    .oi-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 4px;
-    }
+    /* OI list */
+    .oi-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
     .oi-item {
       padding: 10px 12px;
       border-radius: 10px;
@@ -243,18 +202,7 @@
       justify-content: space-between;
       align-items: center;
     }
-    .oi-left {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-    .oi-symbol {
-      font-size: 13px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .oi-symbol { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
     .oi-exchange {
       font-size: 10px;
       padding: 2px 6px;
@@ -262,29 +210,19 @@
       background: #eef2ff;
       color: #4f46e5;
     }
-    .oi-value {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-    .oi-change {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--green);
-    }
+    .oi-value { font-size: 12px; color: var(--text-muted); }
+    .oi-change { font-size: 12px; font-weight: 600; color: var(--green); }
 
-    /* Liquidations / Gainers / Losers */
-    .liquidation-item,
-    .top-item {
+    /* Liquidations */
+    .liq-item {
       padding: 10px 12px;
       border-radius: 10px;
-      border: 1px solid #f3f4f6;
       background: #fffbeb;
+      border: 1px solid #fef3c7;
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-size: 13px;
-    }
-    .liquidation-item + .liquidation-item {
       margin-top: 6px;
     }
     .liq-side {
@@ -292,56 +230,29 @@
       padding: 2px 6px;
       border-radius: 999px;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
     }
-    .liq-long {
-      background: #dcfce7;
-      color: #166534;
-    }
-    .liq-short {
-      background: #fee2e2;
-      color: #b91c1c;
-    }
-    .liq-amount {
-      font-weight: 700;
-      color: #b45309;
-    }
-    .liq-meta {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
+    .liq-long { background: #dcfce7; color: #166534; }
+    .liq-short { background: #fee2e2; color: #b91c1c; }
+    .liq-amount { font-weight: 700; color: #b45309; }
+    .liq-meta { font-size: 11px; color: var(--text-muted); }
 
+    /* Top items */
+    .top-list { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
     .top-item {
-      background: #ecfdf3;
-      border-color: #bbf7d0;
-    }
-    .top-item.red {
-      background: #fef2f2;
-      border-color: #fecaca;
-    }
-    .top-left {
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #f3f4f6;
       display: flex;
-      flex-direction: column;
-      gap: 4px;
+      justify-content: space-between;
+      align-items: center;
     }
-    .top-symbol {
-      font-size: 13px;
-      font-weight: 600;
-    }
-    .top-price {
-      font-size: 13px;
-      font-weight: 600;
-    }
-    .top-price.green {
-      color: var(--green);
-    }
-    .top-price.red {
-      color: var(--red);
-    }
-    .top-meta {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
+    .top-item.green { background: #ecfdf3; border-color: #bbf7d0; }
+    .top-item.red { background: #fef2f2; border-color: #fecaca; }
+    .top-symbol { font-size: 13px; font-weight: 600; }
+    .top-price { font-size: 13px; font-weight: 600; }
+    .top-price.green { color: var(--green); }
+    .top-price.red { color: var(--red); }
+    .top-meta { font-size: 11px; color: var(--text-muted); }
 
     /* Footer */
     .footer {
@@ -377,338 +288,185 @@
 </head>
 <body>
   <div class="app">
-    <!-- Top bar -->
+    <!-- Topbar -->
     <header class="topbar">
       <div class="topbar-inner">
         <div class="logo">Crypto World</div>
         <div class="clock">
-          <div class="clock-time">02:33:21 PM</div>
-          <div class="clock-meta">
-            Kiev, Europe<br />
-            UTC+2
-          </div>
+          <div class="clock-time" id="clock-time">14:33:21</div>
+          <div class="clock-meta">Київ, Україна<br>UTC+2</div>
         </div>
       </div>
     </header>
 
-    <!-- Main grid -->
+    <!-- Content -->
     <main class="content">
-      <!-- Left column -->
+      <!-- Лівий стовпець -->
       <section class="column">
         <!-- News -->
-        <div class="card">
+        <div class="card" id="news-card">
           <div class="card-header">
             <div class="card-title">
-              News
-              <span class="card-sub">Latest market headlines</span>
+              Новини
+              <span class="card-sub">Останні заголовки</span>
             </div>
+            <div class="spinner"></div>
           </div>
-          <div class="news-item">
-            <div class="news-title">
-              Bitcoin reaches new all‑time high
+          <div class="card-content">
+            <div class="news-item">
+              <div class="news-title">Bitcoin оновив історичний максимум</div>
+              <div class="news-meta">2 год тому</div>
             </div>
-            <div class="news-meta">2h ago · Global</div>
-          </div>
-          <div class="news-item">
-            <div class="news-title">
-              Ethereum upgrade scheduled for Q2
+            <div class="news-item">
+              <div class="news-title">Ethereum готується до оновлення</div>
+              <div class="news-meta">4 год тому</div>
             </div>
-            <div class="news-meta">4h ago · Protocol</div>
-          </div>
-          <div class="news-item">
-            <div class="news-title">
-              New regulations announced in EU
+            <div class="news-item">
+              <div class="news-title">Нові правила в ЄС</div>
+              <div class="news-meta">6 год тому</div>
             </div>
-            <div class="news-meta">6h ago · Regulation</div>
           </div>
         </div>
 
-        <!-- Delisting / Listing -->
-        <div class="card">
+        <!-- Delisting/Listing -->
+        <div class="card" id="list-card">
           <div class="card-header">
-            <div class="card-title">Delisting / Listing</div>
+            <div class="card-title">Делістинг / Лістинг</div>
+            <div class="spinner"></div>
           </div>
-          <div class="row">
-            <span>ARB</span>
-            <span class="tag-exchange">Binance · 1h ago</span>
-          </div>
-          <div class="row">
-            <span>USDC</span>
-            <span class="tag-exchange">Bybit · 3h ago</span>
+          <div class="card-content">
+            <div class="row">
+              <span>ARB</span>
+              <span class="tag-exchange">Binance · 1 год тому</span>
+            </div>
+            <div class="row">
+              <span>USDC</span>
+              <span class="tag-exchange">Bybit · 3 год тому</span>
+            </div>
           </div>
         </div>
 
         <!-- Pump & Dump -->
-        <div class="card">
+        <div class="card" id="pump-card">
           <div class="card-header">
-            <div class="card-title">
-              Pump &amp; Dump
-              <span class="card-sub">±5% in last 5 min</span>
-            </div>
+            <div class="card-title">Памп & Дамп<span class="card-sub">±5% за 5 хв</span></div>
+            <div class="spinner"></div>
           </div>
-          <div class="pump-list">
-            <div class="pump-item is-up">
-              <div class="pump-asset">
-                <span class="pump-symbol">BTC</span>
-                <span class="pump-exchange">Binance</span>
+          <div class="card-content">
+            <div class="pump-list">
+              <div class="pump-item is-up">
+                <div><span class="pump-symbol">BTC</span><span class="pump-exchange">Binance</span></div>
+                <div class="pump-change up">+11.5%</div>
               </div>
-              <div class="pump-change up">+11.5%</div>
-            </div>
-            <div class="pump-item is-down">
-              <div class="pump-asset">
-                <span class="pump-symbol">ETH</span>
-                <span class="pump-exchange">Bybit</span>
+              <div class="pump-item is-down">
+                <div><span class="pump-symbol">ETH</span><span class="pump-exchange">Bybit</span></div>
+                <div class="pump-change down">-9.8%</div>
               </div>
-              <div class="pump-change down">‑9.8%</div>
-            </div>
-            <div class="pump-item is-up">
-              <div class="pump-asset">
-                <span class="pump-symbol">SOL</span>
-                <span class="pump-exchange">Binance</span>
-              </div>
-              <div class="pump-change up">+15.2%</div>
-            </div>
-            <div class="pump-item is-down">
-              <div class="pump-asset">
-                <span class="pump-symbol">DOGE</span>
-                <span class="pump-exchange">Bybit</span>
-              </div>
-              <div class="pump-change down">‑12.3%</div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Middle column -->
+      <!-- Середній стовпець -->
       <section class="column">
-        <!-- Open interest -->
-        <div class="card">
+        <!-- Open Interest -->
+        <div class="card" id="oi-card">
           <div class="card-header">
             <div class="card-title">
               Open Interest
-              <span class="card-sub">5% increase in 15 min</span>
+              <span class="card-sub">+5% за 15 хв</span>
             </div>
+            <div class="spinner"></div>
           </div>
-          <div class="oi-list">
-            <div class="oi-item">
-              <div class="oi-left">
-                <div class="oi-symbol">
-                  BTC
-                  <span class="oi-exchange">Binance</span>
+          <div class="card-content">
+            <div class="oi-list">
+              <div class="oi-item">
+                <div>
+                  <div class="oi-symbol">BTC <span class="oi-exchange">Binance</span></div>
+                  <div class="oi-value">$2.3B</div>
                 </div>
-                <div class="oi-value">$2.3B</div>
+                <div class="oi-change">+5.8%</div>
               </div>
-              <div class="oi-change">+5.8%</div>
-            </div>
-            <div class="oi-item">
-              <div class="oi-left">
-                <div class="oi-symbol">
-                  ETH
-                  <span class="oi-exchange">Bybit</span>
+              <div class="oi-item">
+                <div>
+                  <div class="oi-symbol">ETH <span class="oi-exchange">Bybit</span></div>
+                  <div class="oi-value">$1.8B</div>
                 </div>
-                <div class="oi-value">$1.8B</div>
+                <div class="oi-change">+6.2%</div>
               </div>
-              <div class="oi-change">+6.2%</div>
-            </div>
-            <div class="oi-item">
-              <div class="oi-left">
-                <div class="oi-symbol">
-                  SOL
-                  <span class="oi-exchange">Binance</span>
+              <div class="oi-item">
+                <div>
+                  <div class="oi-symbol">SOL <span class="oi-exchange">Binance</span></div>
+                  <div class="oi-value">$450M</div>
                 </div>
-                <div class="oi-value">$450M</div>
+                <div class="oi-change">+7.1%</div>
               </div>
-              <div class="oi-change">+7.1%</div>
-            </div>
-            <div class="oi-item">
-              <div class="oi-left">
-                <div class="oi-symbol">
-                  XRP
-                  <span class="oi-exchange">Bybit</span>
-                </div>
-                <div class="oi-value">$320M</div>
-              </div>
-              <div class="oi-change">+5.3%</div>
-            </div>
-            <div class="oi-item">
-              <div class="oi-left">
-                <div class="oi-symbol">
-                  DOGE
-                  <span class="oi-exchange">Binance</span>
-                </div>
-                <div class="oi-value">$280M</div>
-              </div>
-              <div class="oi-change">+8.9%</div>
-            </div>
-            <div class="oi-item">
-              <div class="oi-left">
-                <div class="oi-symbol">
-                  ADA
-                  <span class="oi-exchange">Bybit</span>
-                </div>
-                <div class="oi-value">$210M</div>
-              </div>
-              <div class="oi-change">+6.7%</div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Right column -->
+      <!-- Правий стовпець -->
       <section class="column">
         <!-- Liquidations -->
-        <div class="card">
+        <div class="card" id="liq-card">
           <div class="card-header">
-            <div class="card-title">
-              Liquidation
-              <span class="card-sub">Events above $20,000</span>
-            </div>
+            <div class="card-title">Ліквідації<span class="card-sub">> $20k</span></div>
+            <div class="spinner"></div>
           </div>
-          <div class="liquidation-item">
-            <div>
-              <div class="card-title">
-                BTC
-                <span class="liq-side liq-long">Long</span>
+          <div class="card-content">
+            <div class="liq-item">
+              <div>
+                <div class="card-title">BTC <span class="liq-side liq-long">Long</span></div>
+                <div class="liq-meta">Binance · 14:50</div>
               </div>
-              <div class="liq-meta">Binance · 14:50:18</div>
+              <div class="liq-amount">$125k</div>
             </div>
-            <div class="liq-amount">$125,000</div>
-          </div>
-          <div class="liquidation-item">
-            <div>
-              <div class="card-title">
-                ETH
-                <span class="liq-side liq-short">Short</span>
+            <div class="liq-item">
+              <div>
+                <div class="card-title">ETH <span class="liq-side liq-short">Short</span></div>
+                <div class="liq-meta">Bybit · 14:40</div>
               </div>
-              <div class="liq-meta">Bybit · 14:40:33</div>
+              <div class="liq-amount">$89k</div>
             </div>
-            <div class="liq-amount">$89,000</div>
-          </div>
-          <div class="liquidation-item">
-            <div>
-              <div class="card-title">
-                SOL
-                <span class="liq-side liq-long">Long</span>
-              </div>
-              <div class="liq-meta">Binance · 14:30:42</div>
-            </div>
-            <div class="liq-amount">$45,000</div>
           </div>
         </div>
 
-        <!-- Top gainers -->
-        <div class="card">
+        <!-- Top Gainers -->
+        <div class="card" id="gainers-card">
           <div class="card-header">
-            <div class="card-title">Top 10 Gainers (24h)</div>
+            <div class="card-title">Топ Гейнери (24г)</div>
+            <div class="spinner"></div>
           </div>
-          <div class="column" style="gap:8px;">
-            <div class="top-item">
-              <div class="top-left">
-                <span class="top-symbol">SOL</span>
-                <span class="top-meta">Vol: $2.3B</span>
+          <div class="card-content">
+            <div class="top-list">
+              <div class="top-item green">
+                <div>SOL<br><span class="top-meta">Vol: $2.3B</span></div>
+                <div>$142.85<br><span class="top-price green">+24.5%</span></div>
               </div>
-              <div>
-                <div class="top-price green">$142.85</div>
-                <div class="top-meta">+24.5%</div>
-              </div>
-            </div>
-            <div class="top-item">
-              <div class="top-left">
-                <span class="top-symbol">AVAX</span>
-                <span class="top-meta">Vol: $890M</span>
-              </div>
-              <div>
-                <div class="top-price green">$38.92</div>
-                <div class="top-meta">+19.8%</div>
-              </div>
-            </div>
-            <div class="top-item">
-              <div class="top-left">
-                <span class="top-symbol">NEAR</span>
-                <span class="top-meta">Vol: $450M</span>
-              </div>
-              <div>
-                <div class="top-price green">$6.45</div>
-                <div class="top-meta">+18.2%</div>
-              </div>
-            </div>
-            <div class="top-item">
-              <div class="top-left">
-                <span class="top-symbol">ALGO</span>
-                <span class="top-meta">Vol: $320M</span>
-              </div>
-              <div>
-                <div class="top-price green">$0.28</div>
-                <div class="top-meta">+16.7%</div>
-              </div>
-            </div>
-            <div class="top-item">
-              <div class="top-left">
-                <span class="top-symbol">FTM</span>
-                <span class="top-meta">Vol: $210M</span>
-              </div>
-              <div>
-                <div class="top-price green">$0.52</div>
-                <div class="top-meta">+15.3%</div>
+              <div class="top-item green">
+                <div>AVAX<br><span class="top-meta">Vol: $890M</span></div>
+                <div>$38.92<br><span class="top-price green">+19.8%</span></div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Top losers -->
-        <div class="card">
+        <!-- Top Losers -->
+        <div class="card" id="losers-card">
           <div class="card-header">
-            <div class="card-title">Top 10 Losers (24h)</div>
+            <div class="card-title">Топ Лузери (24г)</div>
+            <div class="spinner"></div>
           </div>
-          <div class="column" style="gap:8px;">
-            <div class="top-item red">
-              <div class="top-left">
-                <span class="top-symbol">LUNA</span>
-                <span class="top-meta">Vol: $1.2B</span>
+          <div class="card-content">
+            <div class="top-list">
+              <div class="top-item red">
+                <div>LUNA<br><span class="top-meta">Vol: $1.2B</span></div>
+                <div>$0.82<br><span class="top-price red">-18.4%</span></div>
               </div>
-              <div>
-                <div class="top-price red">$0.82</div>
-                <div class="top-meta">‑18.4%</div>
-              </div>
-            </div>
-            <div class="top-item red">
-              <div class="top-left">
-                <span class="top-symbol">APE</span>
-                <span class="top-meta">Vol: $780M</span>
-              </div>
-              <div>
-                <div class="top-price red">$3.45</div>
-                <div class="top-meta">‑15.2%</div>
-              </div>
-            </div>
-            <div class="top-item red">
-              <div class="top-left">
-                <span class="top-symbol">SAND</span>
-                <span class="top-meta">Vol: $560M</span>
-              </div>
-              <div>
-                <div class="top-price red">$0.58</div>
-                <div class="top-meta">‑14.8%</div>
-              </div>
-            </div>
-            <div class="top-item red">
-              <div class="top-left">
-                <span class="top-symbol">MANA</span>
-                <span class="top-meta">Vol: $420M</span>
-              </div>
-              <div>
-                <div class="top-price red">$0.42</div>
-                <div class="top-meta">‑12.9%</div>
-              </div>
-            </div>
-            <div class="top-item red">
-              <div class="top-left">
-                <span class="top-symbol">AXS</span>
-                <span class="top-meta">Vol: $340M</span>
-              </div>
-              <div>
-                <div class="top-price red">$7.23</div>
-                <div class="top-meta">‑11.5%</div>
+              <div class="top-item red">
+                <div>APE<br><span class="top-meta">Vol: $780M</span></div>
+                <div>$3.45<br><span class="top-price red">-15.2%</span></div>
               </div>
             </div>
           </div>
@@ -720,19 +478,38 @@
     <footer class="footer">
       <div class="footer-inner">
         <div>
-          <div class="footer-card-title">About us</div>
-          <p>
-            Crypto World provides real‑time analytics and signals from major
-            crypto exchanges to help traders make informed decisions.
-          </p>
+          <div class="footer-card-title">Про нас</div>
+          <p>Реал-тайм аналітика крипторинку з основних бірж</p>
         </div>
-        <div>
-          <div class="footer-card-title">Contacts</div>
-          <p>Email: info@cryptoworld.com<br />Support: support@cryptoworld.com</p>
-        </div>
-        <div class="made-with">Built with ♥</div>
+        <div class="made-with">Зроблено з ♥ для трейдерів</div>
       </div>
     </footer>
   </div>
+
+  <script>
+    // 🟢 ГОЛОВНИЙ СКРИПТ - КОЛІЩАТКА КРУТЯТЬСЯ АВТОМАТИЧНО!
+    const cards = ['news-card', 'list-card', 'pump-card', 'oi-card', 'liq-card', 'gainers-card', 'losers-card'];
+
+    function toggleAllCards() {
+      cards.forEach(id => {
+        const card = document.getElementById(id);
+        card.classList.toggle('loading');
+      });
+    }
+
+    // Крутить 3 сек, пауза 2 сек, повтор
+    setInterval(toggleAllCards, 5000);
+
+    // Початковий запуск
+    toggleAllCards();
+
+    // Оновлення годинника
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('clock-time').textContent = now.toLocaleTimeString('uk-UA', {hour12: false});
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
 </body>
 </html>
