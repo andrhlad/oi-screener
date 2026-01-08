@@ -20,13 +20,11 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
     body { background: var(--bg); color: var(--text-main); min-height: 100vh; }
 
-    /* Topbar */
     .header { background: #fff; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
     .header-inner { max-width: 1440px; margin: 0 auto; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
     .logo { font-weight: 700; font-size: 20px; color: #4f46e5; }
     .clock-box { background: var(--bg); padding: 8px 16px; border-radius: 99px; font-size: 13px; border: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
 
-    /* Dashboard Grid */
     .dashboard { 
       display: grid; 
       grid-template-columns: 350px 1fr 320px; 
@@ -37,35 +35,21 @@
     }
 
     .column { display: flex; flex-direction: column; gap: 20px; }
-
-    /* Cards */
-    .card { background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 16px; }
+    .card { background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 16px; transition: background 0.3s ease; }
     .card-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; color: #475569; }
     
-    /* Спільні стилі для чатів */
     .chat-container { height: 500px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
     .chat-item { padding: 10px; background: #fff; border-radius: 10px; border: 1px solid #f1f5f9; font-size: 12px; line-height: 1.4; }
     
-    /* Новини */
-    .news-item { padding: 8px 0; border-bottom: 1px solid #f1f5f9; }
-    .news-title { font-size: 13px; font-weight: 600; }
-    .news-meta { font-size: 11px; color: var(--text-muted); }
-
-    /* Делістинг */
-    .row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; border-bottom: 1px solid #f1f5f9; }
-    .tag { background: #eef2ff; color: #4f46e5; font-size: 10px; padding: 2px 8px; border-radius: 99px; font-weight: 600; }
-
-    /* Кольори для сигналів */
     .is-up { border-left: 4px solid var(--green); }
     .is-down { border-left: 4px solid var(--red); }
     
-    /* Гейнери/Лузери */
-    .leaders-content { font-size: 12px; line-height: 1.8; }
-    .leaders-content a { text-decoration: none; color: inherit; display: block; border-bottom: 1px solid #f8fafc; }
-    .leaders-content img { vertical-align: middle; margin-right: 8px; border-radius: 50%; width: 18px; }
+    .leaders-content { font-size: 12px; line-height: 1.8; white-space: pre-wrap; }
+    .leaders-content a { text-decoration: none; color: inherit; display: block; border-bottom: 1px solid #f8fafc; padding: 2px 0; }
+    .leaders-content img { vertical-align: middle; margin-right: 8px; border-radius: 50%; width: 18px; height: 18px; }
 
-    #pump-chat::-webkit-scrollbar, #oi-chat::-webkit-scrollbar { width: 4px; }
-    #pump-chat::-webkit-scrollbar-thumb, #oi-chat::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+    /* Ефект спалаху при оновленні */
+    .flash-update { background: #f0fdf4 !important; }
 
     @media (max-width: 1100px) { .dashboard { grid-template-columns: 1fr; } }
   </style>
@@ -88,12 +72,6 @@
         <div class="card-title">Новини Live</div>
         <div id="news-container"></div>
       </div>
-
-      <div class="card">
-        <div class="card-title">Делістинг / Лістинг</div>
-        <div id="listings-container"></div>
-      </div>
-
       <div class="card">
         <div class="card-title">Памп & Дамп Live</div>
         <div id="pump-chat" class="chat-container"></div>
@@ -108,14 +86,14 @@
     </div>
 
     <div class="column">
-      <div class="card">
+      <div id="gainers-card" class="card">
         <div class="card-title">Топ Гейнери (24г)</div>
-        <div id="gainers-list" class="leaders-content"></div>
+        <div id="gainers-list" class="leaders-content">Завантаження...</div>
       </div>
 
-      <div class="card">
+      <div id="losers-card" class="card">
         <div class="card-title">Топ Лузери (24г)</div>
-        <div id="losers-list" class="leaders-content"></div>
+        <div id="losers-list" class="leaders-content">Завантаження...</div>
       </div>
     </div>
   </main>
@@ -136,41 +114,48 @@
       return div;
     }
 
+    // ОНОВЛЕНА ФУНКЦІЯ: додано timestamp для запобігання кешуванню
     async function refreshLeaders() {
+        const ts = Date.now();
         try {
             const [g, l] = await Promise.all([
-                fetch(`${API_URL}/gainers`),
-                fetch(`${API_URL}/losers`)
+                fetch(`${API_URL}/gainers?t=${ts}`),
+                fetch(`${API_URL}/losers?t=${ts}`)
             ]);
-            document.getElementById('gainers-list').innerHTML = await g.text();
-            document.getElementById('losers-list').innerHTML = await l.text();
+            
+            const gText = await g.text();
+            const lText = await l.text();
+
+            document.getElementById('gainers-list').innerHTML = gText;
+            document.getElementById('losers-list').innerHTML = lText;
+
+            // Візуальний ефект оновлення
+            const cards = [document.getElementById('gainers-card'), document.getElementById('losers-card')];
+            cards.forEach(c => {
+                c.classList.add('flash-update');
+                setTimeout(() => c.classList.remove('flash-update'), 500);
+            });
+            
+            console.log("Топ лідери оновлені автоматично");
         } catch (e) { console.error("Leaders update error", e); }
     }
 
     async function initialLoad() {
         try {
-            const [g, l, h] = await Promise.all([
-                fetch(`${API_URL}/gainers`),
-                fetch(`${API_URL}/losers`),
-                fetch(`${API_URL}/history?hours=12`)
-            ]);
-            
-            document.getElementById('gainers-list').innerHTML = await g.text();
-            document.getElementById('losers-list').innerHTML = await l.text();
-            
+            const h = await fetch(`${API_URL}/history?hours=12`);
             const history = await h.json();
             const pumpChat = document.getElementById('pump-chat');
             const oiChat = document.getElementById('oi-chat');
             
             history.forEach(msg => {
-                if (msg.text.toLowerCase().includes('open interest') || msg.text.includes('OI')) {
-                    oiChat.appendChild(createChatItem(msg.text));
-                } else {
-                    pumpChat.appendChild(createChatItem(msg.text));
-                }
+                const container = (msg.text.toLowerCase().includes('open interest') || msg.text.includes('OI')) ? oiChat : pumpChat;
+                container.appendChild(createChatItem(msg.text));
             });
             pumpChat.scrollTop = pumpChat.scrollHeight;
             oiChat.scrollTop = oiChat.scrollHeight;
+            
+            // Завантажуємо топи вперше
+            refreshLeaders();
         } catch (e) { console.error(e); }
     }
 
@@ -180,16 +165,16 @@
         source.onmessage = (e) => {
             const data = JSON.parse(e.data);
 
-            // Якщо прийшов сигнал для чату
-            if (data.type === 'signal' || data.text) {
+            // 1. Обробка нових сигналів у чат
+            if (data.text) {
                 const container = (data.text.toLowerCase().includes('open interest') || data.text.includes('OI')) 
-                                  ? document.getElementById('oi-chat') 
-                                  : document.getElementById('pump-chat');
+                                ? document.getElementById('oi-chat') 
+                                : document.getElementById('pump-chat');
                 container.appendChild(createChatItem(data.text));
                 container.scrollTop = container.scrollHeight;
             }
 
-            // ЯКЩО ПРИЙШЛА КОМАНДА ОНОВИТИ ТОПИ (Моментально)
+            // 2. МОМЕНТАЛЬНЕ ОНОВЛЕННЯ ЦІН ПРИ КОМАНДІ ВІД СКАНЕРА
             if (data.type === 'update_leaders') {
                 refreshLeaders();
             }
