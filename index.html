@@ -155,12 +155,13 @@
 
       source.onmessage = function(event) {
         const data = JSON.parse(event.data);
-        if (data.type === 'update_leaders') {
-          refreshLeaders();
-          return;
-        }
+        // Якщо прийшов звичайний сигнал від сканера (де є тільки .text)
         if (data.text) {
           processIncomingMessage(data.text, false);
+        }
+        // Обробка спеціальних типів повідомлень
+        if (data.type === 'update_leaders') {
+          refreshLeaders();
         }
       };
 
@@ -178,7 +179,6 @@
       refreshLeaders();
       connectSSE();
       
-      // Інтервал оновлення змінено на 3 секунди
       setInterval(refreshLeaders, 3000);
 
       fetch(`${API_URL}/history?hours=12`)
