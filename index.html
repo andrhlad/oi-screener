@@ -136,6 +136,17 @@
       return div;
     }
 
+    async function refreshLeaders() {
+        try {
+            const [g, l] = await Promise.all([
+                fetch(`${API_URL}/gainers`),
+                fetch(`${API_URL}/losers`)
+            ]);
+            document.getElementById('gainers-list').innerHTML = await g.text();
+            document.getElementById('losers-list').innerHTML = await l.text();
+        } catch (e) { console.error("Leaders update error", e); }
+    }
+
     async function initialLoad() {
         try {
             const [g, l, h] = await Promise.all([
@@ -152,7 +163,6 @@
             const oiChat = document.getElementById('oi-chat');
             
             history.forEach(msg => {
-                // Якщо в повідомленні є згадка Open Interest, кидаємо в центр
                 if (msg.text.toLowerCase().includes('open interest') || msg.text.includes('OI')) {
                     oiChat.appendChild(createChatItem(msg.text));
                 } else {
@@ -166,24 +176,34 @@
 
     function connectSSE() {
         const source = new EventSource(`${API_URL}/signals`);
+        
         source.onmessage = (e) => {
             const data = JSON.parse(e.data);
-            const container = (data.text.toLowerCase().includes('open interest') || data.text.includes('OI')) 
-                              ? document.getElementById('oi-chat') 
-                              : document.getElementById('pump-chat');
-            container.appendChild(createChatItem(data.text));
-            container.scrollTop = container.scrollHeight;
+
+            // Якщо прийшов сигнал для чату
+            if (data.type === 'signal' || data.text) {
+                const container = (data.text.toLowerCase().includes('open interest') || data.text.includes('OI')) 
+                                  ? document.getElementById('oi-chat') 
+                                  : document.getElementById('pump-chat');
+                container.appendChild(createChatItem(data.text));
+                container.scrollTop = container.scrollHeight;
+            }
+
+            // ЯКЩО ПРИЙШЛА КОМАНДА ОНОВИТИ ТОПИ (Моментально)
+            if (data.type === 'update_leaders') {
+                refreshLeaders();
+            }
+        };
+
+        source.onerror = () => {
+            source.close();
+            setTimeout(connectSSE, 3000);
         };
     }
 
     window.onload = () => {
         initialLoad();
         connectSSE();
-        setInterval(async () => {
-            const [g, l] = await Promise.all([fetch(`${API_URL}/gainers`), fetch(`${API_URL}/losers`)]);
-            document.getElementById('gainers-list').innerHTML = await g.text();
-            document.getElementById('losers-list').innerHTML = await l.text();
-        }, 60000);
     };
   </script>
 </body>
