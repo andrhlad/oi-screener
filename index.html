@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Crypto World Dashboard</title>
   <style>
-    /* ... (Ваші існуючі стилі без змін) ... */
     :root {
       --bg: #f7f7f9;
       --card-bg: #ffffff;
@@ -45,11 +44,14 @@
 
     /* Чати */
     .chat-container { height: 500px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-    .chat-item { padding: 10px; background: #fff; border-radius: 10px; border: 1px solid #f1f5f9; font-size: 12px; line-height: 1.4; }
+    .chat-item { padding: 10px; background: #fff; border-radius: 10px; border: 1px solid #f1f5f9; font-size: 12px; line-height: 1.4; border-left: 4px solid #cbd5e1; }
+    .is-up { border-left-color: var(--green); }
+    .is-down { border-left-color: var(--red); }
     
     /* Лідери */
     .leaders-content { font-size: 12px; line-height: 1.8; }
     .leaders-content a { text-decoration: none; color: inherit; display: block; }
+    .row-item { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; border-bottom: 1px solid #f8fafc; padding-bottom: 4px; }
     
     @media (max-width: 1100px) { .dashboard { grid-template-columns: 1fr; } }
   </style>
@@ -75,8 +77,7 @@
 
       <div class="card">
         <div class="card-title">Делістинг / Лістинг</div>
-        <div id="listings-container">
-          </div>
+        <div id="listings-container"></div>
       </div>
 
       <div class="card">
@@ -106,15 +107,93 @@
   </main>
 
   <script>
-    /* Тут ваш JavaScript для годинника та SSE */
     const API_URL = "http://127.0.0.1:5000";
 
+    // 1. Годинник
     function updateClock() {
       document.getElementById('clock-time').textContent = new Date().toLocaleTimeString('uk-UA');
     }
     setInterval(updateClock, 1000); updateClock();
 
-    // Решта функцій (connectSSE, initialLoad і т.д.) залишаються без змін
+    // 2. Створення елемента чату
+    function createChatItem(text) {
+      const div = document.createElement('div');
+      const isDown = text.includes('🔴') || text.includes('📉') || text.includes('Low') || text.includes('Dump');
+      div.className = `chat-item ${isDown ? 'is-down' : 'is-up'}`;
+      div.innerHTML = text;
+      return div;
+    }
+
+    // 3. Оновлення лідерів (Гейнери / Лузери)
+    async function refreshLeaders() {
+      const ts = Date.now();
+      try {
+        const [g, l] = await Promise.all([
+          fetch(`${API_URL}/gainers?t=${ts}`),
+          fetch(`${API_URL}/losers?t=${ts}`)
+        ]);
+        document.getElementById('gainers-list').innerHTML = await g.text();
+        document.getElementById('losers-list').innerHTML = await l.text();
+      } catch (e) { console.error("Update error:", e); }
+    }
+
+    // 4. Підключення до SSE
+    function connectSSE() {
+      const source = new EventSource(`${API_URL}/signals`);
+
+      source.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+
+        // Команда на оновлення ТОПів
+        if (data.type === 'update_leaders') {
+          refreshLeaders();
+          return;
+        }
+
+        // Нове повідомлення
+        if (data.text) {
+          const text = data.text;
+          const isOI = text.toLowerCase().includes('open interest') || text.includes('OI');
+          const isListing = text.toLowerCase().includes('listing') || text.toLowerCase().includes('delisting');
+
+          if (isListing) {
+            const container = document.getElementById('listings-container');
+            const row = document.createElement('div');
+            row.className = 'row';
+            row.innerHTML = `<span>${text}</span><span class="tag">LIVE</span>`;
+            container.prepend(row);
+          } else {
+            const container = isOI ? document.getElementById('oi-chat') : document.getElementById('pump-chat');
+            container.appendChild(createChatItem(text));
+            container.scrollTop = container.scrollHeight;
+          }
+        }
+      };
+
+      source.onerror = function() {
+        source.close();
+        setTimeout(connectSSE, 3000);
+      };
+    }
+
+    // 5. Початкове завантаження
+    window.onload = function() {
+      refreshLeaders();
+      connectSSE();
+      
+      // Спроба завантажити історію, якщо є такий маршрут
+      fetch(`${API_URL}/history?hours=12`).then(res => res.json()).then(history => {
+          const pumpChat = document.getElementById('pump-chat');
+          const oiChat = document.getElementById('oi-chat');
+          history.forEach(msg => {
+              const isOI = msg.text.toLowerCase().includes('open interest') || msg.text.includes('OI');
+              const container = isOI ? oiChat : pumpChat;
+              container.appendChild(createChatItem(msg.text));
+          });
+          pumpChat.scrollTop = pumpChat.scrollHeight;
+          oiChat.scrollTop = oiChat.scrollHeight;
+      }).catch(e => console.log("History not available yet"));
+    };
   </script>
 </body>
 </html>
