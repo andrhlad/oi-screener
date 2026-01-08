@@ -35,22 +35,16 @@
     }
 
     .column { display: flex; flex-direction: column; gap: 20px; }
-    .card { background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 16px; }
+    .card { background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 16px; display: flex; flex-direction: column; }
     .card-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; color: #475569; }
     
-    .row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; border-bottom: 1px solid #f1f5f9; }
-    .tag { background: #eef2ff; color: #4f46e5; font-size: 10px; padding: 2px 8px; border-radius: 99px; font-weight: 600; }
-
-    .chat-container { height: 500px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; scroll-behavior: smooth; }
+    .chat-container { height: 450px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; scroll-behavior: smooth; }
     .chat-item { padding: 10px; background: #fff; border-radius: 10px; border: 1px solid #f1f5f9; font-size: 12px; line-height: 1.4; border-left: 4px solid #cbd5e1; }
-    .is-up { border-left-color: var(--green); }
-    .is-down { border-left-color: var(--red); }
+    .is-up { border-left-color: var(--green); background: #f0fdf4; }
+    .is-down { border-left-color: var(--red); background: #fef2f2; }
     
     .leaders-content { font-size: 12px; line-height: 1.8; }
-    .row-item { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; border-bottom: 1px solid #f8fafc; padding-bottom: 4px; }
-    
-    .leaders-content img { vertical-align: middle; margin-right: 8px; border-radius: 50%; }
-    .leaders-content span { font-family: 'Roboto Mono', monospace; }
+    .tag { background: #eef2ff; color: #4f46e5; font-size: 10px; padding: 2px 8px; border-radius: 99px; font-weight: 600; }
 
     @media (max-width: 1100px) { .dashboard { grid-template-columns: 1fr; } }
   </style>
@@ -62,7 +56,6 @@
       <div class="logo">CRYPTO WORLD</div>
       <div id="clock-box" class="clock-box">
         <span id="clock-time" style="font-weight:600;">00:00:00</span>
-        <span style="color: var(--text-muted);">UTC+2</span>
       </div>
     </div>
   </header>
@@ -71,14 +64,12 @@
     <div class="column">
       <div class="card">
         <div class="card-title">Новини Live</div>
-        <div id="news-container"></div>
+        <div id="news-container" class="chat-container"></div>
       </div>
-
       <div class="card">
         <div class="card-title">Делістинг / Лістинг</div>
-        <div id="listings-container"></div>
+        <div id="listings-container" class="chat-container"></div>
       </div>
-
       <div class="card">
         <div class="card-title">Памп & Дамп Live</div>
         <div id="pump-chat" class="chat-container"></div>
@@ -86,9 +77,9 @@
     </div>
 
     <div class="column">
-      <div class="card">
+      <div class="card" style="height: 100%;">
         <div class="card-title">Open Interest Chat</div>
-        <div id="oi-chat" class="chat-container"></div>
+        <div id="oi-chat" class="chat-container" style="height: 100%;"></div>
       </div>
     </div>
 
@@ -97,7 +88,6 @@
         <div class="card-title">Топ Гейнери (24г)</div>
         <div id="gainers-list" class="leaders-content"></div>
       </div>
-
       <div class="card">
         <div class="card-title">Топ Лузери (24г)</div>
         <div id="losers-list" class="leaders-content"></div>
@@ -111,63 +101,49 @@
     function updateClock() {
       document.getElementById('clock-time').textContent = new Date().toLocaleTimeString('uk-UA');
     }
-    setInterval(updateClock, 1000); updateClock();
+    setInterval(updateClock, 1000);
 
     function createChatItem(text) {
       const div = document.createElement('div');
-      const isDown = text.includes('🔴') || text.includes('📉') || text.includes('Low') || text.includes('Dump');
+      const isDown = text.includes('🔴') || text.includes('-') || text.includes('📉');
       div.className = `chat-item ${isDown ? 'is-down' : 'is-up'}`;
       div.innerHTML = text;
       return div;
     }
 
     async function refreshLeaders() {
-      const ts = Date.now();
       try {
         const [g, l] = await Promise.all([
-          fetch(`${API_URL}/gainers?t=${ts}`),
-          fetch(`${API_URL}/losers?t=${ts}`)
+          fetch(`${API_URL}/gainers?t=${Date.now()}`),
+          fetch(`${API_URL}/losers?t=${Date.now()}`)
         ]);
         document.getElementById('gainers-list').innerHTML = await g.text();
         document.getElementById('losers-list').innerHTML = await l.text();
-      } catch (e) { console.error("Update error:", e); }
+      } catch (e) { console.error("Leaders update error"); }
     }
 
+    // ТЕПЕР ВСІ СИГНАЛИ ЙДУТЬ В ПАМП-ЧАТ
     function processIncomingMessage(text, isHistory = false) {
-      const isOI = text.toLowerCase().includes('open interest') || text.includes('OI');
-      const isListing = text.toLowerCase().includes('listing') || text.toLowerCase().includes('delisting');
-
-      if (isListing) {
-        const container = document.getElementById('listings-container');
-        const row = document.createElement('div');
-        row.className = 'row';
-        row.innerHTML = `<span>${text}</span><span class="tag">${isHistory ? 'PAST' : 'LIVE'}</span>`;
-        if (isHistory) container.appendChild(row); else container.prepend(row);
+      const container = document.getElementById('pump-chat');
+      const item = createChatItem(text);
+      
+      if (isHistory) {
+        container.appendChild(item);
       } else {
-        const container = isOI ? document.getElementById('oi-chat') : document.getElementById('pump-chat');
-        container.appendChild(createChatItem(text));
-        container.scrollTop = container.scrollHeight;
+        container.prepend(item);
       }
+      
+      if (isHistory) container.scrollTop = container.scrollHeight;
     }
 
     function connectSSE() {
-      // ВИПРАВЛЕНО: Було EventEventSource, стало EventSource
       const source = new EventSource(`${API_URL}/signals`);
-
       source.onmessage = function(event) {
         const data = JSON.parse(event.data);
-        if (data.text) {
-          processIncomingMessage(data.text, false);
-        }
-        if (data.type === 'update_leaders') {
-          refreshLeaders();
-        }
+        if (data.text) processIncomingMessage(data.text, false);
+        if (data.type === 'update_leaders') refreshLeaders();
       };
-
-      source.onerror = function() {
-        source.close();
-        setTimeout(connectSSE, 3000);
-      };
+      source.onerror = () => { source.close(); setTimeout(connectSSE, 3000); };
     }
 
     window.onload = function() {
@@ -175,18 +151,12 @@
       connectSSE();
       setInterval(refreshLeaders, 3000);
 
-      // Завантаження історії
       fetch(`${API_URL}/history`)
         .then(res => res.json())
         .then(history => {
-          console.log("History received:", history); // Для перевірки в консолі F12
-          if (history && history.length > 0) {
-            history.forEach(msg => {
-              processIncomingMessage(msg.text, true);
-            });
-          }
+          if (history) history.forEach(msg => processIncomingMessage(msg.text, true));
         })
-        .catch(e => console.error("History loading error:", e));
+        .catch(e => console.error("History error:", e));
     };
   </script>
 </body>
