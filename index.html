@@ -151,7 +151,8 @@
     }
 
     function connectSSE() {
-      const source = new EventEventSource(`${API_URL}/signals`);
+      // ВИПРАВЛЕНО: Було EventEventSource, стало EventSource
+      const source = new EventSource(`${API_URL}/signals`);
 
       source.onmessage = function(event) {
         const data = JSON.parse(event.data);
@@ -170,31 +171,22 @@
     }
 
     window.onload = function() {
-      // Очищуємо контейнери перед завантаженням
-      document.getElementById('pump-chat').innerHTML = '';
-      document.getElementById('oi-chat').innerHTML = '';
-      document.getElementById('listings-container').innerHTML = '';
-
-      // Запускаємо оновлення лідерів та SSE
       refreshLeaders();
       connectSSE();
-      
-      // Оновлення лідерів кожні 3 секунди
       setInterval(refreshLeaders, 3000);
 
-      // ЗАВАНТАЖЕННЯ ІСТОРІЇ (Тепер запитуємо просто /history)
+      // Завантаження історії
       fetch(`${API_URL}/history`)
         .then(res => res.json())
         .then(history => {
+          console.log("History received:", history); // Для перевірки в консолі F12
           if (history && history.length > 0) {
-            console.log(`Отримано ${history.length} записів історії`);
             history.forEach(msg => {
-              // msg.text — це те, що приходить з бази SQLite
               processIncomingMessage(msg.text, true);
             });
           }
         })
-        .catch(e => console.log("Помилка завантаження історії:", e));
+        .catch(e => console.error("History loading error:", e));
     };
   </script>
 </body>
