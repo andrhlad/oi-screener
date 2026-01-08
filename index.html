@@ -44,11 +44,10 @@
     .is-up { border-left: 4px solid var(--green); }
     .is-down { border-left: 4px solid var(--red); }
     
-    .leaders-content { font-size: 12px; line-height: 1.8; white-space: pre-wrap; }
+    .leaders-content { font-size: 12px; line-height: 1.8; white-space: pre-wrap; min-height: 100px; }
     .leaders-content a { text-decoration: none; color: inherit; display: block; border-bottom: 1px solid #f8fafc; padding: 2px 0; }
     .leaders-content img { vertical-align: middle; margin-right: 8px; border-radius: 50%; width: 18px; height: 18px; }
 
-    /* Ефект спалаху при оновленні */
     .flash-update { background: #f0fdf4 !important; }
 
     @media (max-width: 1100px) { .dashboard { grid-template-columns: 1fr; } }
@@ -88,12 +87,12 @@
     <div class="column">
       <div id="gainers-card" class="card">
         <div class="card-title">Топ Гейнери (24г)</div>
-        <div id="gainers-list" class="leaders-content">Завантаження...</div>
+        <div id="gainers-list" class="leaders-content"></div>
       </div>
 
       <div id="losers-card" class="card">
         <div class="card-title">Топ Лузери (24г)</div>
-        <div id="losers-list" class="leaders-content">Завантаження...</div>
+        <div id="losers-list" class="leaders-content"></div>
       </div>
     </div>
   </main>
@@ -114,7 +113,6 @@
       return div;
     }
 
-    // ОНОВЛЕНА ФУНКЦІЯ: додано timestamp для запобігання кешуванню
     async function refreshLeaders() {
         const ts = Date.now();
         try {
@@ -126,26 +124,36 @@
             const gText = await g.text();
             const lText = await l.text();
 
-            document.getElementById('gainers-list').innerHTML = gText;
-            document.getElementById('losers-list').innerHTML = lText;
+            if (gText) document.getElementById('gainers-list').innerHTML = gText;
+            if (lText) document.getElementById('losers-list').innerHTML = lText;
 
-            // Візуальний ефект оновлення
             const cards = [document.getElementById('gainers-card'), document.getElementById('losers-card')];
             cards.forEach(c => {
                 c.classList.add('flash-update');
                 setTimeout(() => c.classList.remove('flash-update'), 500);
             });
-            
-            console.log("Топ лідери оновлені автоматично");
         } catch (e) { console.error("Leaders update error", e); }
     }
 
     async function initialLoad() {
+        const ts = Date.now();
         try {
-            const h = await fetch(`${API_URL}/history?hours=12`);
+            const [g, l, h] = await Promise.all([
+                fetch(`${API_URL}/gainers?t=${ts}`),
+                fetch(`${API_URL}/losers?t=${ts}`),
+                fetch(`${API_URL}/history?hours=12&t=${ts}`)
+            ]);
+            
+            // Вставляємо топи моментально
+            document.getElementById('gainers-list').innerHTML = await g.text();
+            document.getElementById('losers-list').innerHTML = await l.text();
+            
             const history = await h.json();
             const pumpChat = document.getElementById('pump-chat');
             const oiChat = document.getElementById('oi-chat');
+            
+            pumpChat.innerHTML = '';
+            oiChat.innerHTML = '';
             
             history.forEach(msg => {
                 const container = (msg.text.toLowerCase().includes('open interest') || msg.text.includes('OI')) ? oiChat : pumpChat;
@@ -153,19 +161,16 @@
             });
             pumpChat.scrollTop = pumpChat.scrollHeight;
             oiChat.scrollTop = oiChat.scrollHeight;
-            
-            // Завантажуємо топи вперше
-            refreshLeaders();
-        } catch (e) { console.error(e); }
+        } catch (e) { 
+            console.error(e);
+            setTimeout(initialLoad, 1000);
+        }
     }
 
     function connectSSE() {
         const source = new EventSource(`${API_URL}/signals`);
-        
         source.onmessage = (e) => {
             const data = JSON.parse(e.data);
-
-            // 1. Обробка нових сигналів у чат
             if (data.text) {
                 const container = (data.text.toLowerCase().includes('open interest') || data.text.includes('OI')) 
                                 ? document.getElementById('oi-chat') 
@@ -173,13 +178,10 @@
                 container.appendChild(createChatItem(data.text));
                 container.scrollTop = container.scrollHeight;
             }
-
-            // 2. МОМЕНТАЛЬНЕ ОНОВЛЕННЯ ЦІН ПРИ КОМАНДІ ВІД СКАНЕРА
             if (data.type === 'update_leaders') {
                 refreshLeaders();
             }
         };
-
         source.onerror = () => {
             source.close();
             setTimeout(connectSSE, 3000);
