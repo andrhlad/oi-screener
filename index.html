@@ -26,7 +26,7 @@
     .logo { font-weight: 700; font-size: 20px; color: #4f46e5; }
     .clock-box { background: var(--bg); padding: 8px 16px; border-radius: 99px; font-size: 13px; border: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
 
-    /* Сітка */
+    /* Dashboard Grid */
     .dashboard { 
       display: grid; 
       grid-template-columns: 350px 1fr 320px; 
@@ -38,34 +38,34 @@
 
     .column { display: flex; flex-direction: column; gap: 20px; }
 
-    /* Картки */
+    /* Cards */
     .card { background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 16px; }
     .card-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; color: #475569; }
     
+    /* Спільні стилі для чатів */
+    .chat-container { height: 500px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+    .chat-item { padding: 10px; background: #fff; border-radius: 10px; border: 1px solid #f1f5f9; font-size: 12px; line-height: 1.4; }
+    
     /* Новини */
-    .news-item { padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
-    .news-item:last-child { border-bottom: none; }
-    .news-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
-    .news-time { font-size: 11px; color: var(--text-muted); }
+    .news-item { padding: 8px 0; border-bottom: 1px solid #f1f5f9; }
+    .news-title { font-size: 13px; font-weight: 600; }
+    .news-meta { font-size: 11px; color: var(--text-muted); }
 
     /* Делістинг */
     .row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; border-bottom: 1px solid #f1f5f9; }
     .tag { background: #eef2ff; color: #4f46e5; font-size: 10px; padding: 2px 8px; border-radius: 99px; font-weight: 600; }
 
-    /* Памп і Дамп */
-    #pump-chat { height: 550px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-    .pump-item { padding: 12px; background: #fff; border-radius: 10px; border: 1px solid #f1f5f9; font-size: 12px; line-height: 1.5; animation: fadeIn 0.3s ease; }
+    /* Кольори для сигналів */
     .is-up { border-left: 4px solid var(--green); }
     .is-down { border-left: 4px solid var(--red); }
     
-    /* Лідери */
-    .leaders-content { font-size: 12px; line-height: 1.8; min-height: 20px; }
-    .leaders-content a { text-decoration: none; color: inherit; display: block; padding: 4px 0; border-bottom: 1px solid #f8fafc; }
+    /* Гейнери/Лузери */
+    .leaders-content { font-size: 12px; line-height: 1.8; }
+    .leaders-content a { text-decoration: none; color: inherit; display: block; border-bottom: 1px solid #f8fafc; }
     .leaders-content img { vertical-align: middle; margin-right: 8px; border-radius: 50%; width: 18px; }
 
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    #pump-chat::-webkit-scrollbar { width: 4px; }
-    #pump-chat::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+    #pump-chat::-webkit-scrollbar, #oi-chat::-webkit-scrollbar { width: 4px; }
+    #pump-chat::-webkit-scrollbar-thumb, #oi-chat::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
 
     @media (max-width: 1100px) { .dashboard { grid-template-columns: 1fr; } }
   </style>
@@ -86,29 +86,24 @@
     <div class="column">
       <div class="card">
         <div class="card-title">Новини Live</div>
-        <div id="news-container">
-            </div>
+        <div id="news-container"></div>
       </div>
 
       <div class="card">
         <div class="card-title">Делістинг / Лістинг</div>
-        <div id="listings-container">
-            </div>
+        <div id="listings-container"></div>
       </div>
 
       <div class="card">
         <div class="card-title">Памп & Дамп Live</div>
-        <div id="pump-chat"></div>
+        <div id="pump-chat" class="chat-container"></div>
       </div>
     </div>
 
     <div class="column">
       <div class="card">
-        <div class="card-title">Аналітика ринку</div>
-        <div id="oi-container">
-            <div class="row"><span>Open Interest BTC</span><span style="color:var(--green); font-weight:700;">+4.2%</span></div>
-            <div class="row"><span>Open Interest ETH</span><span style="color:var(--green); font-weight:700;">+3.1%</span></div>
-        </div>
+        <div class="card-title">Open Interest Chat</div>
+        <div id="oi-chat" class="chat-container"></div>
       </div>
     </div>
 
@@ -133,15 +128,12 @@
     }
     setInterval(updateClock, 1000); updateClock();
 
-    const chat = document.getElementById('pump-chat');
-    
-    function appendSignal(data) {
+    function createChatItem(text) {
       const div = document.createElement('div');
-      const isDown = data.text.includes('🔴') || data.text.includes('📉');
-      div.className = `pump-item ${isDown ? 'is-down' : 'is-up'}`;
-      div.innerHTML = data.text;
-      chat.appendChild(div);
-      chat.scrollTop = chat.scrollHeight;
+      const isDown = text.includes('🔴') || text.includes('📉') || text.includes('-');
+      div.className = `chat-item ${isDown ? 'is-down' : 'is-up'}`;
+      div.innerHTML = text;
+      return div;
     }
 
     async function initialLoad() {
@@ -152,26 +144,41 @@
                 fetch(`${API_URL}/history?hours=12`)
             ]);
             
-            // Заповнюємо без зайвих слів
             document.getElementById('gainers-list').innerHTML = await g.text();
             document.getElementById('losers-list').innerHTML = await l.text();
             
             const history = await h.json();
-            chat.innerHTML = '';
-            history.forEach(appendSignal);
-        } catch (e) { console.error("Data load failed"); }
+            const pumpChat = document.getElementById('pump-chat');
+            const oiChat = document.getElementById('oi-chat');
+            
+            history.forEach(msg => {
+                // Якщо в повідомленні є згадка Open Interest, кидаємо в центр
+                if (msg.text.toLowerCase().includes('open interest') || msg.text.includes('OI')) {
+                    oiChat.appendChild(createChatItem(msg.text));
+                } else {
+                    pumpChat.appendChild(createChatItem(msg.text));
+                }
+            });
+            pumpChat.scrollTop = pumpChat.scrollHeight;
+            oiChat.scrollTop = oiChat.scrollHeight;
+        } catch (e) { console.error(e); }
     }
 
     function connectSSE() {
         const source = new EventSource(`${API_URL}/signals`);
-        source.onmessage = (e) => appendSignal(JSON.parse(e.data));
-        source.onerror = () => { source.close(); setTimeout(connectSSE, 3000); };
+        source.onmessage = (e) => {
+            const data = JSON.parse(e.data);
+            const container = (data.text.toLowerCase().includes('open interest') || data.text.includes('OI')) 
+                              ? document.getElementById('oi-chat') 
+                              : document.getElementById('pump-chat');
+            container.appendChild(createChatItem(data.text));
+            container.scrollTop = container.scrollHeight;
+        };
     }
 
     window.onload = () => {
         initialLoad();
         connectSSE();
-        // Фонове оновлення топів раз на хвилину
         setInterval(async () => {
             const [g, l] = await Promise.all([fetch(`${API_URL}/gainers`), fetch(`${API_URL}/losers`)]);
             document.getElementById('gainers-list').innerHTML = await g.text();
