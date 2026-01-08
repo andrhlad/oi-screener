@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crypto World - Dashboard</title>
+  <title>Crypto World Dashboard</title>
   <style>
     :root {
       --bg: #f7f7f9;
@@ -26,13 +26,13 @@
     .logo { font-weight: 700; font-size: 20px; color: #4f46e5; }
     .clock-box { background: var(--bg); padding: 8px 16px; border-radius: 99px; font-size: 13px; border: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
 
-    /* Основна сітка */
+    /* Сітка */
     .dashboard { 
       display: grid; 
-      grid-template-columns: 350px 1fr 320px; /* Три колонки */
+      grid-template-columns: 350px 1fr 320px; 
       max-width: 1440px; 
       margin: 20px auto; 
-      padding: 0 20px; 
+      padding: 0 20px 40px; 
       gap: 20px; 
     }
 
@@ -42,30 +42,32 @@
     .card { background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 16px; }
     .card-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; color: #475569; }
     
-    /* Стилі Новин */
+    /* Новини */
     .news-item { padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
     .news-item:last-child { border-bottom: none; }
     .news-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
     .news-time { font-size: 11px; color: var(--text-muted); }
 
-    /* Стилі Делістингу */
+    /* Делістинг */
     .row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; border-bottom: 1px solid #f1f5f9; }
     .tag { background: #eef2ff; color: #4f46e5; font-size: 10px; padding: 2px 8px; border-radius: 99px; font-weight: 600; }
 
-    /* Памп і Дамп чат */
-    #pump-chat { height: 500px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-    .pump-item { padding: 12px; background: #fff; border-radius: 10px; border: 1px solid #f1f5f9; font-size: 12px; line-height: 1.5; }
+    /* Памп і Дамп */
+    #pump-chat { height: 550px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+    .pump-item { padding: 12px; background: #fff; border-radius: 10px; border: 1px solid #f1f5f9; font-size: 12px; line-height: 1.5; animation: fadeIn 0.3s ease; }
     .is-up { border-left: 4px solid var(--green); }
     .is-down { border-left: 4px solid var(--red); }
     
-    /* Лідери ринку */
-    .leaders-content { font-size: 12px; line-height: 1.8; }
+    /* Лідери */
+    .leaders-content { font-size: 12px; line-height: 1.8; min-height: 20px; }
     .leaders-content a { text-decoration: none; color: inherit; display: block; padding: 4px 0; border-bottom: 1px solid #f8fafc; }
     .leaders-content img { vertical-align: middle; margin-right: 8px; border-radius: 50%; width: 18px; }
 
-    @media (max-width: 1100px) { 
-        .dashboard { grid-template-columns: 1fr; } 
-    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    #pump-chat::-webkit-scrollbar { width: 4px; }
+    #pump-chat::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+
+    @media (max-width: 1100px) { .dashboard { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -82,57 +84,43 @@
 
   <main class="dashboard">
     <div class="column">
-      
       <div class="card">
         <div class="card-title">Новини Live</div>
         <div id="news-container">
-            <div class="news-item">
-                <div class="news-title">Ринок очікує дані по інфляції США</div>
-                <div class="news-time">щойно</div>
             </div>
-            <div class="news-item">
-                <div class="news-title">BTC утримує рівень підтримки</div>
-                <div class="news-time">12 хв тому</div>
-            </div>
-        </div>
       </div>
 
       <div class="card">
         <div class="card-title">Делістинг / Лістинг</div>
-        <div class="row"><span>STRK</span><span class="tag">Binance</span></div>
-        <div class="row"><span>WIF</span><span class="tag">Bybit</span></div>
-        <div class="row"><span>ZRO</span><span class="tag">OKX</span></div>
+        <div id="listings-container">
+            </div>
       </div>
 
       <div class="card">
         <div class="card-title">Памп & Дамп Live</div>
-        <div id="pump-chat">
-            <div style="text-align:center; padding:20px; color:var(--text-muted); font-size:12px;">Очікування сигналів...</div>
-        </div>
+        <div id="pump-chat"></div>
       </div>
-
     </div>
 
     <div class="column">
       <div class="card">
         <div class="card-title">Аналітика ринку</div>
-        <div class="row"><span>Open Interest BTC</span><span style="color:var(--green); font-weight:700;">+4.2%</span></div>
-        <div class="row"><span>Open Interest ETH</span><span style="color:var(--green); font-weight:700;">+3.1%</span></div>
-        <p style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">
-            Тут можна розмістити графік або додаткові аналітичні дані.
-        </p>
+        <div id="oi-container">
+            <div class="row"><span>Open Interest BTC</span><span style="color:var(--green); font-weight:700;">+4.2%</span></div>
+            <div class="row"><span>Open Interest ETH</span><span style="color:var(--green); font-weight:700;">+3.1%</span></div>
+        </div>
       </div>
     </div>
 
     <div class="column">
       <div class="card">
         <div class="card-title">Топ Гейнери (24г)</div>
-        <div id="gainers-list" class="leaders-content">Завантаження...</div>
+        <div id="gainers-list" class="leaders-content"></div>
       </div>
 
       <div class="card">
         <div class="card-title">Топ Лузери (24г)</div>
-        <div id="losers-list" class="leaders-content">Завантаження...</div>
+        <div id="losers-list" class="leaders-content"></div>
       </div>
     </div>
   </main>
@@ -140,16 +128,14 @@
   <script>
     const API_URL = "http://127.0.0.1:5000";
 
-    // Годинник
     function updateClock() {
       document.getElementById('clock-time').textContent = new Date().toLocaleTimeString('uk-UA');
     }
     setInterval(updateClock, 1000); updateClock();
 
-    // Логіка чату (Памп & Дамп)
     const chat = document.getElementById('pump-chat');
+    
     function appendSignal(data) {
-      if (chat.innerText.includes("Очікування")) chat.innerHTML = '';
       const div = document.createElement('div');
       const isDown = data.text.includes('🔴') || data.text.includes('📉');
       div.className = `pump-item ${isDown ? 'is-down' : 'is-up'}`;
@@ -158,23 +144,24 @@
       chat.scrollTop = chat.scrollHeight;
     }
 
-    // Завантаження даних
-    async function refreshData() {
+    async function initialLoad() {
         try {
             const [g, l, h] = await Promise.all([
                 fetch(`${API_URL}/gainers`),
                 fetch(`${API_URL}/losers`),
                 fetch(`${API_URL}/history?hours=12`)
             ]);
+            
+            // Заповнюємо без зайвих слів
             document.getElementById('gainers-list').innerHTML = await g.text();
             document.getElementById('losers-list').innerHTML = await l.text();
+            
             const history = await h.json();
             chat.innerHTML = '';
             history.forEach(appendSignal);
-        } catch (e) { console.error("Update error", e); }
+        } catch (e) { console.error("Data load failed"); }
     }
 
-    // Live підключення
     function connectSSE() {
         const source = new EventSource(`${API_URL}/signals`);
         source.onmessage = (e) => appendSignal(JSON.parse(e.data));
@@ -182,9 +169,14 @@
     }
 
     window.onload = () => {
-        refreshData();
+        initialLoad();
         connectSSE();
-        setInterval(refreshData, 60000);
+        // Фонове оновлення топів раз на хвилину
+        setInterval(async () => {
+            const [g, l] = await Promise.all([fetch(`${API_URL}/gainers`), fetch(`${API_URL}/losers`)]);
+            document.getElementById('gainers-list').innerHTML = await g.text();
+            document.getElementById('losers-list').innerHTML = await l.text();
+        }, 60000);
     };
   </script>
 </body>
