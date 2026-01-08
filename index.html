@@ -23,55 +23,48 @@
     /* Topbar */
     .topbar { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
     .topbar-inner { max-width: 1280px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
-    .logo { font-weight: 700; font-size: 20px; }
+    .logo { font-weight: 700; font-size: 20px; color: #4f46e5; }
     .clock { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px; border: 1px solid var(--border); background: #fff; font-size: 13px; }
-    .clock-time { font-weight: 600; }
 
-    /* Layout */
-    .content { max-width: 1280px; margin: 18px auto; padding: 0 24px 40px; display: grid; grid-template-columns: 280px 1fr 300px; gap: 16px; flex: 1; }
+    /* Layout - повернуто стару сітку */
+    .content { max-width: 1280px; margin: 18px auto; padding: 0 24px 40px; display: grid; grid-template-columns: 320px 300px 1fr; gap: 16px; flex: 1; }
     @media (max-width: 1100px) { .content { grid-template-columns: 1fr; } }
     .column { display: flex; flex-direction: column; gap: 16px; }
 
     /* Cards */
-    .card { background: var(--card-bg); border-radius: var(--radius-card); border: 1px solid var(--border); box-shadow: var(--shadow-soft); padding: 16px; overflow: hidden; }
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #f8f8f8; padding-bottom: 8px; }
-    .card-title { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-    .card-sub { font-size: 11px; color: var(--text-muted); font-weight: normal; text-transform: none; }
+    .card { background: var(--card-bg); border-radius: var(--radius-card); border: 1px solid var(--border); box-shadow: var(--shadow-soft); padding: 14px 16px; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .card-title { font-size: 14px; font-weight: 600; }
+    .card-sub { font-size: 11px; color: var(--text-muted); font-weight: normal; margin-left: 5px; }
 
-    /* Новини */
-    .news-item { padding: 10px 0; border-bottom: 1px solid #f3f4f6; }
-    .news-item:last-child { border-bottom: none; }
-    .news-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; line-height: 1.4; }
-    .news-meta { font-size: 11px; color: var(--text-muted); }
+    /* Памп & Дамп чат (знову в лівій колонці) */
+    #pump-chat { height: 450px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 5px; }
+    .pump-item { padding: 12px; background: #f9fafb; border-radius: 10px; border: 1px solid #f1f5f9; font-size: 12px; line-height: 1.5; animation: fadeIn 0.3s ease-out; }
+    .pump-item a { color: #4f46e5; text-decoration: none; font-weight: 600; }
+    .is-up { border-left: 4px solid var(--green); }
+    .is-down { border-left: 4px solid var(--red); }
 
-    /* Чат Памп & Дамп */
-    #pump-chat { height: 500px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-right: 5px; }
+    /* Списки лідерів */
+    .leaders-content { font-size: 12px; line-height: 1.8; }
+    .leaders-content a { text-decoration: none; color: inherit; display: block; padding: 4px 0; border-bottom: 1px solid #f8f8f8; }
+    .leaders-content img { vertical-align: middle; margin-right: 6px; border-radius: 50%; width: 18px; height: 18px; }
+
+    .row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; border-bottom: 1px solid #f3f4f6; }
+    .tag-exchange { background: #eef2ff; color: #4f46e5; font-size: 10px; padding: 2px 6px; border-radius: 999px; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     #pump-chat::-webkit-scrollbar { width: 4px; }
     #pump-chat::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
-
-    .pump-item { padding: 14px; background: #f9fafb; border-radius: 12px; border: 1px solid #f1f5f9; font-size: 13px; line-height: 1.6; animation: fadeIn 0.3s ease; }
-    .pump-item a { color: #4f46e5; text-decoration: none; font-weight: 600; }
-    .is-up { border-left: 5px solid var(--green); background: #f0fdf4; }
-    .is-down { border-left: 5px solid var(--red); background: #fef2f2; }
-
-    /* Рядки та Списки */
-    .row { display: flex; justify-content: space-between; padding: 10px 0; font-size: 13px; border-bottom: 1px solid #f3f4f6; }
-    .row:last-child { border-bottom: none; }
-    .tag-exchange { background: #eef2ff; color: #4f46e5; font-size: 10px; padding: 2px 8px; border-radius: 999px; font-weight: 600; }
-    .val-up { color: var(--green); font-weight: 700; }
-    .val-down { color: var(--red); font-weight: 700; }
-
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
 
   <header class="topbar">
     <div class="topbar-inner">
-      <div class="logo">CRYPTO WORLD</div>
+      <div class="logo">Crypto World</div>
       <div class="clock">
-        <div class="clock-time" id="clock-time">00:00:00</div>
-        <div style="font-size: 11px; color: var(--text-muted);">Локальний час</div>
+        <div id="clock-time" style="font-weight:600;">00:00:00</div>
+        <div style="font-size: 11px; color: var(--text-muted);">UTC+2</div>
       </div>
     </div>
   </header>
@@ -79,52 +72,44 @@
   <main class="content">
     <div class="column">
       <div class="card">
-        <div class="card-header"><div class="card-title">Новини <span class="card-sub">Live</span></div></div>
-        <div id="news-container">
-            <div class="news-item"><div class="news-title">Ринок очікує дані по інфляції США</div><div class="news-meta">щойно</div></div>
-            <div class="news-item"><div class="news-title">BTC утримує рівень підтримки</div><div class="news-meta">12 хв тому</div></div>
-            <div class="news-item"><div class="news-title">Solana показує ріст активності в мережі</div><div class="news-meta">45 хв тому</div></div>
+        <div class="card-header"><div class="card-title">Памп & Дамп <span class="card-sub">Live Signals</span></div></div>
+        <div id="pump-chat">
+            <div style="text-align:center; color:var(--text-muted); font-size:12px; padding:20px;">Підключення...</div>
         </div>
       </div>
 
       <div class="card">
         <div class="card-header"><div class="card-title">Делістинг / Лістинг</div></div>
-        <div class="row"><span>STRK</span><span class="tag-exchange">Binance</span></div>
-        <div class="row"><span>WIF</span><span class="tag-exchange">Bybit</span></div>
-        <div class="row"><span>ZRO</span><span class="tag-exchange">OKX</span></div>
+        <div class="row"><span>ARB</span><span class="tag-exchange">Binance</span></div>
+        <div class="row"><span>USDC</span><span class="tag-exchange">Bybit</span></div>
       </div>
     </div>
 
     <div class="column">
       <div class="card">
-        <div class="card-header">
-          <div class="card-title">Памп & Дамп <span class="card-sub">сигнали з боту</span></div>
-        </div>
-        <div id="pump-chat">
-            <div style="text-align:center; color:var(--text-muted); font-size:12px; padding:40px;">Підключення до сканера...</div>
+        <div class="card-header"><div class="card-title">Open Interest <span class="card-sub">+5% за 15 хв</span></div></div>
+        <div class="row"><span>BTC</span><span style="color:var(--green); font-weight:600">+5.8%</span></div>
+        <div class="row"><span>ETH</span><span style="color:var(--green); font-weight:600">+6.2%</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Новини <span class="card-sub">Live</span></div></div>
+        <div style="font-size: 13px; line-height: 1.6;">
+            <div style="margin-bottom:8px;">• BTC тестує $100k рівень супротиву</div>
+            <div>• Регулятори розглядають нові правила ETF</div>
         </div>
       </div>
     </div>
 
     <div class="column">
       <div class="card">
-        <div class="card-header"><div class="card-title">Open Interest <span class="card-sub">15m</span></div></div>
-        <div class="row"><span>Bitcoin</span><span class="val-up">+4.2%</span></div>
-        <div class="row"><span>Ethereum</span><span class="val-up">+3.1%</span></div>
+        <div class="card-header"><div class="card-title">Топ Гейнери (24г)</div></div>
+        <div id="gainers-list" class="leaders-content">Завантаження...</div>
       </div>
 
       <div class="card">
-        <div class="card-header"><div class="card-title">Топ Гейнери <span class="card-sub">24г</span></div></div>
-        <div id="gainers-list">
-            <div style="font-size:12px; color:var(--text-muted)">Завантаження...</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header"><div class="card-title">Топ Лузери <span class="card-sub">24г</span></div></div>
-        <div id="losers-list">
-            <div style="font-size:12px; color:var(--text-muted)">Завантаження...</div>
-        </div>
+        <div class="card-header"><div class="card-title">Топ Лузери (24г)</div></div>
+        <div id="losers-list" class="leaders-content">Завантаження...</div>
       </div>
     </div>
   </main>
@@ -132,71 +117,41 @@
   <script>
     const API_URL = "http://127.0.0.1:5000";
 
-    // 1. Оновлення годинника
     function updateClock() {
       document.getElementById('clock-time').textContent = new Date().toLocaleTimeString('uk-UA');
     }
-    setInterval(updateClock, 1000);
-    updateClock();
+    setInterval(updateClock, 1000); updateClock();
 
-    // 2. Додавання сигналу в чат
     const chat = document.getElementById('pump-chat');
     function appendSignal(data) {
       if (chat.innerText.includes("Підключення")) chat.innerHTML = '';
-      
       const div = document.createElement('div');
-      const isUp = data.text.includes('🟢');
-      div.className = `pump-item ${isUp ? 'is-up' : 'is-down'}`;
+      const isDown = data.text.includes('🔴') || data.text.includes('📉');
+      div.className = `pump-item ${isDown ? 'is-down' : 'is-up'}`;
       div.innerHTML = data.text;
-      
       chat.appendChild(div);
       chat.scrollTop = chat.scrollHeight;
-
-      if (chat.children.length > 50) chat.removeChild(chat.firstChild);
     }
 
-    // 3. SSE Live підключення
-    function connectSSE() {
+    function connect() {
       const source = new EventSource(`${API_URL}/signals`);
-      source.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        appendSignal(data);
-      };
-      source.onerror = () => {
-        source.close();
-        setTimeout(connectSSE, 3000);
-      };
+      source.onmessage = (e) => appendSignal(JSON.parse(e.data));
+      source.onerror = () => { source.close(); setTimeout(connect, 3000); };
     }
 
-    // 4. Завантаження історії сигналів
-    async function loadHistory() {
+    async function updateLeaders() {
       try {
-        const res = await fetch(`${API_URL}/history?hours=24`);
-        const data = await res.json();
-        if (data.length > 0) chat.innerHTML = '';
-        data.forEach(appendSignal);
-      } catch (e) { console.error("History error", e); }
+        const [g, l] = await Promise.all([fetch(`${API_URL}/gainers`), fetch(`${API_URL}/losers`)]);
+        document.getElementById('gainers-list').innerHTML = await g.text();
+        document.getElementById('losers-list').innerHTML = await l.text();
+      } catch (e) { console.error("Leader update failed"); }
     }
 
-    // 5. Оновлення лідерів ринку (Гейнери/Лузери)
-    async function updateMarketLeaders() {
-      try {
-        const [gRes, lRes] = await Promise.all([
-          fetch(`${API_URL}/gainers`),
-          fetch(`${API_URL}/losers`)
-        ]);
-        document.getElementById('gainers-list').innerText = await gRes.text();
-        document.getElementById('losers-list').innerText = await lRes.text();
-      } catch (e) { console.error("Leaders error", e); }
-    }
-
-    // Запуск усього при завантаженні
-    window.onload = () => {
-      loadHistory();
-      connectSSE();
-      updateMarketLeaders();
-      setInterval(updateMarketLeaders, 60000); // Оновлювати лідерів кожну хвилину
-    };
+    fetch(`${API_URL}/history?hours=12`).then(r => r.json()).then(data => data.forEach(appendSignal));
+    
+    connect();
+    updateLeaders();
+    setInterval(updateLeaders, 60000);
   </script>
 </body>
 </html>
