@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Crypto World Dashboard</title>
   <style>
-    /* Змінні для світлої та темної тем */
     :root {
       --bg: #f7f7f9;
       --card-bg: #ffffff;
@@ -35,7 +34,7 @@
     .header-inner { max-width: 1440px; margin: 0 auto; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
     .logo { font-weight: 700; font-size: 20px; color: var(--accent); }
     
-    .header-right { display: flex; align-items: center; gap: 12px; }
+    .header-right { display: flex; align-items: center; gap: 15px; }
 
     .clock-box { 
       background: var(--bg); 
@@ -51,7 +50,6 @@
     .clock-label { color: var(--text-muted); font-size: 10px; font-weight: 700; text-transform: uppercase; }
     .clock-time { font-weight: 600; font-variant-numeric: tabular-nums; }
 
-    /* Кнопка перемикання теми */
     .theme-toggle {
       background: var(--bg);
       border: 1px solid var(--border);
@@ -65,33 +63,25 @@
       justify-content: center;
       font-size: 18px;
     }
-    .theme-toggle:hover { border-color: var(--accent); }
 
-    .dashboard { 
-      display: grid; 
-      grid-template-columns: 350px 1fr 320px; 
-      max-width: 1440px; 
-      margin: 20px auto; 
-      padding: 0 20px 40px; 
-      gap: 20px; 
-    }
-
+    .dashboard { display: grid; grid-template-columns: 350px 1fr 320px; max-width: 1440px; margin: 20px auto; padding: 0 20px 40px; gap: 20px; }
     .column { display: flex; flex-direction: column; gap: 20px; }
     .card { background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 16px; display: flex; flex-direction: column; }
     .card-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; color: var(--text-muted); }
     
     .chat-container { overflow-y: auto; display: flex; flex-direction: column; gap: 8px; scroll-behavior: smooth; }
-    .small-box { height: 150px; }
+    .small-box { height: 180px; }
     .mid-box { height: 300px; }
     .large-box { height: 500px; }
 
-    .chat-item { padding: 10px; background: var(--bg); border-radius: 10px; border: 1px solid var(--border); font-size: 12px; line-height: 1.4; border-left: 4px solid #cbd5e1; }
+    .chat-item { padding: 10px; background: var(--bg); border-radius: 10px; border: 1px solid var(--border); font-size: 12px; line-height: 1.4; border-left: 4px solid #cbd5e1; animation: slideIn 0.3s ease-out; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    
     .is-up { border-left-color: var(--green); background: rgba(22, 163, 74, 0.05); }
     .is-down { border-left-color: var(--red); background: rgba(220, 38, 38, 0.05); }
     
     .leaders-content { font-size: 12px; line-height: 1.8; }
-    .about-text { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
-    .contact-link { color: var(--accent); text-decoration: none; font-weight: 600; display: block; margin-top: 5px; }
+    .contact-link { color: var(--accent); text-decoration: none; font-weight: 600; display: block; margin-top: 5px; font-size: 13px; }
 
     @media (max-width: 1100px) { .dashboard { grid-template-columns: 1fr; } }
   </style>
@@ -112,7 +102,7 @@
             <span id="clock-utc" class="clock-time">00:00:00</span>
           </div>
         </div>
-        <button id="theme-btn" class="theme-toggle" title="Перемкнути тему">🌓</button>
+        <button id="theme-btn" class="theme-toggle">🌓</button>
       </div>
     </div>
   </header>
@@ -153,26 +143,27 @@
         <div class="card-title">Топ Лузери (24г)</div>
         <div id="losers-list" class="leaders-content"></div>
       </div>
-      <div class="card"><div class="card-title">Про нас</div><div class="about-text">Ми — аналітична платформа для відстеження крипто-ринку в реальному часі.</div></div>
-      <div class="card"><div class="card-title">Контакти</div><div class="about-text"><a href="#" class="contact-link">support@cryptoworld.com</a><a href="#" class="contact-link">Telegram: @crypto_world_admin</a></div></div>
+      <div class="card">
+        <div class="card-title">Контакти</div>
+        <div class="about-text">
+          <a href="mailto:support@cryptoworld.com" class="contact-link">📧 support@cryptoworld.com</a>
+          <a href="https://t.me/crypto_world_admin" target="_blank" class="contact-link">✈️ Telegram: @crypto_world_admin</a>
+        </div>
+      </div>
     </div>
   </main>
 
   <script>
     const API_URL = "http://127.0.0.1:5000";
 
-    // Логіка тем
     const themeBtn = document.getElementById('theme-btn');
-    const currentTheme = localStorage.getItem('theme') || 'light';
-    
-    if (currentTheme === 'dark') {
+    if (localStorage.getItem('theme') === 'dark') {
       document.documentElement.setAttribute('data-theme', 'dark');
       themeBtn.textContent = '☀️';
     }
-
     themeBtn.addEventListener('click', () => {
-      let theme = document.documentElement.getAttribute('data-theme');
-      if (theme === 'dark') {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      if (isDark) {
         document.documentElement.removeAttribute('data-theme');
         localStorage.setItem('theme', 'light');
         themeBtn.textContent = '🌓';
@@ -193,13 +184,34 @@
 
     function createChatItem(text) {
       const div = document.createElement('div');
-      const isDown = text.includes('🔴') || text.includes('-') || text.includes('📉');
+      const isDown = text.includes('🔴') || text.includes('DUMP') || text.includes('📉');
       div.className = `chat-item ${isDown ? 'is-down' : 'is-up'}`;
       div.innerHTML = text;
       return div;
     }
 
-    // Решта ваших функцій (refreshLeaders, processIncomingMessage, connectSSE, window.onload) залишаються без змін
+    function processIncomingMessage(containerId, text, isHistory = false) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const item = createChatItem(text);
+      if (isHistory) container.appendChild(item);
+      else container.prepend(item);
+      if (isHistory) container.scrollTop = container.scrollHeight;
+    }
+
+    function connectSSE() {
+      const source = new EventSource(`${API_URL}/signals`);
+      source.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        if (data.type === 'pump' || data.type === 'dump') processIncomingMessage('pump-chat', data.text);
+        else if (data.type === 'oi') processIncomingMessage('oi-chat', data.text);
+        else if (data.type === 'liq') processIncomingMessage('liquidations-chat', data.text);
+        else if (data.type === 'news') processIncomingMessage('news-container', data.text);
+        else if (data.type === 'update_leaders') refreshLeaders();
+      };
+      source.onerror = () => { source.close(); setTimeout(connectSSE, 3000); };
+    }
+
     async function refreshLeaders() {
       try {
         const [g, l] = await Promise.all([
@@ -211,38 +223,19 @@
       } catch (e) { console.error("Leaders update error"); }
     }
 
-    function processIncomingMessage(containerId, text, isHistory = false) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-      const item = createChatItem(text);
-      if (isHistory) { container.appendChild(item); } 
-      else { container.prepend(item); }
-      if (isHistory) container.scrollTop = container.scrollHeight;
-    }
-
-    function connectSSE() {
-      const source = new EventSource(`${API_URL}/signals`);
-      source.onmessage = function(event) {
-        const data = JSON.parse(event.data);
-        if (data.type === 'pump') processIncomingMessage('pump-chat', data.text);
-        if (data.type === 'oi') processIncomingMessage('oi-chat', data.text);
-        if (data.type === 'liq') processIncomingMessage('liquidations-chat', data.text);
-        if (data.type === 'news') processIncomingMessage('news-container', data.text);
-        if (data.type === 'update_leaders') refreshLeaders();
-      };
-      source.onerror = () => { source.close(); setTimeout(connectSSE, 3000); };
-    }
-
     window.onload = function() {
       refreshLeaders();
       connectSSE();
-      setInterval(refreshLeaders, 3000);
+      setInterval(refreshLeaders, 30000);
       fetch(`${API_URL}/history`).then(res => res.json()).then(history => {
         if (history) history.forEach(msg => {
-          const target = msg.type === 'oi' ? 'oi-chat' : (msg.type === 'liq' ? 'liquidations-chat' : 'pump-chat');
+          let target = 'pump-chat';
+          if (msg.type === 'oi') target = 'oi-chat';
+          else if (msg.type === 'liq') target = 'liquidations-chat';
+          else if (msg.type === 'news') target = 'news-container';
           processIncomingMessage(target, msg.text, true);
         });
-      }).catch(e => console.error("History error:", e));
+      }).catch(e => console.warn("No history"));
     };
   </script>
 </body>
