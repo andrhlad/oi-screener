@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Crypto World Dashboard</title>
   <style>
+    /* Змінні для світлої та темної тем */
     :root {
       --bg: #f7f7f9;
       --card-bg: #ffffff;
@@ -15,16 +16,27 @@
       --red: #dc2626;
       --radius: 14px;
       --shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+      --accent: #4f46e5;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; transition: background 0.3s, border-color 0.3s, color 0.3s; }
     body { background: var(--bg); color: var(--text-main); min-height: 100vh; }
 
-    .header { background: #fff; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+    .header { background: var(--card-bg); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
     .header-inner { max-width: 1440px; margin: 0 auto; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
-    .logo { font-weight: 700; font-size: 20px; color: #4f46e5; }
+    .logo { font-weight: 700; font-size: 20px; color: var(--accent); }
     
-    /* Стиль для подвійного годинника */
+    .header-right { display: flex; align-items: center; gap: 12px; }
+
     .clock-box { 
       background: var(--bg); 
       padding: 8px 16px; 
@@ -39,6 +51,22 @@
     .clock-label { color: var(--text-muted); font-size: 10px; font-weight: 700; text-transform: uppercase; }
     .clock-time { font-weight: 600; font-variant-numeric: tabular-nums; }
 
+    /* Кнопка перемикання теми */
+    .theme-toggle {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .theme-toggle:hover { border-color: var(--accent); }
+
     .dashboard { 
       display: grid; 
       grid-template-columns: 350px 1fr 320px; 
@@ -50,21 +78,20 @@
 
     .column { display: flex; flex-direction: column; gap: 20px; }
     .card { background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 16px; display: flex; flex-direction: column; }
-    .card-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; color: #475569; }
+    .card-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; color: var(--text-muted); }
     
     .chat-container { overflow-y: auto; display: flex; flex-direction: column; gap: 8px; scroll-behavior: smooth; }
-    
     .small-box { height: 150px; }
     .mid-box { height: 300px; }
     .large-box { height: 500px; }
 
-    .chat-item { padding: 10px; background: #fff; border-radius: 10px; border: 1px solid #f1f5f9; font-size: 12px; line-height: 1.4; border-left: 4px solid #cbd5e1; }
-    .is-up { border-left-color: var(--green); background: #f0fdf4; }
-    .is-down { border-left-color: var(--red); background: #fef2f2; }
+    .chat-item { padding: 10px; background: var(--bg); border-radius: 10px; border: 1px solid var(--border); font-size: 12px; line-height: 1.4; border-left: 4px solid #cbd5e1; }
+    .is-up { border-left-color: var(--green); background: rgba(22, 163, 74, 0.05); }
+    .is-down { border-left-color: var(--red); background: rgba(220, 38, 38, 0.05); }
     
     .leaders-content { font-size: 12px; line-height: 1.8; }
-    .about-text { font-size: 13px; color: #64748b; line-height: 1.5; }
-    .contact-link { color: #4f46e5; text-decoration: none; font-weight: 600; display: block; margin-top: 5px; }
+    .about-text { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+    .contact-link { color: var(--accent); text-decoration: none; font-weight: 600; display: block; margin-top: 5px; }
 
     @media (max-width: 1100px) { .dashboard { grid-template-columns: 1fr; } }
   </style>
@@ -74,15 +101,18 @@
   <header class="header">
     <div class="header-inner">
       <div class="logo">CRYPTO WORLD</div>
-      <div class="clock-box">
-        <div class="clock-segment" style="border-right: 1px solid var(--border); padding-right: 12px;">
-          <span class="clock-label">Local</span>
-          <span id="clock-local" class="clock-time">00:00:00</span>
+      <div class="header-right">
+        <div class="clock-box">
+          <div class="clock-segment" style="border-right: 1px solid var(--border); padding-right: 12px;">
+            <span class="clock-label">Local</span>
+            <span id="clock-local" class="clock-time">00:00:00</span>
+          </div>
+          <div class="clock-segment">
+            <span class="clock-label">UTC</span>
+            <span id="clock-utc" class="clock-time">00:00:00</span>
+          </div>
         </div>
-        <div class="clock-segment">
-          <span class="clock-label">UTC</span>
-          <span id="clock-utc" class="clock-time">00:00:00</span>
-        </div>
+        <button id="theme-btn" class="theme-toggle" title="Перемкнути тему">🌓</button>
       </div>
     </div>
   </header>
@@ -123,38 +153,43 @@
         <div class="card-title">Топ Лузери (24г)</div>
         <div id="losers-list" class="leaders-content"></div>
       </div>
-      
-      <div class="card">
-        <div class="card-title">Про нас</div>
-        <div class="about-text">
-          Ми — аналітична платформа для відстеження крипто-ринку в реальному часі. 
-          Збираємо дані про аномальні об'єми, OI та ліквідації.
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">Контакти</div>
-        <div class="about-text">
-          <a href="#" class="contact-link">support@cryptoworld.com</a>
-          <a href="#" class="contact-link">Telegram: @crypto_world_admin</a>
-        </div>
-      </div>
+      <div class="card"><div class="card-title">Про нас</div><div class="about-text">Ми — аналітична платформа для відстеження крипто-ринку в реальному часі.</div></div>
+      <div class="card"><div class="card-title">Контакти</div><div class="about-text"><a href="#" class="contact-link">support@cryptoworld.com</a><a href="#" class="contact-link">Telegram: @crypto_world_admin</a></div></div>
     </div>
   </main>
 
   <script>
     const API_URL = "http://127.0.0.1:5000";
 
-    // Оновлена функція годинника з двома поясами
+    // Логіка тем
+    const themeBtn = document.getElementById('theme-btn');
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    
+    if (currentTheme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      themeBtn.textContent = '☀️';
+    }
+
+    themeBtn.addEventListener('click', () => {
+      let theme = document.documentElement.getAttribute('data-theme');
+      if (theme === 'dark') {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+        themeBtn.textContent = '🌓';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        themeBtn.textContent = '☀️';
+      }
+    });
+
     function updateClocks() {
       const now = new Date();
-      // Локальний час користувача
       document.getElementById('clock-local').textContent = now.toLocaleTimeString('uk-UA');
-      // Час за UTC
       document.getElementById('clock-utc').textContent = now.toLocaleTimeString('uk-UA', { timeZone: 'UTC' });
     }
     setInterval(updateClocks, 1000);
-    updateClocks(); // Ініціалізація відразу
+    updateClocks();
 
     function createChatItem(text) {
       const div = document.createElement('div');
@@ -164,6 +199,7 @@
       return div;
     }
 
+    // Решта ваших функцій (refreshLeaders, processIncomingMessage, connectSSE, window.onload) залишаються без змін
     async function refreshLeaders() {
       try {
         const [g, l] = await Promise.all([
@@ -179,11 +215,8 @@
       const container = document.getElementById(containerId);
       if (!container) return;
       const item = createChatItem(text);
-      if (isHistory) {
-        container.appendChild(item);
-      } else {
-        container.prepend(item);
-      }
+      if (isHistory) { container.appendChild(item); } 
+      else { container.prepend(item); }
       if (isHistory) container.scrollTop = container.scrollHeight;
     }
 
@@ -204,17 +237,12 @@
       refreshLeaders();
       connectSSE();
       setInterval(refreshLeaders, 3000);
-      fetch(`${API_URL}/history`)
-        .then(res => res.json())
-        .then(history => {
-          if (history) {
-            history.forEach(msg => {
-              const target = msg.type === 'oi' ? 'oi-chat' : (msg.type === 'liq' ? 'liquidations-chat' : 'pump-chat');
-              processIncomingMessage(target, msg.text, true);
-            });
-          }
-        })
-        .catch(e => console.error("History error:", e));
+      fetch(`${API_URL}/history`).then(res => res.json()).then(history => {
+        if (history) history.forEach(msg => {
+          const target = msg.type === 'oi' ? 'oi-chat' : (msg.type === 'liq' ? 'liquidations-chat' : 'pump-chat');
+          processIncomingMessage(target, msg.text, true);
+        });
+      }).catch(e => console.error("History error:", e));
     };
   </script>
 </body>
