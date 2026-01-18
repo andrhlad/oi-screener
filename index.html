@@ -30,7 +30,6 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; transition: background 0.3s, border-color 0.3s, color 0.3s; }
     body { background: var(--bg); color: var(--text-main); min-height: 100vh; }
 
-    /* Header */
     .header { background: var(--card-bg); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
     .header-inner { max-width: 1440px; margin: 0 auto; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
     .logo { font-weight: 700; font-size: 20px; color: var(--accent); }
@@ -43,15 +42,12 @@
 
     .theme-toggle { background: var(--bg); border: 1px solid var(--border); color: var(--text-main); width: 38px; height: 38px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; }
 
-    /* Grid Layout */
     .dashboard { display: grid; grid-template-columns: 350px 1fr 320px; max-width: 1440px; margin: 20px auto; padding: 0 20px 40px; gap: 20px; }
     .column { display: flex; flex-direction: column; gap: 20px; }
     
-    /* Cards */
     .card { background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 16px; display: flex; flex-direction: column; }
     .card-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; color: var(--text-muted); }
     
-    /* Chats */
     .chat-container { overflow-y: auto; display: flex; flex-direction: column; gap: 8px; scroll-behavior: smooth; }
     .small-box { height: 180px; }
     .mid-box { height: 300px; }
@@ -124,18 +120,18 @@
       </div>
 
       <div class="card">
+        <div class="card-title">Топ Лузери (24г)</div>
+        <div id="losers-list" class="leaders-content">Завантаження...</div>
+      </div>
+
+      <div class="card">
         <div class="card-title">Про нас</div>
         <div style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 15px;">
-          Ми моніторимо крипто-ринок у реальному часі. Збираємо дані про аномальні об'єми, OI та ліквідації.
+          Моніторинг крипто-ринку в реальному часі. Дані про аномальні об'єми, зміни OI та ліквідації.
         </div>
         <div class="card-title" style="font-size: 11px; margin-bottom: 5px;">Контакти</div>
         <a href="mailto:support@cryptoworld.com" class="contact-link">📧 support@cryptoworld.com</a>
         <a href="https://t.me/crypto_world_admin" target="_blank" class="contact-link">✈️ Telegram: @crypto_world_admin</a>
-      </div>
-
-      <div class="card">
-        <div class="card-title">Топ Лузери (24г)</div>
-        <div id="losers-list" class="leaders-content">Завантаження...</div>
       </div>
     </div>
   </main>
@@ -143,27 +139,20 @@
   <script>
     const API_URL = "http://127.0.0.1:5000";
 
-    // Theme Logic
+    // Тема
     const themeBtn = document.getElementById('theme-btn');
     if (localStorage.getItem('theme') === 'dark') {
       document.documentElement.setAttribute('data-theme', 'dark');
       themeBtn.textContent = '☀️';
     }
-
     themeBtn.addEventListener('click', () => {
       const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      if (isDark) {
-        document.documentElement.removeAttribute('data-theme');
-        localStorage.setItem('theme', 'light');
-        themeBtn.textContent = '🌓';
-      } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        localStorage.setItem('theme', 'dark');
-        themeBtn.textContent = '☀️';
-      }
+      document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      localStorage.setItem('theme', isDark ? 'light' : 'dark');
+      themeBtn.textContent = isDark ? '🌓' : '☀️';
     });
 
-    // Clocks
+    // Годинники
     function updateClocks() {
       const now = new Date();
       document.getElementById('clock-local').textContent = now.toLocaleTimeString('uk-UA');
@@ -172,7 +161,7 @@
     setInterval(updateClocks, 1000);
     updateClocks();
 
-    // Message Processing
+    // Обробка повідомлень
     function processIncomingMessage(containerId, text, isHistory = false) {
       const container = document.getElementById(containerId);
       if (!container) return;
@@ -191,12 +180,11 @@
       if (isHistory) container.scrollTop = container.scrollHeight;
     }
 
-    // SSE
+    // З'єднання SSE
     function connectSSE() {
       const source = new EventSource(`${API_URL}/signals`);
       source.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        // Визначаємо куди класти сигнал
         let target = 'pump-chat';
         if (data.type === 'oi') target = 'oi-chat';
         else if (data.type === 'liq') target = 'liquidations-chat';
@@ -207,7 +195,7 @@
       source.onerror = () => { source.close(); setTimeout(connectSSE, 3000); };
     }
 
-    // Leaders
+    // Оновлення лідерів
     async function refreshLeaders() {
       try {
         const [g, l] = await Promise.all([
@@ -224,7 +212,7 @@
       setInterval(refreshLeaders, 30000);
       connectSSE();
 
-      // Load 36h History
+      // Завантаження історії 36г
       fetch(`${API_URL}/history`).then(res => res.json()).then(data => {
         data.forEach(msg => {
           let target = 'pump-chat';
