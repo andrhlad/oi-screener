@@ -193,9 +193,26 @@
     function processIncomingMessage(containerId, text, isHistory = false) {
       const container = document.getElementById(containerId);
       if (!container) return;
+      
       const item = createChatItem(text);
-      if (isHistory) container.appendChild(item);
-      else container.prepend(item);
+      
+      // Додаємо в початок (якщо живий сигнал) або в кінець (якщо історія)
+      if (isHistory) {
+        container.appendChild(item);
+      } else {
+        container.prepend(item);
+      }
+
+      // ОБМЕЖЕННЯ: Видаляємо старі повідомлення, щоб сторінка не гальмувала
+      // Якщо в контейнері більше 50 елементів, видаляємо останній (найстаріший)
+      if (container.children.length > 50) {
+        if (isHistory) {
+            container.removeChild(container.firstChild); // При завантаженні історії видаляємо зверху
+        } else {
+            container.removeChild(container.lastChild);  // При живому потоці видаляємо знизу
+        }
+      }
+
       if (isHistory) container.scrollTop = container.scrollHeight;
     }
 
