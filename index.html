@@ -163,9 +163,9 @@
     setInterval(updateClocks, 1000);
     updateClocks();
 
-    // Обробка повідомлень (prepend для нових, append для історії)
-    function processMessage(containerId, text, isHistory = false) {
-      const container = document.getElementById(containerId);
+    // Обробка повідомлень (ВСЕ йде в pump-chat)
+    function processMessage(text, isHistory = false) {
+      const container = document.getElementById('pump-chat');
       if (!container) return;
       
       const div = document.createElement('div');
@@ -180,7 +180,7 @@
       }
 
       // Ліміт повідомлень
-      if (container.children.length > 60) {
+      if (container.children.length > 100) {
         container.removeChild(isHistory ? container.firstChild : container.lastChild);
       }
       
@@ -194,15 +194,13 @@
       const source = new EventSource(`${API_URL}/signals`);
       
       source.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        const targets = {
-            'oi': 'oi-chat',
-            'liq': 'liquidations-chat',
-            'news': 'news-container',
-            'listing': 'listings-container'
-        };
-        const targetId = targets[data.type] || 'pump-chat';
-        processMessage(targetId, data.text);
+        try {
+          const data = JSON.parse(event.data);
+          // Ігноруємо тип повідомлення і відправляємо все в памп-чат
+          processMessage(data.text, false);
+        } catch (e) {
+          console.error("SSE Error");
+        }
       };
 
       source.onerror = () => {
@@ -226,22 +224,21 @@
     window.onload = () => {
       refreshLeaders();
       setInterval(refreshLeaders, 30000);
-      connectSSE();
-
+      
       // Завантаження історії
       fetch(`${API_URL}/history`)
         .then(res => res.json())
         .then(data => {
           data.forEach(msg => {
-            const targets = {
-                'oi': 'oi-chat',
-                'liq': 'liquidations-chat',
-                'news': 'news-container',
-                'listing': 'listings-container'
-            };
-            const targetId = targets[msg.type] || 'pump-chat';
-            processMessage(targetId, msg.text, true);
+            // Вся історія також іде тільки в pump-chat
+            processMessage(msg.text, true);
           });
+          // Підключаємо онлайн потік після історії
+          connectSSE();
+        })
+        .catch(err => {
+            console.log("No history or server offline");
+            connectSSE();
         });
     };
   </script>
