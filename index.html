@@ -38,13 +38,10 @@
     .card { background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 16px; display: flex; flex-direction: column; }
     .card-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; color: #475569; }
     
-    /* Базовий контейнер для чату */
     .chat-container { overflow-y: auto; display: flex; flex-direction: column; gap: 8px; scroll-behavior: smooth; }
     
-    /* ЗМЕНШЕНІ БЛОКИ (у 3 рази менше від 450px) */
     .small-box { height: 150px; }
-    
-    /* БЛОК ПАМПІВ (залишаємо великим) */
+    .mid-box { height: 300px; }
     .large-box { height: 500px; }
 
     .chat-item { padding: 10px; background: #fff; border-radius: 10px; border: 1px solid #f1f5f9; font-size: 12px; line-height: 1.4; border-left: 4px solid #cbd5e1; }
@@ -52,6 +49,8 @@
     .is-down { border-left-color: var(--red); background: #fef2f2; }
     
     .leaders-content { font-size: 12px; line-height: 1.8; }
+    .about-text { font-size: 13px; color: #64748b; line-height: 1.5; }
+    .contact-link { color: #4f46e5; text-decoration: none; font-weight: 600; display: block; margin-top: 5px; }
 
     @media (max-width: 1100px) { .dashboard { grid-template-columns: 1fr; } }
   </style>
@@ -84,9 +83,13 @@
     </div>
 
     <div class="column">
-      <div class="card" style="height: 100%;">
+      <div class="card">
         <div class="card-title">Open Interest Chat</div>
-        <div id="oi-chat" class="chat-container" style="height: 100%;"></div>
+        <div id="oi-chat" class="chat-container mid-box"></div>
+      </div>
+      <div class="card" style="flex-grow: 1;">
+        <div class="card-title">Ліквідації Live</div>
+        <div id="liquidations-chat" class="chat-container" style="height: 100%; min-height: 400px;"></div>
       </div>
     </div>
 
@@ -98,6 +101,22 @@
       <div class="card">
         <div class="card-title">Топ Лузери (24г)</div>
         <div id="losers-list" class="leaders-content"></div>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">Про нас</div>
+        <div class="about-text">
+          Ми — аналітична платформа для відстеження крипто-ринку в реальному часі. 
+          Збираємо дані про аномальні об'єми, OI та ліквідації.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Контакти</div>
+        <div class="about-text">
+          <a href="#" class="contact-link">support@cryptoworld.com</a>
+          <a href="#" class="contact-link">Telegram: @crypto_world_admin</a>
+        </div>
       </div>
     </div>
   </main>
@@ -129,8 +148,9 @@
       } catch (e) { console.error("Leaders update error"); }
     }
 
-    function processIncomingMessage(text, isHistory = false) {
-      const container = document.getElementById('pump-chat');
+    function processIncomingMessage(containerId, text, isHistory = false) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
       const item = createChatItem(text);
       if (isHistory) {
         container.appendChild(item);
@@ -144,7 +164,10 @@
       const source = new EventSource(`${API_URL}/signals`);
       source.onmessage = function(event) {
         const data = JSON.parse(event.data);
-        if (data.text) processIncomingMessage(data.text, false);
+        if (data.type === 'pump') processIncomingMessage('pump-chat', data.text);
+        if (data.type === 'oi') processIncomingMessage('oi-chat', data.text);
+        if (data.type === 'liq') processIncomingMessage('liquidations-chat', data.text);
+        if (data.type === 'news') processIncomingMessage('news-container', data.text);
         if (data.type === 'update_leaders') refreshLeaders();
       };
       source.onerror = () => { source.close(); setTimeout(connectSSE, 3000); };
@@ -157,7 +180,12 @@
       fetch(`${API_URL}/history`)
         .then(res => res.json())
         .then(history => {
-          if (history) history.forEach(msg => processIncomingMessage(msg.text, true));
+          if (history) {
+            history.forEach(msg => {
+              const target = msg.type === 'oi' ? 'oi-chat' : (msg.type === 'liq' ? 'liquidations-chat' : 'pump-chat');
+              processIncomingMessage(target, msg.text, true);
+            });
+          }
         })
         .catch(e => console.error("History error:", e));
     };
