@@ -35,7 +35,7 @@
     .logo { font-weight: 700; font-size: 20px; color: var(--accent); }
     
     .header-right { display: flex; align-items: center; gap: 15px; }
-    .clock-box { background: var(--bg); padding: 8px 16px; border-radius: 99px; font-size: 13px; border: 1px solid var(--border); display: flex; align-items: center; gap: 15px; }
+    .clock-box { background: var(--bg); padding: 8px 16px; border-radius: 99px; font-size: 13px; border: 1px solid var(--border); display: flex; align-items: center; }
     .clock-segment { display: flex; align-items: center; gap: 6px; }
     .clock-label { color: var(--text-muted); font-size: 10px; font-weight: 700; text-transform: uppercase; }
     .clock-time { font-weight: 600; font-variant-numeric: tabular-nums; }
@@ -72,12 +72,8 @@
       <div class="logo">CRYPTO WORLD</div>
       <div class="header-right">
         <div class="clock-box">
-          <div class="clock-segment" style="border-right: 1px solid var(--border); padding-right: 12px;">
-            <span class="clock-label">Local</span>
-            <span id="clock-local" class="clock-time">00:00:00</span>
-          </div>
           <div class="clock-segment">
-            <span class="clock-label">UTC</span>
+            <span class="clock-label">UTC Time</span>
             <span id="clock-utc" class="clock-time">00:00:00</span>
           </div>
         </div>
@@ -154,10 +150,9 @@
     }
     themeBtn.addEventListener('click', toggleTheme);
 
-    // Годинники
+    // Годинник (Тільки UTC)
     function updateClocks() {
       const now = new Date();
-      document.getElementById('clock-local').textContent = now.toLocaleTimeString('uk-UA');
       document.getElementById('clock-utc').textContent = now.toLocaleTimeString('uk-UA', { timeZone: 'UTC' });
     }
     setInterval(updateClocks, 1000);
@@ -179,7 +174,6 @@
         container.prepend(div);
       }
 
-      // Ліміт повідомлень
       if (container.children.length > 100) {
         container.removeChild(isHistory ? container.firstChild : container.lastChild);
       }
@@ -196,7 +190,6 @@
       source.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          // Ігноруємо тип повідомлення і відправляємо все в памп-чат
           processMessage(data.text, false);
         } catch (e) {
           console.error("SSE Error");
@@ -230,10 +223,8 @@
         .then(res => res.json())
         .then(data => {
           data.forEach(msg => {
-            // Вся історія також іде тільки в pump-chat
             processMessage(msg.text, true);
           });
-          // Підключаємо онлайн потік після історії
           connectSSE();
         })
         .catch(err => {
