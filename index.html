@@ -33,7 +33,7 @@
     .header { background: var(--card-bg); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
     .header-inner { max-width: 1440px; margin: 0 auto; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
     .logo { font-weight: 700; font-size: 20px; color: var(--accent); }
-    
+
     .header-right { display: flex; align-items: center; gap: 15px; }
     .clock-box { background: var(--bg); padding: 8px 16px; border-radius: 99px; font-size: 13px; border: 1px solid var(--border); display: flex; align-items: center; }
     .clock-segment { display: flex; align-items: center; gap: 6px; }
@@ -44,10 +44,10 @@
 
     .dashboard { display: grid; grid-template-columns: 350px 1fr 320px; max-width: 1440px; margin: 20px auto; padding: 0 20px 40px; gap: 20px; }
     .column { display: flex; flex-direction: column; gap: 20px; }
-    
+
     .card { background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 16px; display: flex; flex-direction: column; }
     .card-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; color: var(--text-muted); }
-    
+
     .chat-container { overflow-y: auto; display: flex; flex-direction: column; gap: 8px; scroll-behavior: smooth; }
     .small-box { height: 180px; }
     .mid-box { height: 300px; }
@@ -55,10 +55,10 @@
 
     .chat-item { padding: 10px; background: var(--bg); border-radius: 10px; border: 1px solid var(--border); font-size: 12px; line-height: 1.4; border-left: 4px solid #cbd5e1; animation: slideIn 0.3s ease-out; }
     @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-    
+
     .is-up { border-left-color: var(--green); background: rgba(22, 163, 74, 0.05); }
     .is-down { border-left-color: var(--red); background: rgba(220, 38, 38, 0.05); }
-    
+
     .leaders-content { font-size: 12px; line-height: 1.8; }
     .contact-link { color: var(--accent); text-decoration: none; font-weight: 600; display: block; margin-top: 5px; font-size: 13px; }
 
@@ -143,17 +143,18 @@
       localStorage.setItem('theme', isDark ? 'light' : 'dark');
       themeBtn.textContent = isDark ? '🌓' : '☀️';
     };
-    
+
     if (localStorage.getItem('theme') === 'dark') {
       document.documentElement.setAttribute('data-theme', 'dark');
       themeBtn.textContent = '☀️';
     }
     themeBtn.addEventListener('click', toggleTheme);
 
-    // Годинник (Тільки UTC)
+    // Годинник UTC
     function updateClocks() {
       const now = new Date();
-      document.getElementById('clock-utc').textContent = now.toLocaleTimeString('uk-UA', { timeZone: 'UTC' });
+      document.getElementById('clock-utc').textContent =
+        now.toLocaleTimeString('uk-UA', { timeZone: 'UTC' });
     }
     setInterval(updateClocks, 1000);
     updateClocks();
@@ -162,7 +163,7 @@
     function processMessage(text, isHistory = false) {
       const container = document.getElementById('pump-chat');
       if (!container) return;
-      
+
       const div = document.createElement('div');
       const isDown = /🔴|DUMP|📉/.test(text);
       div.className = `chat-item ${isDown ? 'is-down' : 'is-up'}`;
@@ -177,29 +178,37 @@
       if (container.children.length > 100) {
         container.removeChild(isHistory ? container.firstChild : container.lastChild);
       }
-      
+
       if (isHistory) {
         container.scrollTop = container.scrollHeight;
       }
     }
 
-    // Оновлення лідерів
-    async function refreshLeaders() {
-      try {
-        const [g, l] = await Promise.all([
-          fetch(`${API_URL}/gainers`),
-          fetch(`${API_URL}/losers`)
-        ]);
-        document.getElementById('gainers-list').innerHTML = await g.text();
-        document.getElementById('losers-list').innerHTML = await l.text();
-      } catch (e) { console.error("Update error"); }
+    // SSE для лідерів
+    function setupLeadersSSE() {
+      const source = new EventSource(`${API_URL}/leaders_stream`);
+
+      source.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          document.getElementById('gainers-list').innerHTML =
+            `<ul>${data.gainers.map(i => `<li>${i}</li>`).join('')}</ul>`;
+          document.getElementById('losers-list').innerHTML =
+            `<ul>${data.losers.map(i => `<li>${i}</li>`).join('')}</ul>`;
+        } catch (e) {
+          console.error("SSE parse error", e);
+        }
+      };
+
+      source.onerror = (err) => {
+        console.error("SSE connection error", err);
+        source.close();
+        setTimeout(setupLeadersSSE, 5000); // повторне підключення
+      };
     }
 
     window.onload = () => {
-      refreshLeaders();
-      setInterval(refreshLeaders, 30000);
-
-      // Історія повідомлень та SSE більше не завантажується
+      setupLeadersSSE();
     };
   </script>
 </body>
