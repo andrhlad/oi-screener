@@ -183,25 +183,6 @@
       }
     }
 
-    // З'єднання SSE
-    function connectSSE() {
-      const source = new EventSource(`${API_URL}/signals`);
-      
-      source.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          processMessage(data.text, false);
-        } catch (e) {
-          console.error("SSE Error");
-        }
-      };
-
-      source.onerror = () => {
-        source.close();
-        setTimeout(connectSSE, 2000);
-      };
-    }
-
     // Оновлення лідерів
     async function refreshLeaders() {
       try {
@@ -217,23 +198,9 @@
     window.onload = () => {
       refreshLeaders();
       setInterval(refreshLeaders, 30000);
-      
-      // Завантаження історії
-      fetch(`${API_URL}/history`)
-        .then(res => res.json())
-        .then(data => {
-          data.forEach(msg => {
-            processMessage(msg.text, true);
-          });
-          connectSSE();
-        })
-        .catch(err => {
-            console.log("No history or server offline");
-            connectSSE();
-        });
+
+      // Історія повідомлень та SSE більше не завантажується
     };
   </script>
 </body>
 </html>
-
-
