@@ -4,191 +4,211 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Crypto World Dashboard</title>
-
 <style>
 :root {
-  --bg:#f7f7f9;
-  --card-bg:#fff;
-  --border:#e4e6ef;
-  --text-main:#222;
-  --text-muted:#8f95a3;
-  --green:#16a34a;
-  --red:#dc2626;
-  --radius:14px;
-  --shadow:0 8px 20px rgba(15,23,42,.06);
-  --accent:#f7a600; /* Bybit accent */
-}
-[data-theme="dark"] {
-  --bg:#0b0e11;
-  --card-bg:#161a1e;
-  --border:#23282f;
-  --text-main:#eaecef;
-  --text-muted:#848e9c;
-  --shadow:0 8px 20px rgba(0,0,0,.4);
-}
-*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
-body{background:var(--bg);color:var(--text-main)}
-
-.header{background:var(--card-bg);border-bottom:1px solid var(--border);position:sticky;top:0}
-.header-inner{max-width:1440px;margin:auto;padding:12px 24px;display:flex;justify-content:space-between}
-.logo{font-weight:800;color:var(--accent)}
-
-.dashboard{
-  display:grid;
-  grid-template-columns:350px 1fr 320px;
-  max-width:1440px;
-  margin:20px auto;
-  padding:0 20px 40px;
-  gap:20px
-}
-.column{display:flex;flex-direction:column;gap:20px}
-.card{
-  background:var(--card-bg);
-  border-radius:var(--radius);
-  border:1px solid var(--border);
-  box-shadow:var(--shadow);
-  padding:16px
-}
-.card-title{
-  font-size:12px;
-  font-weight:700;
-  color:var(--text-muted);
-  margin-bottom:10px;
-  text-transform:uppercase
+  --bg: #0f111a;
+  --card-bg: #1e2134;
+  --border: #2c2f4a;
+  --text-main: #f1f1f1;
+  --text-muted: #a0a3b8;
+  --green: #00ff96;
+  --red: #ff5c5c;
+  --radius: 12px;
+  --shadow: 0 6px 16px rgba(0,0,0,0.4);
+  --accent: #7f5af0;
 }
 
-.chat-container{overflow-y:auto;display:flex;flex-direction:column;gap:6px}
-.small-box{height:180px}
-.mid-box{height:300px}
-.large-box{height:500px}
-
-.chat-item{
-  padding:8px;
-  font-size:12px;
-  border-left:3px solid;
-  background:rgba(255,255,255,.02)
+[data-theme="light"] {
+  --bg: #f7f7f9;
+  --card-bg: #ffffff;
+  --border: #e4e6ef;
+  --text-main: #222;
+  --text-muted: #8f95a3;
+  --green: #16a34a;
+  --red: #dc2626;
+  --shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+  --accent: #4f46e5;
 }
-.is-up{border-color:var(--green)}
-.is-down{border-color:var(--red)}
 
-.leader-row{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  font-size:13px;
-  padding:6px 0;
+* {
+  margin:0; padding:0; box-sizing:border-box;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  transition: all 0.3s;
+}
+
+body { background: var(--bg); color: var(--text-main); min-height:100vh; }
+
+/* HEADER */
+.header {
+  background: var(--card-bg);
   border-bottom:1px solid var(--border);
-  align-items:center
+  position: sticky; top:0; z-index:100;
 }
-.leader-row:last-child{border-bottom:none}
-.price{text-align:right;color:var(--text-muted)}
-.up{color:var(--green);text-align:right}
-.down{color:var(--red);text-align:right}
+.header-inner {
+  max-width: 1440px; margin:0 auto; padding:12px 24px;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.logo { font-weight:800; font-size:20px; color:var(--accent); }
+.header-right { display:flex; align-items:center; gap:12px; }
+.clock-box {
+  background: var(--bg); padding:6px 14px;
+  border-radius:999px; font-size:13px; border:1px solid var(--border);
+}
+.theme-toggle {
+  width:38px; height:38px; border-radius:50%; border:1px solid var(--border);
+  background:var(--bg); cursor:pointer; font-size:18px;
+}
 
-@media(max-width:1100px){
-.dashboard{grid-template-columns:1fr}
+/* DASHBOARD GRID */
+.dashboard {
+  display:grid; grid-template-columns:350px 1fr 320px;
+  max-width:1440px; margin:20px auto; padding:0 20px 40px; gap:20px;
 }
+.column { display:flex; flex-direction:column; gap:20px; }
+
+/* CARDS */
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  border:1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding:16px; display:flex; flex-direction:column;
+}
+.card-title {
+  font-size:13px; font-weight:700;
+  margin-bottom:12px; text-transform:uppercase;
+  color: var(--text-muted);
+}
+
+/* CHAT BOXES */
+.chat-container { overflow-y:auto; display:flex; flex-direction:column; gap:6px; scroll-behavior:smooth; }
+.small-box{height:180px;} .mid-box{height:300px;} .large-box{height:500px;}
+.chat-item {
+  padding:10px; border-radius:8px; font-size:12px;
+  background: var(--bg); border-left:4px solid #555;
+}
+.is-up { border-left-color: var(--green); background: rgba(0,255,150,0.1); }
+.is-down { border-left-color: var(--red); background: rgba(255,92,92,0.1); }
+
+/* LEADERS TABLE */
+.leaders-content { display:flex; flex-direction:column; gap:6px; font-size:12px; }
+.leader-row {
+  display:grid; grid-template-columns:1fr 1fr 1fr; padding:6px 8px;
+  border-radius:6px; align-items:center;
+  transition: background 0.2s;
+}
+.leader-row:hover { background: rgba(127,90,240,0.1); }
+.leader-price { text-align:right; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.leader-change.up { color: var(--green); text-align:right; font-weight:600; }
+.leader-change.down { color: var(--red); text-align:right; font-weight:600; }
+
+/* CONTACTS */
+.contact-link { color: var(--accent); text-decoration:none; font-weight:600; margin-top:5px; font-size:13px; }
+
+/* RESPONSIVE */
+@media(max-width:1100px){.dashboard{grid-template-columns:1fr;}}
 </style>
 </head>
-
 <body>
 
 <header class="header">
   <div class="header-inner">
     <div class="logo">CRYPTO WORLD</div>
-    <button id="theme-btn">🌓</button>
+    <div class="header-right">
+      <div class="clock-box">UTC: <span id="clock-utc">00:00:00</span></div>
+      <button id="theme-btn" class="theme-toggle">🌓</button>
+    </div>
   </div>
 </header>
 
 <main class="dashboard">
+  <!-- LEFT COLUMN -->
+  <div class="column">
+    <div class="card">
+      <div class="card-title">Новини Live</div>
+      <div id="news-container" class="chat-container small-box"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Делістинг / Лістинг</div>
+      <div id="listings-container" class="chat-container small-box"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Памп & Дамп Live</div>
+      <div id="pump-chat" class="chat-container large-box"></div>
+    </div>
+  </div>
 
-<!-- LEFT -->
-<div class="column">
-  <div class="card">
-    <div class="card-title">Новини Live</div>
-    <div id="news-container" class="chat-container small-box"></div>
+  <!-- MIDDLE COLUMN -->
+  <div class="column">
+    <div class="card">
+      <div class="card-title">Open Interest Chat</div>
+      <div id="oi-chat" class="chat-container mid-box"></div>
+    </div>
+    <div class="card" style="flex-grow:1;">
+      <div class="card-title">Ліквідації Live</div>
+      <div id="liquidations-chat" class="chat-container" style="height:100%; min-height:400px;"></div>
+    </div>
   </div>
-  <div class="card">
-    <div class="card-title">Делістинг / Лістинг</div>
-    <div id="listings-container" class="chat-container small-box"></div>
-  </div>
-  <div class="card">
-    <div class="card-title">Памп & Дамп</div>
-    <div id="pump-chat" class="chat-container large-box"></div>
-  </div>
-</div>
 
-<!-- CENTER -->
-<div class="column">
-  <div class="card">
-    <div class="card-title">Open Interest</div>
-    <div id="oi-chat" class="chat-container mid-box"></div>
+  <!-- RIGHT COLUMN -->
+  <div class="column">
+    <div class="card">
+      <div class="card-title">Топ Гейнери (24г)</div>
+      <div id="gainers-list" class="leaders-content">Завантаження...</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Топ Лузери (24г)</div>
+      <div id="losers-list" class="leaders-content">Завантаження...</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Про нас</div>
+      <div style="font-size:13px; color:var(--text-muted); line-height:1.5; margin-bottom:10px;">
+        Моніторинг крипто-ринку в реальному часі. Дані про аномальні об'єми, зміни OI та ліквідації.
+      </div>
+      <div class="card-title" style="font-size:11px; margin-bottom:5px;">Контакти</div>
+      <a href="mailto:support@cryptoworld.com" class="contact-link">📧 support@cryptoworld.com</a>
+      <a href="https://t.me/crypto_world_admin" target="_blank" class="contact-link">✈️ Telegram: @crypto_world_admin</a>
+    </div>
   </div>
-  <div class="card">
-    <div class="card-title">Ліквідації</div>
-    <div id="liquidations-chat" class="chat-container large-box"></div>
-  </div>
-</div>
-
-<!-- RIGHT -->
-<div class="column">
-  <div class="card">
-    <div class="card-title">Топ Гейнери (24г)</div>
-    <div id="gainers-list"></div>
-  </div>
-  <div class="card">
-    <div class="card-title">Топ Лузери (24г)</div>
-    <div id="losers-list"></div>
-  </div>
-</div>
-
 </main>
 
 <script>
 const API_URL="http://127.0.0.1:5000";
 
 /* THEME */
-document.getElementById("theme-btn").onclick=()=>{
-  const t=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";
-  document.documentElement.setAttribute("data-theme",t);
+const themeBtn=document.getElementById('theme-btn');
+const toggleTheme=()=>{const isDark=document.documentElement.getAttribute('data-theme')==='dark'; document.documentElement.setAttribute('data-theme',isDark?'light':'dark'); localStorage.setItem('theme',isDark?'light':'dark'); themeBtn.textContent=isDark?'🌓':'☀️';};
+if(localStorage.getItem('theme')==='dark'){document.documentElement.setAttribute('data-theme','dark'); themeBtn.textContent='☀️';}
+themeBtn.addEventListener('click',toggleTheme);
+
+/* UTC CLOCK */
+function updateClock(){document.getElementById('clock-utc').textContent=new Date().toLocaleTimeString('uk-UA',{timeZone:'UTC'});}
+setInterval(updateClock,1000); updateClock();
+
+/* CHAT MESSAGE */
+function processMessage(text,containerId='pump-chat',isHistory=false){
+  const container=document.getElementById(containerId);
+  if(!container)return;
+  const div=document.createElement('div');
+  const isDown=/🔴|DUMP|📉/.test(text);
+  div.className=`chat-item ${isDown?'is-down':'is-up'}`;
+  div.innerHTML=text;
+  if(isHistory) container.appendChild(div); else container.prepend(div);
+  if(container.children.length>100) container.removeChild(isHistory?container.firstChild:container.lastChild);
+  if(isHistory) container.scrollTop=container.scrollHeight;
 }
 
-/* CHAT */
-function processMessage(text){
-  const el=document.createElement("div");
-  el.className=`chat-item ${/DUMP|📉/.test(text)?"is-down":"is-up"}`;
-  el.innerHTML=text;
-  pump-chat.prepend(el);
-}
-
-/* LEADERS */
-function formatPrice(p){
-  if(p>1000)return p.toFixed(2);
-  if(p>1)return p.toFixed(4);
-  return p.toFixed(6);
-}
-
-function renderLeaders(id,list){
-  document.getElementById(id).innerHTML=list.map(i=>`
-    <div class="leader-row">
-      <div>${i.symbol}</div>
-      <div class="price">$${formatPrice(i.price)}</div>
-      <div class="${i.change>=0?'up':'down'}">
-        ${i.change>=0?'+':''}${i.change}%
-      </div>
-    </div>
-  `).join("");
-}
-
-function setupLeadersSSE(){
-  const s=new EventSource(API_URL+"/leaders_stream");
-  s.onmessage=e=>{
-    const d=JSON.parse(e.data);
-    renderLeaders("gainers-list",d.gainers);
-    renderLeaders("losers-list",d.losers);
-  };
-  s.onerror=()=>{s.close();setTimeout(setupLeadersSSE,5000);}
-}
-setupLeadersSSE();
+/* LEADERS SSE */
+function formatPrice(p){return p>1000?p.toFixed(2):p>1?p.toFixed(4):p.toFixed(6);}
+function renderLeaders(containerId,items){const el=document.getElementById(containerId); if(!items)return; el.innerHTML=items.map(i=>`<div class="leader-row">
+  <div>${i.symbol}</div>
+  <div class="leader-price">$${formatPrice(i.price||0)}</div>
+  <div class="leader-change ${i.change>=0?'up':'down'}">${i.change>=0?'+':''}${i.change}%</div>
+</div>`).join('');}
+function setupLeadersSSE(){const source=new EventSource(`${API_URL}/leaders_stream`);
+source.onmessage=e=>{const data=JSON.parse(e.data); renderLeaders('gainers-list',data.gainers); renderLeaders('losers-list',data.losers);};
+source.onerror=()=>{source.close(); setTimeout(setupLeadersSSE,5000);}}
+window.onload=()=>{setupLeadersSSE();}
 </script>
 
 </body>
