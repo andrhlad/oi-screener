@@ -38,6 +38,7 @@
 
 body { background: var(--bg); color: var(--text-main); }
 
+/* HEADER */
 .header {
   background: var(--card-bg);
   border-bottom:1px solid var(--border);
@@ -49,6 +50,7 @@ body { background: var(--bg); color: var(--text-main); }
 }
 .logo { font-weight:800; font-size:20px; color:var(--accent); }
 
+/* DASHBOARD */
 .dashboard {
   display:grid; grid-template-columns:350px 1fr 320px;
   max-width:1440px; margin:20px auto; padding:0 20px 40px; gap:20px;
@@ -68,43 +70,29 @@ body { background: var(--bg); color: var(--text-main); }
   color: var(--text-muted);
 }
 
+/* LEADERS */
 .leaders-content { display:flex; flex-direction:column; gap:6px; font-size:12px; }
-
 .leader-row {
-  display:grid; 
-  grid-template-columns:1fr 1fr 1fr;
+  display:grid; grid-template-columns:1fr 1fr 1fr;
   padding:6px 8px;
   border-radius:6px;
   align-items:center;
 }
-
 .leader-symbol {
   display:flex;
   align-items:center;
   gap:6px;
 }
-
 .leader-symbol img {
+  width:14px;
   height:14px;
-  width:auto;
 }
-
 .leader-price {
   text-align:right;
   color: var(--text-muted);
 }
-
-.leader-change.up { 
-  color: var(--green); 
-  text-align:right; 
-  font-weight:600; 
-}
-
-.leader-change.down { 
-  color: var(--red); 
-  text-align:right; 
-  font-weight:600; 
-}
+.leader-change.up { color: var(--green); text-align:right; font-weight:600; }
+.leader-change.down { color: var(--red); text-align:right; font-weight:600; }
 
 @media(max-width:1100px){
   .dashboard{grid-template-columns:1fr;}
@@ -124,6 +112,7 @@ body { background: var(--bg); color: var(--text-main); }
   <div></div>
   <div></div>
 
+  <!-- RIGHT COLUMN -->
   <div class="column">
     <div class="card">
       <div class="card-title">Топ Гейнери (24г)</div>
@@ -144,22 +133,14 @@ function formatPrice(p){
   return p>1000?p.toFixed(2):p>1?p.toFixed(4):p.toFixed(6);
 }
 
-/* EXCHANGE ICON (SVG VERSION) */
+/* EXCHANGE ICON */
 function getExchangeIcon(exchange){
   if(exchange==="binance"){
-    return `
-      <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.svg"
-           title="Binance">
-    `;
+    return `<img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png" title="Binance">`;
   }
-
   if(exchange==="bybit"){
-    return `
-      <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Bybit_logo.svg"
-           title="Bybit">
-    `;
+    return `<img src="https://seeklogo.com/images/B/bybit-logo-25B3F6A4D7-seeklogo.com.png" title="Bybit">`;
   }
-
   return "";
 }
 
