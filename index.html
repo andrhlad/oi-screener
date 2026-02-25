@@ -43,50 +43,37 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 .dashboard { display:grid; grid-template-columns:350px 1fr 320px; max-width:1440px; margin:20px auto; padding:0 20px 40px; gap:20px; }
 .column { display:flex; flex-direction:column; gap:20px; }
 
-/* CARDS */
+/* CARDS & CHATS */
 .card { background: var(--card-bg); border-radius: var(--radius); border:1px solid var(--border); box-shadow: var(--shadow); padding:16px; display:flex; flex-direction:column; }
 .card-title { font-size:13px; font-weight:700; margin-bottom:12px; text-transform:uppercase; color: var(--text-muted); }
+.chat-container { overflow-y:auto; display:flex; flex-direction:column; gap:6px; scroll-behavior:smooth; background: var(--bg); border-radius: 8px; padding: 5px; }
 
 /* LEADERS TABLE */
 .leaders-content { display:flex; flex-direction:column; gap:6px; font-size:12px; }
-.leader-row { 
-  display:grid; 
-  grid-template-columns: 1.2fr 1.1fr 1.2fr; 
-  padding:6px 8px; 
-  border-radius:6px; 
-  align-items:center; 
-}
-.leader-row:hover { background: rgba(127,90,240,0.1); }
+.leader-row { display:grid; grid-template-columns: 1.1fr 1fr 1.3fr; padding:8px 8px; border-radius:6px; align-items:center; }
+.leader-row:hover { background: rgba(127,90,240,0.05); }
 
-/* Спеціальний стиль для ціни та її мерехтіння */
-.leader-price { 
-  text-align:right; 
-  color: var(--text-muted); 
-  font-variant-numeric: tabular-nums; 
-  white-space: nowrap;
-  transition: color 0.6s ease; /* Плавне повернення кольору */
-}
+/* АНІМАЦІЯ ЦІНИ */
+.leader-price { text-align:right; color: var(--text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; transition: color 0.6s ease; padding-right: 8px; }
 .leader-price sub { font-size: 0.75em; bottom: -0.1em; opacity: 0.7; margin: 0 1px; }
-
-/* Класи для спалаху тексту */
 .price-flash-up { color: var(--green) !important; font-weight: 700; transition: none !important; }
 .price-flash-down { color: var(--red) !important; font-weight: 700; transition: none !important; }
 
-.leader-symbol { display: flex; align-items: center; gap: 8px; font-weight: 600; }
-.ex-icon-link { display: flex; align-items: center; transition: transform 0.2s; }
-.ex-icon-link:hover { transform: scale(1.15); }
-.ex-icon { width: 16px; height: 16px; border-radius: 3px; object-fit: contain; }
+/* ОВАЛИ ВІДСОТКІВ (BADGES) */
+.change-badge { display: inline-flex; align-items: center; justify-content: center; padding: 4px 10px; border-radius: 999px; font-weight: 700; min-width: 65px; text-align: center; }
+.change-badge.up { background: rgba(0, 255, 150, 0.15); color: var(--green); }
+.change-badge.down { background: rgba(255, 92, 92, 0.15); color: var(--red); }
 
+.leader-symbol { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.ex-icon { width: 16px; height: 16px; border-radius: 3px; object-fit: contain; }
 .coin-link { text-decoration: none; color: inherit; border-bottom: 1px dashed transparent; }
 .coin-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.leader-change { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+.cg-icon { width: 14px; height: 14px; border-radius: 2px; opacity: 0.6; }
+.cg-icon:hover { opacity: 1; }
 
-.leader-change { display: flex; align-items: center; justify-content: flex-end; gap: 4px; font-weight: 600; }
-.leader-change.up { color: var(--green); }
-.leader-change.down { color: var(--red); }
-
-.cg-link { margin-left: 6px; display: inline-flex; align-items: center; vertical-align: middle; opacity: 0.6; }
-.cg-link:hover { opacity: 1; }
-.cg-icon { width: 14px; height: 14px; border-radius: 2px; }
+/* CONTACTS */
+.contact-link { color: var(--accent); text-decoration:none; font-weight:600; margin-top:5px; font-size:13px; display: block; }
 
 @media(max-width:1100px){.dashboard{grid-template-columns:1fr;}}
 </style>
@@ -125,8 +112,13 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
       <div id="losers-list" class="leaders-content">Завантаження...</div>
     </div>
     <div class="card">
-      <div class="card-title" style="font-size:12px;">Контакти</div>
-      <a href="https://t.me/crypto_world_admin" target="_blank" style="color:var(--accent); text-decoration:none; font-weight:600; font-size:13px;">✈️ Telegram: @crypto_world_admin</a>
+      <div class="card-title" style="font-size:12px;">Про нас</div>
+      <div style="font-size:13px; color:var(--text-muted); line-height:1.5; margin-bottom:10px;">
+        Моніторинг крипто-ринку в реальному часі. Дані про аномальні об'єми, зміни OI та ліквідації.
+      </div>
+      <div class="card-title" style="font-size:11px; margin-bottom:5px;">Контакти</div>
+      <a href="mailto:support@cryptoworld.com" class="contact-link">📧 support@cryptoworld.com</a>
+      <a href="https://t.me/crypto_world_admin" target="_blank" class="contact-link">✈️ Telegram: @crypto_world_admin</a>
     </div>
   </div>
 </main>
@@ -149,7 +141,7 @@ setInterval(() => { document.getElementById('clock-utc').textContent = new Date(
 
 function getExchangeIcon(ex) {
   const icon = ex === "binance" ? "https://bin.bnbstatic.com/static/images/common/favicon.ico" : "https://www.bybit.com/favicon.ico";
-  return `<a href="${REF_LINKS[ex]||'#'}" target="_blank" class="ex-icon-link"><img src="${icon}" class="ex-icon"></a>`;
+  return `<a href="${REF_LINKS[ex]||'#'}" target="_blank"><img src="${icon}" class="ex-icon"></a>`;
 }
 
 function formatPrice(p) {
@@ -173,13 +165,13 @@ function renderLeaders(containerId, items) {
     const tradeUrl = i.exchange === "binance" ? `https://www.binance.com/en/futures/${i.symbol}USDT` : `https://www.bybit.com/trade/usdt/${i.symbol}USDT`;
     const cgUrl = `https://www.coinglass.com/tv/en/${i.exchange.charAt(0).toUpperCase() + i.exchange.slice(1)}_${i.symbol}USDT`;
     
-    // Визначаємо спалах тексту ціни
     let flashClass = "";
     if (previousPrices[id]) {
       if (i.price > previousPrices[id]) flashClass = "price-flash-up";
       else if (i.price < previousPrices[id]) flashClass = "price-flash-down";
     }
     previousPrices[id] = i.price;
+    const isUp = i.change >= 0;
 
     return `
     <div class="leader-row">
@@ -188,18 +180,17 @@ function renderLeaders(containerId, items) {
         <a href="${tradeUrl}" target="_blank" class="coin-link">${i.symbol}</a>
       </div>
       <div class="leader-price ${flashClass}" id="price-${id}">$${formatPrice(i.price)}</div>
-      <div class="leader-change ${i.change >= 0 ? 'up' : 'down'}">
-        <span>${i.change >= 0 ? '+' : ''}${i.change}%</span>
-        <a href="${cgUrl}" target="_blank" class="cg-link"><img src="https://www.coinglass.com/favicon.ico" class="cg-icon"></a>
+      <div class="leader-change">
+        <div class="change-badge ${isUp ? 'up' : 'down'}">${isUp ? '+' : ''}${i.change}%</div>
+        <a href="${cgUrl}" target="_blank"><img src="https://www.coinglass.com/favicon.ico" class="cg-icon"></a>
       </div>
     </div>`;
   }).join('');
 
-  // Прибираємо колірний спалах з цифр через 500мс
   setTimeout(() => {
     items.forEach(i => {
-      const priceEl = document.getElementById(`price-${i.exchange}_${i.symbol}`);
-      if (priceEl) priceEl.classList.remove('price-flash-up', 'price-flash-down');
+      const p = document.getElementById(`price-${i.exchange}_${i.symbol}`);
+      if (p) p.classList.remove('price-flash-up', 'price-flash-down');
     });
   }, 500);
 }
