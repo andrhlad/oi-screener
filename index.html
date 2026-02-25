@@ -58,7 +58,7 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 
 /* LEADERS TABLE */
 .leaders-content { display:flex; flex-direction:column; gap:6px; font-size:12px; }
-.leader-row { display:grid; grid-template-columns:1.2fr 1fr 1.3fr; padding:6px 8px; border-radius:6px; align-items:center; transition: background 0.2s; }
+.leader-row { display:grid; grid-template-columns:1.2fr 1.1fr 1.2fr; padding:6px 8px; border-radius:6px; align-items:center; transition: background 0.2s; }
 .leader-row:hover { background: rgba(127,90,240,0.1); }
 
 .leader-symbol { display: flex; align-items: center; gap: 8px; font-weight: 600; }
@@ -77,6 +77,14 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
   border-bottom-color: var(--accent); 
 }
 
+/* Спеціальний стиль для нулів у ціні */
+.leader-price { text-align:right; color: var(--text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.leader-price sub { font-size: 0.75em; bottom: -0.1em; opacity: 0.7; margin: 0 1px; }
+
+.leader-change { display: flex; align-items: center; justify-content: flex-end; gap: 4px; font-weight: 600; }
+.leader-change.up { color: var(--green); }
+.leader-change.down { color: var(--red); }
+
 .cg-link {
   margin-left: 6px;
   display: inline-flex;
@@ -86,11 +94,6 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 }
 .cg-link:hover { opacity: 1; }
 .cg-icon { width: 14px; height: 14px; border-radius: 2px; }
-
-.leader-price { text-align:right; color: var(--text-muted); font-variant-numeric: tabular-nums; }
-.leader-change { display: flex; align-items: center; justify-content: flex-end; gap: 4px; font-weight: 600; }
-.leader-change.up { color: var(--green); }
-.leader-change.down { color: var(--red); }
 
 /* CONTACTS */
 .contact-link { color: var(--accent); text-decoration:none; font-weight:600; margin-top:5px; font-size:13px; }
@@ -184,21 +187,6 @@ function updateClock(){
 setInterval(updateClock,1000);
 updateClock();
 
-function processMessage(text, containerId='pump-chat', isHistory=false){
-  const container = document.getElementById(containerId);
-  if(!container) return;
-  const div = document.createElement('div');
-  const isDown = /🔴|DUMP|📉/.test(text);
-  div.className = `chat-item ${isDown?'is-down':'is-up'}`;
-  div.innerHTML = text;
-  if(isHistory) container.appendChild(div);
-  else container.prepend(div);
-  if(container.children.length>100){
-    container.removeChild(isHistory ? container.firstChild : container.lastChild);
-  }
-  if(isHistory) container.scrollTop = container.scrollHeight;
-}
-
 function getExchangeIcon(exchange) {
   const refUrl = REF_LINKS[exchange] || "#";
   let iconUrl = "";
@@ -211,20 +199,41 @@ function getExchangeIcon(exchange) {
     </a>`;
 }
 
-function formatPrice(p){
-  return p>1000?p.toFixed(2):p>1?p.toFixed(4):p.toFixed(6);
+/**
+ * Оновлена функція форматування ціни.
+ * Якщо після коми більше 3 нулів, замінює їх на індекс (напр. 0.0{4}123)
+ */
+function formatPrice(p) {
+  if (!p || p === 0) return "0.00";
+  
+  // Для цін >= 1
+  if (p >= 1) {
+    return p >= 1000 
+      ? p.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) 
+      : p.toFixed(4);
+  }
+
+  // Для цін < 1 (напр. 0.000000123)
+  const str = p.toFixed(12); // Беремо запас для точності
+  const match = str.match(/^0\.(0+)/); // Шукаємо нулі після коми
+  
+  if (match && match[1].length > 3) {
+    const zeroCount = match[1].length;
+    const remainingDigits = str.substring(2 + zeroCount).substring(0, 4); // Беремо перші 4 цифри після нулів
+    return `0.0<sub>${zeroCount}</sub>${remainingDigits}`;
+  }
+
+  return p.toFixed(6); // Для звичайних малих цін
 }
 
 function renderLeaders(containerId, items){
   const el = document.getElementById(containerId);
   if(!items) return;
   el.innerHTML = items.map(i=>{
-    // 1. Посилання на торгову пару (на назві монети)
     let tradeUrl = "#";
     if(i.exchange === "binance") tradeUrl = `https://www.binance.com/en/futures/${i.symbol}USDT`;
     if(i.exchange === "bybit") tradeUrl = `https://www.bybit.com/trade/usdt/${i.symbol}USDT`;
     
-    // 2. Посилання на Coinglass (на іконці CG)
     const exName = i.exchange.charAt(0).toUpperCase() + i.exchange.slice(1);
     const cgUrl = `https://www.coinglass.com/tv/en/${exName}_${i.symbol}USDT`;
     
