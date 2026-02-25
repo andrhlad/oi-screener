@@ -1,90 +1,97 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Crypto World Dashboard</title>
-<style>
-:root {
-  --bg: #0f111a;
-  --card-bg: #1e2134;
-  --border: #2c2f4a;
-  --text-main: #f1f1f1;
-  --text-muted: #a0a3b8;
-  --green: #00ff96;
-  --red: #ff5c5c;
-  --radius: 12px;
-  --shadow: 0 6px 16px rgba(0,0,0,0.4);
-  --accent: #7f5af0;
-}
-[data-theme="light"] {
-  --bg: #f7f7f9;
-  --card-bg: #ffffff;
-  --border: #e4e6ef;
-  --text-main: #222;
-  --text-muted: #8f95a3;
-  --green: #16a34a;
-  --red: #dc2626;
-  --shadow: 0 8px 20px rgba(15,23,42,0.06);
-  --accent: #4f46e5;
-}
-* { margin:0; padding:0; box-sizing:border-box; font-family:"Inter",system-ui,-apple-system,sans-serif; transition: background 0.3s, color 0.3s; }
-body { background: var(--bg); color: var(--text-main); min-height:100vh; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Open Interest Screener — Crypto World Dashboard</title>
+  <meta name="description" content="Моніторинг крипто-ринку в реальному часі: зміни Open Interest (OI), аномальні об'єми та ліквідації на Binance та Bybit.">
+  <meta name="keywords" content="open interest screener, crypto world, крипто моніторинг, памп і дамп, ліквідації криптовалют">
+  
+  <meta property="og:title" content="Open Interest Screener — Crypto World">
+  <meta property="og:description" content="Аналітика крипто-ринку в реальному часі.">
+  <meta property="og:url" content="https://openinterestscreener.com">
 
-/* HEADER */
-.header { background: var(--card-bg); border-bottom:1px solid var(--border); position: sticky; top:0; z-index:100; }
-.header-inner { max-width:1440px; margin:0 auto; padding:12px 24px; display:flex; justify-content:space-between; align-items:center; }
-.logo { font-weight:800; font-size:20px; color:var(--accent); }
-.header-right { display:flex; align-items:center; gap:12px; }
-.clock-box { background: var(--bg); padding:6px 14px; border-radius:999px; font-size:13px; border:1px solid var(--border); }
-.theme-toggle { width:38px; height:38px; border-radius:50%; border:1px solid var(--border); background:var(--bg); cursor:pointer; font-size:18px; }
+  <style>
+    :root {
+      --bg: #0f111a;
+      --card-bg: #1e2134;
+      --border: #2c2f4a;
+      --text-main: #f1f1f1;
+      --text-muted: #a0a3b8;
+      --green: #00ff96;
+      --red: #ff5c5c;
+      --radius: 12px;
+      --shadow: 0 6px 16px rgba(0,0,0,0.4);
+      --accent: #7f5af0;
+    }
+    [data-theme="light"] {
+      --bg: #f7f7f9;
+      --card-bg: #ffffff;
+      --border: #e4e6ef;
+      --text-main: #222;
+      --text-muted: #8f95a3;
+      --green: #16a34a;
+      --red: #dc2626;
+      --shadow: 0 8px 20px rgba(15,23,42,0.06);
+      --accent: #4f46e5;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; font-family:"Inter",system-ui,-apple-system,sans-serif; transition: background 0.3s, color 0.3s; }
+    body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 
-/* DASHBOARD GRID */
-.dashboard { display:grid; grid-template-columns:350px 1fr 320px; max-width:1440px; margin:20px auto; padding:0 20px 40px; gap:20px; }
-.column { display:flex; flex-direction:column; gap:20px; }
+    /* HEADER */
+    .header { background: var(--card-bg); border-bottom:1px solid var(--border); position: sticky; top:0; z-index:100; }
+    .header-inner { max-width:1440px; margin:0 auto; padding:12px 24px; display:flex; justify-content:space-between; align-items:center; }
+    .logo { font-weight:800; font-size:20px; color:var(--accent); }
+    .header-right { display:flex; align-items:center; gap:12px; }
+    .clock-box { background: var(--bg); padding:6px 14px; border-radius:999px; font-size:13px; border:1px solid var(--border); }
+    .theme-toggle { width:38px; height:38px; border-radius:50%; border:1px solid var(--border); background:var(--bg); cursor:pointer; font-size:18px; }
 
-/* CARDS & CHATS */
-.card { background: var(--card-bg); border-radius: var(--radius); border:1px solid var(--border); box-shadow: var(--shadow); padding:16px; display:flex; flex-direction:column; }
-.card-title { font-size:13px; font-weight:700; margin-bottom:12px; text-transform:uppercase; color: var(--text-muted); }
+    /* DASHBOARD GRID */
+    .dashboard { display:grid; grid-template-columns:350px 1fr 320px; max-width:1440px; margin:20px auto; padding:0 20px 40px; gap:20px; }
+    .column { display:flex; flex-direction:column; gap:20px; }
 
-.chat-container { 
-  overflow-y:auto; 
-  display:flex; 
-  flex-direction:column; 
-  gap:6px; 
-  scroll-behavior:smooth; 
-  background: transparent; 
-  padding: 0; 
-}
+    /* CARDS & CHATS */
+    .card { background: var(--card-bg); border-radius: var(--radius); border:1px solid var(--border); box-shadow: var(--shadow); padding:16px; display:flex; flex-direction:column; }
+    .card-title { font-size:13px; font-weight:700; margin-bottom:12px; text-transform:uppercase; color: var(--text-muted); }
 
-/* LEADERS TABLE */
-.leaders-content { display:flex; flex-direction:column; gap:6px; font-size:12px; }
-.leader-row { display:grid; grid-template-columns: 1.1fr 1fr 1.3fr; padding:8px 8px; border-radius:6px; align-items:center; }
-.leader-row:hover { background: rgba(127,90,240,0.05); }
+    .chat-container { 
+      overflow-y:auto; 
+      display:flex; 
+      flex-direction:column; 
+      gap:6px; 
+      scroll-behavior:smooth; 
+      background: transparent; 
+      padding: 0; 
+    }
 
-/* КОЛІР ЦІНИ (ФІКСОВАНИЙ) */
-.leader-price { text-align:right; font-variant-numeric: tabular-nums; white-space: nowrap; padding-right: 8px; font-weight: 600; }
-.leader-price.up { color: var(--green); }
-.leader-price.down { color: var(--red); }
-.leader-price sub { font-size: 0.75em; bottom: -0.1em; opacity: 0.7; margin: 0 1px; }
+    /* LEADERS TABLE */
+    .leaders-content { display:flex; flex-direction:column; gap:6px; font-size:12px; }
+    .leader-row { display:grid; grid-template-columns: 1.1fr 1fr 1.3fr; padding:8px 8px; border-radius:6px; align-items:center; }
+    .leader-row:hover { background: rgba(127,90,240,0.05); }
 
-/* BADGES */
-.change-badge { display: inline-flex; align-items: center; justify-content: center; padding: 4px 10px; border-radius: 999px; font-weight: 700; min-width: 65px; text-align: center; }
-.change-badge.up { background: rgba(0, 255, 150, 0.15); color: var(--green); }
-.change-badge.down { background: rgba(255, 92, 92, 0.15); color: var(--red); }
+    .leader-price { text-align:right; font-variant-numeric: tabular-nums; white-space: nowrap; padding-right: 8px; font-weight: 600; }
+    .leader-price.up { color: var(--green); }
+    .leader-price.down { color: var(--red); }
+    .leader-price sub { font-size: 0.75em; bottom: -0.1em; opacity: 0.7; margin: 0 1px; }
 
-.leader-symbol { display: flex; align-items: center; gap: 8px; font-weight: 600; }
-.ex-icon { width: 16px; height: 16px; border-radius: 3px; object-fit: contain; }
-.coin-link { text-decoration: none; color: inherit; border-bottom: 1px dashed transparent; }
-.coin-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
-.leader-change { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
-.cg-icon { width: 14px; height: 14px; border-radius: 2px; opacity: 0.6; }
-.cg-icon:hover { opacity: 1; }
+    /* BADGES */
+    .change-badge { display: inline-flex; align-items: center; justify-content: center; padding: 4px 10px; border-radius: 999px; font-weight: 700; min-width: 65px; text-align: center; }
+    .change-badge.up { background: rgba(0, 255, 150, 0.15); color: var(--green); }
+    .change-badge.down { background: rgba(255, 92, 92, 0.15); color: var(--red); }
 
-.contact-link { color: var(--accent); text-decoration:none; font-weight:600; margin-top:5px; font-size:13px; display: block; }
+    .leader-symbol { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+    .ex-icon { width: 16px; height: 16px; border-radius: 3px; object-fit: contain; }
+    .coin-link { text-decoration: none; color: inherit; border-bottom: 1px dashed transparent; }
+    .coin-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
+    .leader-change { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+    .cg-icon { width: 14px; height: 14px; border-radius: 2px; opacity: 0.6; }
+    .cg-icon:hover { opacity: 1; }
 
-@media(max-width:1100px){.dashboard{grid-template-columns:1fr;}}
-</style>
+    .contact-link { color: var(--accent); text-decoration:none; font-weight:600; margin-top:5px; font-size:13px; display: block; }
+
+    @media(max-width:1100px){.dashboard{grid-template-columns:1fr;}}
+  </style>
 </head>
 <body>
 
@@ -132,7 +139,11 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 </main>
 
 <script>
-const API_URL = "http://127.0.0.1:5000";
+/* УВАГА: Коли ви викладете бекенд на сервер (наприклад, Render, Railway або VPS), 
+замініть 127.0.0.1 на вашу реальну адресу сервера. 
+На GitHub Pages локальна адреса 127.0.0.1 працювати не буде!
+*/
+const API_URL = "http://127.0.0.1:5000"; 
 const REF_LINKS = { binance: "https://accounts.binance.com/register?ref=184649565", bybit: "https://www.bybit.com/invite?ref=J8QWYL%230" };
 
 const themeBtn = document.getElementById('theme-btn');
@@ -161,7 +172,6 @@ function formatPrice(p) {
   return p.toFixed(6);
 }
 
-// Додано параметр forceColorClass для фіксації кольору
 function renderLeaders(containerId, items, forceColorClass) {
   const el = document.getElementById(containerId);
   if (!items) return;
@@ -191,7 +201,6 @@ function setupLeadersSSE() {
   const source = new EventSource(`${API_URL}/leaders_stream`);
   source.onmessage = e => {
     const data = JSON.parse(e.data);
-    // Для гейнерів передаємо 'up' (зелений), для лузерів 'down' (червоний)
     renderLeaders('gainers-list', data.gainers, 'up');
     renderLeaders('losers-list', data.losers, 'down');
   };
