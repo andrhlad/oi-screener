@@ -61,9 +61,21 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 .leader-row { display:grid; grid-template-columns:1.2fr 1fr 1fr; padding:6px 8px; border-radius:6px; align-items:center; transition: background 0.2s; }
 .leader-row:hover { background: rgba(127,90,240,0.1); }
 
-/* НОВІ СТИЛІ ДЛЯ ІКОНОК БІРЖ */
+/* СТИЛІ ДЛЯ ІКОНОК ТА ПОСИЛАНЬ */
 .leader-symbol { display: flex; align-items: center; gap: 8px; font-weight: 600; }
 .ex-icon { width: 16px; height: 16px; border-radius: 3px; object-fit: contain; }
+
+/* Стиль для реферального посилання в назві монети */
+.coin-link { 
+  text-decoration: none; 
+  color: inherit; 
+  border-bottom: 1px dashed transparent; 
+  transition: all 0.2s;
+}
+.coin-link:hover { 
+  color: var(--accent); 
+  border-bottom-color: var(--accent); 
+}
 
 .leader-price { text-align:right; color: var(--text-muted); font-variant-numeric: tabular-nums; }
 .leader-change.up { color: var(--green); text-align:right; font-weight:600; }
@@ -139,6 +151,12 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 <script>
 const API_URL = "http://127.0.0.1:5000";
 
+/* ВАШІ РЕФЕРАЛЬНІ ПОСИЛАННЯ */
+const REF_LINKS = {
+  binance: "https://accounts.binance.com/register?ref=184649565",
+  bybit: "https://www.bybit.com/invite?ref=J8QWYL%230"
+};
+
 /* THEME TOGGLE */
 const themeBtn = document.getElementById('theme-btn');
 if(localStorage.getItem('theme')==='dark'){
@@ -194,18 +212,24 @@ function formatPrice(p){
 function renderLeaders(containerId, items){
   const el = document.getElementById(containerId);
   if(!items) return;
-  el.innerHTML = items.map(i=>`
+  el.innerHTML = items.map(i=>{
+    // Визначаємо посилання на основі біржі
+    const refUrl = REF_LINKS[i.exchange] || "#";
+    
+    return `
     <div class="leader-row">
       <div class="leader-symbol">
         ${getExchangeIcon(i.exchange)}
-        <span>${i.symbol}</span>
+        <a href="${refUrl}" target="_blank" class="coin-link">
+          ${i.symbol}
+        </a>
       </div>
       <div class="leader-price">$${formatPrice(i.price||0)}</div>
       <div class="leader-change ${i.change>=0?'up':'down'}">
         ${i.change>=0?'+':''}${i.change}%
       </div>
     </div>
-  `).join('');
+  `}).join('');
 }
 
 function setupLeadersSSE(){
