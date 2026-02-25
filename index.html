@@ -58,10 +58,9 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 
 /* LEADERS TABLE */
 .leaders-content { display:flex; flex-direction:column; gap:6px; font-size:12px; }
-.leader-row { display:grid; grid-template-columns:1.2fr 1fr 1.2fr; padding:6px 8px; border-radius:6px; align-items:center; transition: background 0.2s; }
+.leader-row { display:grid; grid-template-columns:1.2fr 1fr 1.3fr; padding:6px 8px; border-radius:6px; align-items:center; transition: background 0.2s; }
 .leader-row:hover { background: rgba(127,90,240,0.1); }
 
-/* СТИЛІ ДЛЯ ІКОНОК ТА ПОСИЛАНЬ */
 .leader-symbol { display: flex; align-items: center; gap: 8px; font-weight: 600; }
 .ex-icon { width: 16px; height: 16px; border-radius: 3px; object-fit: contain; }
 
@@ -76,7 +75,7 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
   border-bottom-color: var(--accent); 
 }
 
-/* CG Icon Styles */
+/* CG Style */
 .cg-link {
   margin-left: 6px;
   display: inline-flex;
@@ -95,7 +94,6 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 /* CONTACTS */
 .contact-link { color: var(--accent); text-decoration:none; font-weight:600; margin-top:5px; font-size:13px; }
 
-/* RESPONSIVE */
 @media(max-width:1100px){.dashboard{grid-template-columns:1fr;}}
 </style>
 </head>
@@ -167,7 +165,6 @@ const REF_LINKS = {
   bybit: "https://www.bybit.com/invite?ref=J8QWYL%230"
 };
 
-/* THEME TOGGLE */
 const themeBtn = document.getElementById('theme-btn');
 if(localStorage.getItem('theme')==='dark'){
   document.documentElement.setAttribute('data-theme','dark');
@@ -180,28 +177,11 @@ themeBtn.addEventListener('click', ()=>{
   themeBtn.textContent = isDark ? '🌓' : '☀️';
 });
 
-/* UTC CLOCK */
 function updateClock(){
   document.getElementById('clock-utc').textContent = new Date().toLocaleTimeString('uk-UA',{timeZone:'UTC'});
 }
 setInterval(updateClock,1000);
 updateClock();
-
-/* CHAT MESSAGE */
-function processMessage(text, containerId='pump-chat', isHistory=false){
-  const container = document.getElementById(containerId);
-  if(!container) return;
-  const div = document.createElement('div');
-  const isDown = /🔴|DUMP|📉/.test(text);
-  div.className = `chat-item ${isDown?'is-down':'is-up'}`;
-  div.innerHTML = text;
-  if(isHistory) container.appendChild(div);
-  else container.prepend(div);
-  if(container.children.length>100){
-    container.removeChild(isHistory ? container.firstChild : container.lastChild);
-  }
-  if(isHistory) container.scrollTop = container.scrollHeight;
-}
 
 function getExchangeIcon(exchange) {
   if (exchange === "binance") {
@@ -222,7 +202,10 @@ function renderLeaders(containerId, items){
   if(!items) return;
   el.innerHTML = items.map(i=>{
     const refUrl = REF_LINKS[i.exchange] || "#";
-    const cgUrl = `https://www.coinglass.com/currencies/${i.symbol}`;
+    
+    // ФОРМУВАННЯ ПОСИЛАННЯ (ENGLISH INTERFACE)
+    const exName = i.exchange.charAt(0).toUpperCase() + i.exchange.slice(1);
+    const cgUrl = `https://www.coinglass.com/tv/en/${exName}_${i.symbol}USDT`;
     
     return `
     <div class="leader-row">
@@ -235,7 +218,7 @@ function renderLeaders(containerId, items){
       <div class="leader-price">$${formatPrice(i.price||0)}</div>
       <div class="leader-change ${i.change>=0?'up':'down'}">
         <span>${i.change>=0?'+':''}${i.change}%</span>
-        <a href="${cgUrl}" target="_blank" class="cg-link" title="Coinglass Analysis">
+        <a href="${cgUrl}" target="_blank" class="cg-link" title="Coinglass Chart (EN)">
           <img src="https://www.coinglass.com/favicon.ico" class="cg-icon">
         </a>
       </div>
