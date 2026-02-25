@@ -58,14 +58,13 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 
 /* LEADERS TABLE */
 .leaders-content { display:flex; flex-direction:column; gap:6px; font-size:12px; }
-.leader-row { display:grid; grid-template-columns:1.2fr 1fr 1fr; padding:6px 8px; border-radius:6px; align-items:center; transition: background 0.2s; }
+.leader-row { display:grid; grid-template-columns:1.2fr 1fr 1.2fr; padding:6px 8px; border-radius:6px; align-items:center; transition: background 0.2s; }
 .leader-row:hover { background: rgba(127,90,240,0.1); }
 
 /* СТИЛІ ДЛЯ ІКОНОК ТА ПОСИЛАНЬ */
 .leader-symbol { display: flex; align-items: center; gap: 8px; font-weight: 600; }
 .ex-icon { width: 16px; height: 16px; border-radius: 3px; object-fit: contain; }
 
-/* Стиль для реферального посилання в назві монети */
 .coin-link { 
   text-decoration: none; 
   color: inherit; 
@@ -77,9 +76,21 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
   border-bottom-color: var(--accent); 
 }
 
+/* CG Icon Styles */
+.cg-link {
+  margin-left: 6px;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  opacity: 0.6;
+}
+.cg-link:hover { opacity: 1; }
+.cg-icon { width: 14px; height: 14px; border-radius: 2px; }
+
 .leader-price { text-align:right; color: var(--text-muted); font-variant-numeric: tabular-nums; }
-.leader-change.up { color: var(--green); text-align:right; font-weight:600; }
-.leader-change.down { color: var(--red); text-align:right; font-weight:600; }
+.leader-change { display: flex; align-items: center; justify-content: flex-end; gap: 4px; font-weight: 600; }
+.leader-change.up { color: var(--green); }
+.leader-change.down { color: var(--red); }
 
 /* CONTACTS */
 .contact-link { color: var(--accent); text-decoration:none; font-weight:600; margin-top:5px; font-size:13px; }
@@ -151,7 +162,6 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 <script>
 const API_URL = "http://127.0.0.1:5000";
 
-/* ВАШІ РЕФЕРАЛЬНІ ПОСИЛАННЯ */
 const REF_LINKS = {
   binance: "https://accounts.binance.com/register?ref=184649565",
   bybit: "https://www.bybit.com/invite?ref=J8QWYL%230"
@@ -193,7 +203,6 @@ function processMessage(text, containerId='pump-chat', isHistory=false){
   if(isHistory) container.scrollTop = container.scrollHeight;
 }
 
-/* ФУНКЦІЯ ДЛЯ ОТРИМАННЯ ІКОНКИ БІРЖІ */
 function getExchangeIcon(exchange) {
   if (exchange === "binance") {
     return `<img src="https://bin.bnbstatic.com/static/images/common/favicon.ico" class="ex-icon" title="Binance">`;
@@ -204,7 +213,6 @@ function getExchangeIcon(exchange) {
   return "";
 }
 
-/* LEADERS */
 function formatPrice(p){
   return p>1000?p.toFixed(2):p>1?p.toFixed(4):p.toFixed(6);
 }
@@ -213,8 +221,8 @@ function renderLeaders(containerId, items){
   const el = document.getElementById(containerId);
   if(!items) return;
   el.innerHTML = items.map(i=>{
-    // Визначаємо посилання на основі біржі
     const refUrl = REF_LINKS[i.exchange] || "#";
+    const cgUrl = `https://www.coinglass.com/currencies/${i.symbol}`;
     
     return `
     <div class="leader-row">
@@ -226,7 +234,10 @@ function renderLeaders(containerId, items){
       </div>
       <div class="leader-price">$${formatPrice(i.price||0)}</div>
       <div class="leader-change ${i.change>=0?'up':'down'}">
-        ${i.change>=0?'+':''}${i.change}%
+        <span>${i.change>=0?'+':''}${i.change}%</span>
+        <a href="${cgUrl}" target="_blank" class="cg-link" title="Coinglass Analysis">
+          <img src="https://www.coinglass.com/favicon.ico" class="cg-icon">
+        </a>
       </div>
     </div>
   `}).join('');
