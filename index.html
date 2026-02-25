@@ -58,8 +58,13 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 
 /* LEADERS TABLE */
 .leaders-content { display:flex; flex-direction:column; gap:6px; font-size:12px; }
-.leader-row { display:grid; grid-template-columns:1fr 1fr 1fr; padding:6px 8px; border-radius:6px; align-items:center; transition: background 0.2s; }
+.leader-row { display:grid; grid-template-columns:1.2fr 1fr 1fr; padding:6px 8px; border-radius:6px; align-items:center; transition: background 0.2s; }
 .leader-row:hover { background: rgba(127,90,240,0.1); }
+
+/* НОВІ СТИЛІ ДЛЯ ІКОНОК БІРЖ */
+.leader-symbol { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.ex-icon { width: 16px; height: 16px; border-radius: 3px; object-fit: contain; }
+
 .leader-price { text-align:right; color: var(--text-muted); font-variant-numeric: tabular-nums; }
 .leader-change.up { color: var(--green); text-align:right; font-weight:600; }
 .leader-change.down { color: var(--red); text-align:right; font-weight:600; }
@@ -84,7 +89,6 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 </header>
 
 <main class="dashboard">
-  <!-- LEFT COLUMN -->
   <div class="column">
     <div class="card">
       <div class="card-title">Новини Live</div>
@@ -100,7 +104,6 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
     </div>
   </div>
 
-  <!-- MIDDLE COLUMN -->
   <div class="column">
     <div class="card">
       <div class="card-title">Open Interest Chat</div>
@@ -112,7 +115,6 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
     </div>
   </div>
 
-  <!-- RIGHT COLUMN -->
   <div class="column">
     <div class="card">
       <div class="card-title">Топ Гейнери (24г)</div>
@@ -173,6 +175,17 @@ function processMessage(text, containerId='pump-chat', isHistory=false){
   if(isHistory) container.scrollTop = container.scrollHeight;
 }
 
+/* ФУНКЦІЯ ДЛЯ ОТРИМАННЯ ІКОНКИ БІРЖІ */
+function getExchangeIcon(exchange) {
+  if (exchange === "binance") {
+    return `<img src="https://bin.bnbstatic.com/static/images/common/favicon.ico" class="ex-icon" title="Binance">`;
+  }
+  if (exchange === "bybit") {
+    return `<img src="https://www.bybit.com/favicon.ico" class="ex-icon" title="Bybit">`;
+  }
+  return "";
+}
+
 /* LEADERS */
 function formatPrice(p){
   return p>1000?p.toFixed(2):p>1?p.toFixed(4):p.toFixed(6);
@@ -183,7 +196,10 @@ function renderLeaders(containerId, items){
   if(!items) return;
   el.innerHTML = items.map(i=>`
     <div class="leader-row">
-      <div>${i.symbol}</div>
+      <div class="leader-symbol">
+        ${getExchangeIcon(i.exchange)}
+        <span>${i.symbol}</span>
+      </div>
       <div class="leader-price">$${formatPrice(i.price||0)}</div>
       <div class="leader-change ${i.change>=0?'up':'down'}">
         ${i.change>=0?'+':''}${i.change}%
