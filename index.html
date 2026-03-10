@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -57,7 +57,7 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
   padding: 0; 
 }
 
-/* СТИЛЬ РЯДКА ЛІКВІДАЦІЇ */
+/* LIQUIDATION ROW STYLE */
 .liq-row {
   display: flex;
   justify-content: space-between;
@@ -114,31 +114,31 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 
 <main class="dashboard">
   <div class="column">
-    <div class="card"><div class="card-title">Новини Live</div><div id="news-container" class="chat-container" style="height:180px"></div></div>
-    <div class="card"><div class="card-title">Делістинг / Лістинг</div><div id="listings-container" class="chat-container" style="height:180px"></div></div>
-    <div class="card"><div class="card-title">Памп & Дамп Live</div><div id="pump-chat" class="chat-container" style="height:500px"></div></div>
+    <div class="card"><div class="card-title">Pump & Dump Live</div><div id="pump-chat" class="chat-container" style="height:500px"></div></div>
+    <div class="card"><div class="card-title">News Live</div><div id="news-container" class="chat-container" style="height:180px"></div></div>
+    <div class="card"><div class="card-title">Listing / Delisting</div><div id="listings-container" class="chat-container" style="height:180px"></div></div>
   </div>
 
   <div class="column">
     <div class="card"><div class="card-title">Open Interest Chat</div><div id="oi-chat" class="chat-container" style="height:300px"></div></div>
-    <div class="card" style="flex-grow:1;"><div class="card-title">Ліквідації Live</div><div id="liquidations-chat" class="chat-container" style="height:100%; min-height:400px;"></div></div>
+    <div class="card" style="flex-grow:1;"><div class="card-title">Liquidations Live</div><div id="liquidations-chat" class="chat-container" style="height:100%; min-height:400px;"></div></div>
   </div>
 
   <div class="column">
     <div class="card">
-      <div class="card-title">Топ Гейнери (24г)</div>
+      <div class="card-title">Top Gainers (24h)</div>
       <div id="gainers-list" class="leaders-content"></div>
     </div>
     <div class="card">
-      <div class="card-title">Топ Лузери (24г)</div>
+      <div class="card-title">Top Losers (24h)</div>
       <div id="losers-list" class="leaders-content"></div>
     </div>
     <div class="card">
-      <div class="card-title" style="font-size:12px;">Про нас</div>
+      <div class="card-title" style="font-size:12px;">About Us</div>
       <div style="font-size:13px; color:var(--text-muted); line-height:1.5; margin-bottom:10px;">
-        Моніторинг крипто-ринку в реальному часі. Дані про аномальні об'єми, зміни OI та ліквідації.
+        Real-time crypto market monitoring. Data on abnormal volumes, OI changes, and liquidations.
       </div>
-      <div class="card-title" style="font-size:11px; margin-bottom:5px;">Контакти</div>
+      <div class="card-title" style="font-size:11px; margin-bottom:5px;">Contacts</div>
       <a href="mailto:support@cryptoworld.com" class="contact-link">📧 support@cryptoworld.com</a>
       <a href="https://t.me/crypto_world_admin" target="_blank" class="contact-link">✈️ Telegram: @crypto_world_admin</a>
     </div>
@@ -146,16 +146,16 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 </main>
 
 <script>
-// --- КОНФІГУРАЦІЯ ---
-const LEADERS_API = "http://127.0.0.1:5000"; // Flask для гейнерів
-const LIQ_WS_URL = "ws://127.0.0.1:8000/ws/liquidations"; // FastAPI для ліквідацій
+// --- CONFIGURATION ---
+const LEADERS_API = "http://127.0.0.1:5000"; 
+const LIQ_WS_URL = "ws://127.0.0.1:8000/ws/liquidations"; 
 
 const REF_LINKS = { 
     binance: "https://accounts.binance.com/register?ref=184649565", 
     bybit: "https://www.bybit.com/invite?ref=J8QWYL%230" 
 };
 
-// --- ТЕМА ТА ГОДИННИК ---
+// --- THEME & CLOCK ---
 const themeBtn = document.getElementById('theme-btn');
 themeBtn.onclick = () => {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
@@ -164,10 +164,10 @@ themeBtn.onclick = () => {
 };
 
 setInterval(() => { 
-    document.getElementById('clock-utc').textContent = new Date().toLocaleTimeString('uk-UA',{timeZone:'UTC'}); 
+    document.getElementById('clock-utc').textContent = new Date().toLocaleTimeString('en-GB',{timeZone:'UTC'}); 
 }, 1000);
 
-// --- ДОПОМІЖНІ ФУНКЦІЇ ---
+// --- HELPERS ---
 function getExchangeIcon(ex) {
   const name = ex.toLowerCase();
   const icon = name === "binance" ? "https://bin.bnbstatic.com/static/images/common/favicon.ico" : "https://www.bybit.com/favicon.ico";
@@ -186,7 +186,7 @@ function formatPrice(p) {
   return p.toFixed(6);
 }
 
-// --- ЛОГІКА ЛІДЕРІВ (SSE) ---
+// --- LEADERS LOGIC (SSE) ---
 function renderLeaders(containerId, items, forceColorClass) {
   const el = document.getElementById(containerId);
   if (!items) return;
@@ -221,7 +221,7 @@ function setupLeadersSSE() {
   source.onerror = () => { source.close(); setTimeout(setupLeadersSSE, 5000); };
 }
 
-// --- ЛОГІКА ЛІКВІДАЦІЙ (WEBSOCKET) ---
+// --- LIQUIDATIONS LOGIC (WEBSOCKET) ---
 function addLiquidationToUI(data) {
     const container = document.getElementById('liquidations-chat');
     const row = document.createElement('div');
@@ -247,7 +247,6 @@ function addLiquidationToUI(data) {
 
     container.insertBefore(row, container.firstChild);
 
-    // Видаляємо старі записи (більше 50)
     if (container.children.length > 50) {
         container.lastElementChild.remove();
     }
@@ -258,10 +257,8 @@ function setupLiquidationsWS() {
 
     socket.onmessage = (event) => {
         const msg = JSON.parse(event.data);
-        
         if (msg.type === 'history') {
             document.getElementById('liquidations-chat').innerHTML = '';
-            // Історія приходить масивом, додаємо кожну
             msg.data.forEach(item => addLiquidationToUI(item));
         } else if (msg.type === 'new') {
             addLiquidationToUI(msg.data);
@@ -276,10 +273,10 @@ function setupLiquidationsWS() {
     socket.onerror = (err) => console.error("WS Error:", err);
 }
 
-// --- ЗАПУСК ---
+// --- START ---
 window.onload = () => {
-    setupLeadersSSE();      // Потік гейнерів/лузерів
-    setupLiquidationsWS();  // Потік ліквідацій
+    setupLeadersSSE();
+    setupLiquidationsWS();
 };
 </script>
 </body>
