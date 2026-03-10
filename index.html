@@ -77,7 +77,15 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 .leader-row { display:grid; grid-template-columns: 1.1fr 1fr 1.3fr; padding:8px 8px; border-radius:6px; align-items:center; }
 .leader-row:hover { background: rgba(127,90,240,0.05); }
 
-.leader-price { text-align:right; font-variant-numeric: tabular-nums; white-space: nowrap; padding-right: 8px; font-weight: 600; letter-spacing: -0.2px; }
+/* ЗМІНЕНО: Вирівнювання ціни по лівому краю */
+.leader-price { 
+  text-align: left; 
+  font-variant-numeric: tabular-nums; 
+  white-space: nowrap; 
+  padding-left: 10px; 
+  font-weight: 600; 
+  letter-spacing: -0.2px; 
+}
 .leader-price.up { color: var(--green); }
 .leader-price.down { color: var(--red); }
 
@@ -173,22 +181,13 @@ function getExchangeIcon(ex) {
   return `<a href="${REF_LINKS[name]||'#'}" target="_blank"><img src="${icon}" class="ex-icon"></a>`;
 }
 
-/**
- * ПРАВКА ТУТ: Повна ціна без скорочень (індексів)
- * та автоматичне видалення зайвих нулів в кінці.
- */
 function formatPrice(p) {
   if (!p || p === 0) return "0.00";
-  
-  // Якщо ціна >= 1 (наприклад BTC), форматуємо з комами та 2-4 знаками
   if (p >= 1) {
     return p >= 1000 
       ? p.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) 
       : p.toFixed(4).replace(/\.?0+$/, '');
   }
-
-  // Для дешевих монет (як DOGS) виводимо до 8 знаків після коми
-  // .replace(/\.?0+$/, '') видаляє непотрібні нулі в кінці (0.1200 -> 0.12)
   return p.toFixed(8).replace(/\.?0+$/, '');
 }
 
