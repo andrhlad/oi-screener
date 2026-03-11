@@ -66,7 +66,7 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 /* --- LIQUIDATIONS STYLE --- */
 .liq-row {
   display: grid !important;
-  grid-template-columns: 1.4fr 1fr 1fr;
+  grid-template-columns: 1.4fr 1fr 1.3fr;
   align-items: center;
   gap: 10px;
   padding: 10px;
@@ -74,32 +74,10 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
   font-size: 13px;
   animation: fadeIn 0.4s ease-out;
 }
-.liq-info { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.liq-symbol-box { display: flex; align-items: center; gap: 6px; }
-
-.liq-amount { 
-  text-align: center; 
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-}
-.liq-side-label { 
-  font-size: 10px; 
-  font-weight: 800; 
-  text-transform: uppercase; 
-  margin-bottom: 2px; 
-}
-.liq-val-text { 
-  color: var(--text-main); 
-  font-weight: 700; 
-  font-size: 14px; 
-}
-.liq-price { 
-  text-align: right; 
-  font-variant-numeric: tabular-nums; 
-  color: var(--text-main); 
-  font-size: 12px; 
-}
+.liq-info { display: flex; align-items: center; gap: 6px; }
+.liq-amount { text-align: center; font-weight: 700; font-size: 14px; }
+.liq-price-box { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+.liq-price { font-variant-numeric: tabular-nums; color: var(--text-main); font-size: 12px; text-align: right; }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-10px); }
@@ -108,31 +86,26 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 
 /* LEADERS TABLE */
 .leaders-content { display:flex; flex-direction:column; gap:6px; font-size:12px; }
-.leader-row { display:grid; grid-template-columns: 1.35fr 1fr 1.15fr; padding:8px 8px; border-radius:6px; align-items:center; }
+.leader-row { display:grid; grid-template-columns: 1fr 1fr 1.25fr; padding:8px 8px; border-radius:6px; align-items:center; }
 .leader-row:hover { background: rgba(127,90,240,0.05); }
 
-.leader-price { 
-  text-align: left; 
-  font-variant-numeric: tabular-nums; 
-  white-space: nowrap; 
-  padding-left: 10px; 
-  font-weight: 600; 
-}
+.leader-symbol { display: flex; align-items: center; gap: 6px; font-weight: 600; }
+.leader-price { text-align: left; font-variant-numeric: tabular-nums; font-weight: 600; }
 .leader-price.up { color: var(--green); }
 .leader-price.down { color: var(--red); }
 
+.leader-change-box { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
 .change-badge { display: inline-flex; align-items: center; justify-content: center; padding: 4px 10px; border-radius: 999px; font-weight: 700; min-width: 65px; text-align: center; }
 .change-badge.up { background: rgba(0, 255, 150, 0.15); color: var(--green); }
 .change-badge.down { background: rgba(255, 92, 92, 0.15); color: var(--red); }
 
-/* SYMBOL BOX LOGIC */
-.leader-symbol { display: flex; align-items: center; justify-content: space-between; font-weight: 600; width: 100%; }
-.symbol-left { display: flex; align-items: center; gap: 6px; }
-.ex-icon { width: 14px; height: 14px; border-radius: 3px; object-fit: contain; cursor: pointer; transition: transform 0.2s; vertical-align: middle; }
-.ex-icon:hover { transform: scale(1.25); }
+/* ICONS */
+.ex-icon { width: 14px; height: 14px; border-radius: 3px; object-fit: contain; vertical-align: middle; }
+.cg-icon { width: 16px; height: 16px; border-radius: 4px; cursor: pointer; transition: transform 0.2s; }
+.cg-icon:hover { transform: scale(1.25); }
+
 .coin-link { text-decoration: none; color: inherit; }
 .coin-link:hover { color: var(--accent); }
-
 .contact-link { color: var(--accent); text-decoration:none; font-weight:600; margin-top:5px; font-size:13px; display: block; }
 
 @media(max-width:1100px){.dashboard{grid-template-columns:1fr;}}
@@ -194,34 +167,24 @@ const REF_LINKS = {
     bybit: "https://www.bybit.com/invite?ref=J8QWYL%230" 
 };
 
-// THEME & CLOCK
+// ТЕМА ТА ГОДИННИК
 const themeBtn = document.getElementById('theme-btn');
 themeBtn.onclick = () => {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
   document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
   themeBtn.textContent = isDark ? '🌓' : '☀️';
 };
-
-setInterval(() => { 
-    document.getElementById('clock-utc').textContent = new Date().toLocaleTimeString('en-GB',{timeZone:'UTC'}); 
-}, 1000);
+setInterval(() => { document.getElementById('clock-utc').textContent = new Date().toLocaleTimeString('en-GB',{timeZone:'UTC'}); }, 1000);
 
 // HELPERS
 function getExIcon(ex) {
   const name = ex.toLowerCase();
   return name === "binance" ? "https://bin.bnbstatic.com/static/images/common/favicon.ico" : "https://www.bybit.com/favicon.ico";
 }
-
-function getCGIcon() {
-  return "https://www.google.com/s2/favicons?sz=32&domain=coinglass.com";
-}
-
-// Формування посилання на графік CoinGlass TradingView
+function getCGIcon() { return "https://www.google.com/s2/favicons?sz=32&domain=coinglass.com"; }
 function getCGTvUrl(exchange, symbol) {
-  // Робимо першу літеру біржі великою (Binance, Bybit)
-  const exFormatted = exchange.charAt(0).toUpperCase() + exchange.slice(1).toLowerCase();
-  // CoinGlass використовує формат Binance_BTCUSDT
-  return `https://www.coinglass.com/tv/ru/${exFormatted}_${symbol}USDT`;
+  const ex = exchange.charAt(0).toUpperCase() + exchange.slice(1).toLowerCase();
+  return `https://www.coinglass.com/tv/ru/${ex}_${symbol}USDT`;
 }
 
 // LEADERS SSE
@@ -230,21 +193,16 @@ function renderLeaders(containerId, items, forceColorClass) {
   if (!items) return;
   el.innerHTML = items.map(i => {
     const tradeUrl = i.exchange === "binance" ? `https://www.binance.com/en/futures/${i.symbol}USDT` : `https://www.bybit.com/trade/usdt/${i.symbol}USDT`;
-    const cgTvUrl = getCGTvUrl(i.exchange, i.symbol);
-    const isUp = i.change >= 0;
-
     return `
     <div class="leader-row">
       <div class="leader-symbol">
-        <div class="symbol-left">
-           <a href="${REF_LINKS[i.exchange.toLowerCase()]||'#'}" target="_blank"><img src="${getExIcon(i.exchange)}" class="ex-icon"></a>
-           <a href="${tradeUrl}" target="_blank" class="coin-link">${i.symbol}</a>
-        </div>
-        <a href="${cgTvUrl}" target="_blank" title="CoinGlass TV Chart"><img src="${getCGIcon()}" class="ex-icon"></a>
+        <a href="${REF_LINKS[i.exchange.toLowerCase()]||'#'}" target="_blank"><img src="${getExIcon(i.exchange)}" class="ex-icon"></a>
+        <a href="${tradeUrl}" target="_blank" class="coin-link">${i.symbol}</a>
       </div>
       <div class="leader-price ${forceColorClass}">$${i.price}</div>
-      <div class="leader-change">
-        <div class="change-badge ${isUp ? 'up' : 'down'}">${isUp ? '+' : ''}${i.change}%</div>
+      <div class="leader-change-box">
+        <div class="change-badge ${i.change >= 0 ? 'up' : 'down'}">${i.change >= 0 ? '+' : ''}${i.change}%</div>
+        <a href="${getCGTvUrl(i.exchange, i.symbol)}" target="_blank"><img src="${getCGIcon()}" class="cg-icon"></a>
       </div>
     </div>`;
   }).join('');
@@ -265,35 +223,20 @@ function addLiquidationToUI(data) {
     const container = document.getElementById('liquidations-chat');
     const row = document.createElement('div');
     row.className = 'liq-row';
-
     const sideColor = data.side === "LONG" ? "var(--red)" : "var(--green)";
-    const cgTvUrl = getCGTvUrl(data.ex, data.sym);
-
-    let cleanPrice = data.prc;
-    if (typeof cleanPrice === 'string') {
-        cleanPrice = cleanPrice.replace(/\.?0+$/, "");
-    }
 
     row.innerHTML = `
         <div class="liq-info">
-            <div class="liq-symbol-box">
-                <a href="${REF_LINKS[data.ex.toLowerCase()]||'#'}" target="_blank"><img src="${getExIcon(data.ex)}" class="ex-icon"></a>
-                <span style="color:var(--text-muted); font-size:11px;">${data.tm}</span>
-                <b style="color:var(--text-main);">${data.sym}</b>
-            </div>
-            <a href="${cgTvUrl}" target="_blank" title="CoinGlass TV Chart"><img src="${getCGIcon()}" class="ex-icon"></a>
+            <img src="${getExIcon(data.ex)}" class="ex-icon">
+            <b style="color:var(--text-main);">${data.sym}</b>
+            <span style="color:var(--text-muted); font-size:10px;">${data.tm}</span>
         </div>
-        
-        <div class="liq-amount">
-            <span class="liq-side-label" style="color: ${sideColor};">${data.side}</span>
-            <span class="liq-val-text">$${data.val}</span>
-        </div>
-
-        <div class="liq-price">
-            ${cleanPrice}
+        <div class="liq-amount" style="color:${sideColor}">$${data.val}</div>
+        <div class="liq-price-box">
+            <span class="liq-price">$${data.prc}</span>
+            <a href="${getCGTvUrl(data.ex, data.sym)}" target="_blank"><img src="${getCGIcon()}" class="cg-icon"></a>
         </div>
     `;
-
     container.insertBefore(row, container.firstChild);
     if (container.children.length > 100) container.lastElementChild.remove();
 }
@@ -305,17 +248,12 @@ function setupLiquidationsWS() {
         if (msg.type === 'history') {
             document.getElementById('liquidations-chat').innerHTML = '';
             msg.data.forEach(item => addLiquidationToUI(item));
-        } else if (msg.type === 'new') {
-            addLiquidationToUI(msg.data);
-        }
+        } else if (msg.type === 'new') { addLiquidationToUI(msg.data); }
     };
     socket.onclose = () => setTimeout(setupLiquidationsWS, 3000);
 }
 
-window.onload = () => {
-    setupLeadersSSE();
-    setupLiquidationsWS();
-};
+window.onload = () => { setupLeadersSSE(); setupLiquidationsWS(); };
 </script>
 </body>
 </html>
