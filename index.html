@@ -208,13 +208,7 @@ function getExchangeIcon(ex) {
   return `<a href="${REF_LINKS[name]||'#'}" target="_blank"><img src="${icon}" class="ex-icon"></a>`;
 }
 
-function formatPrice(p) {
-  if (!p || p === 0) return "0.00";
-  if (p >= 1) {
-    return p >= 1000 ? p.toLocaleString('en-US', {minimumFractionDigits: 2}) : p.toFixed(4);
-  }
-  return p.toFixed(8);
-}
+// Функцію formatPrice видалено, оскільки сервер тепер надсилає готовий рядок
 
 // LEADERS SSE
 function renderLeaders(containerId, items, forceColorClass) {
@@ -226,8 +220,7 @@ function renderLeaders(containerId, items, forceColorClass) {
     return `
     <div class="leader-row">
       <div class="leader-symbol">${getExchangeIcon(i.exchange)} <a href="${tradeUrl}" target="_blank" class="coin-link">${i.symbol}</a></div>
-      <div class="leader-price ${forceColorClass}">$${formatPrice(i.price)}</div>
-      <div class="leader-change">
+      <div class="leader-price ${forceColorClass}">$${i.price}</div> <div class="leader-change">
         <div class="change-badge ${isUp ? 'up' : 'down'}">${isUp ? '+' : ''}${i.change}%</div>
       </div>
     </div>`;
@@ -255,6 +248,12 @@ function addLiquidationToUI(data) {
         "https://bin.bnbstatic.com/static/images/common/favicon.ico" : 
         "https://www.bybit.com/favicon.ico";
 
+    // Для ліквідацій також можна додати rstrip-логіку у JS, якщо сервер надсилає число
+    let cleanPrice = data.prc;
+    if (typeof cleanPrice === 'string') {
+        cleanPrice = cleanPrice.replace(/\.?0+$/, "");
+    }
+
     row.innerHTML = `
         <div class="liq-info">
             <img src="${exIcon}" style="width:14px; height:14px; border-radius:2px;">
@@ -268,7 +267,7 @@ function addLiquidationToUI(data) {
         </div>
 
         <div class="liq-price">
-            ${data.prc}
+            ${cleanPrice}
         </div>
     `;
 
