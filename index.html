@@ -62,7 +62,7 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 }
 
 .card-title { font-size:13px; font-weight:700; margin-bottom:12px; text-transform:uppercase; color: var(--text-muted); text-align: center; }
-.chat-container { overflow-y:auto; display:flex; flex-direction:column; gap:2px; }
+.chat-container { overflow-y:auto; display:flex; flex-direction:column; gap:2px; flex-grow: 1; }
 
 /* --- LIQUIDATIONS STYLE --- */
 .liq-row { display: grid !important; grid-template-columns: 1.6fr 1fr 1fr; align-items: center; padding: 12px 10px; border-bottom: 1px solid var(--border); font-size: 13px; }
@@ -76,13 +76,13 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 .liq-price { text-align: right; font-variant-numeric: tabular-nums; color: var(--text-main); font-size: 13px; font-weight: 600; }
 
 /* LEADERS STYLE */
-.leaders-content { display:flex; flex-direction:column; gap:6px; font-size:12px; }
+.leaders-content { display:flex; flex-direction:column; gap:6px; font-size:12px; overflow-y: auto; }
 .leader-row { display:grid; grid-template-columns: 1.1fr 1fr 1.4fr; padding:8px 8px; border-radius:6px; align-items:center; }
 .change-badge { display: inline-flex; align-items: center; justify-content: center; padding: 4px 10px; border-radius: 999px; font-weight: 700; min-width: 65px; }
 .change-badge.up { background: rgba(0, 255, 150, 0.15); color: var(--green); }
 .change-badge.down { background: rgba(255, 92, 92, 0.15); color: var(--red); }
 
-.ex-icon { width: 14px; height: 14px; border-radius: 3px; object-fit: contain; cursor: pointer; }
+.ex-icon { width: 14px; height: 14px; border-radius: 3px; object-fit: contain; }
 .coin-link { text-decoration: none; color: inherit; margin-left: 2px; }
 .contact-link { color: var(--accent); text-decoration:none; font-weight:600; margin-top:5px; font-size:13px; display: block; }
 
@@ -105,20 +105,20 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
   <div class="column">
     <div class="card" style="height:500px"><div class="card-title">Pump & Dump Live</div><div id="pump-chat" class="chat-container"></div></div>
     <div class="card" style="height:180px"><div class="card-title">News Live</div><div id="news-container" class="chat-container"></div></div>
-    <div class="card" style="height:320px"><div class="card-title">Listing / Delisting</div><div id="listings-container" class="chat-container"></div></div>
+    <div class="card" style="height:595px"><div class="card-title">Listing / Delisting</div><div id="listings-container" class="chat-container"></div></div>
   </div>
 
   <div class="column">
     <div class="card" style="height:390px"><div class="card-title">Open Interest Chat</div><div id="oi-chat" class="chat-container"></div></div>
-    <div class="card" style="height:630px">
+    <div class="card" style="height:905px">
       <div class="card-title">Liquidations Live</div>
-      <div id="liquidations-chat" class="chat-container" style="height:100%;"></div>
+      <div id="liquidations-chat" class="chat-container"></div>
     </div>
   </div>
 
   <div class="column">
-    <div class="card" style="height:280px"><div class="card-title">Top Gainers (24h)</div><div id="gainers-list" class="leaders-content"></div></div>
-    <div class="card" style="height:280px"><div class="card-title">Top Losers (24h)</div><div id="losers-list" class="leaders-content"></div></div>
+    <div class="card" style="height:560px"><div class="card-title">Top Gainers (24h)</div><div id="gainers-list" class="leaders-content"></div></div>
+    <div class="card" style="height:560px"><div class="card-title">Top Losers (24h)</div><div id="losers-list" class="leaders-content"></div></div>
     <div class="card">
       <div class="card-title">About Us</div>
       <div style="font-size:13px; color:var(--text-muted); line-height:1.5; margin-bottom:10px;">Monitoring market data in real-time.</div>
