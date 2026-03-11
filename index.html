@@ -60,7 +60,7 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 /* --- ОНОВЛЕНІ СТИЛІ ЛІКВІДАЦІЙ --- */
 .liq-row {
   display: grid !important;
-  grid-template-columns: 1.2fr 1fr 1fr; /* 3 колонки: Інфо, Сума, Ціна */
+  grid-template-columns: 1.2fr 1fr 1fr; /* 3 колонки */
   align-items: center;
   gap: 10px;
   padding: 10px;
@@ -69,8 +69,29 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
   animation: fadeIn 0.4s ease-out;
 }
 .liq-info { display: flex; align-items: center; gap: 8px; }
-.liq-amount { text-align: center; font-weight: 800; font-size: 14px; }
-.liq-price { text-align: right; font-variant-numeric: tabular-nums; color: var(--text-muted); font-size: 12px; }
+.liq-amount { 
+  text-align: center; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+}
+.liq-side-label { 
+  font-size: 10px; 
+  font-weight: 800; 
+  text-transform: uppercase; 
+  margin-bottom: 2px; 
+}
+.liq-val-text { 
+  color: var(--text-main); 
+  font-weight: 700; 
+  font-size: 14px; 
+}
+.liq-price { 
+  text-align: right; 
+  font-variant-numeric: tabular-nums; 
+  color: var(--text-main); 
+  font-size: 12px; 
+}
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-10px); }
@@ -100,8 +121,6 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 .ex-icon { width: 16px; height: 16px; border-radius: 3px; object-fit: contain; }
 .coin-link { text-decoration: none; color: inherit; }
 .coin-link:hover { color: var(--accent); }
-.leader-change { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
-.cg-icon { width: 14px; height: 14px; border-radius: 2px; opacity: 0.6; }
 
 .contact-link { color: var(--accent); text-decoration:none; font-weight:600; margin-top:5px; font-size:13px; display: block; }
 
@@ -222,6 +241,7 @@ function addLiquidationToUI(data) {
     const row = document.createElement('div');
     row.className = 'liq-row';
 
+    // Колір тільки для тексту сторони
     const sideColor = data.side === "LONG" ? "var(--red)" : "var(--green)";
     const exIcon = data.ex.toLowerCase() === "binance" ? 
         "https://bin.bnbstatic.com/static/images/common/favicon.ico" : 
@@ -234,8 +254,9 @@ function addLiquidationToUI(data) {
             <b style="color:var(--text-main);">${data.sym}</b>
         </div>
         
-        <div class="liq-amount" style="color:${sideColor};">
-            $${data.val}
+        <div class="liq-amount">
+            <span class="liq-side-label" style="color: ${sideColor};">${data.side}</span>
+            <span class="liq-val-text">$${data.val}</span>
         </div>
 
         <div class="liq-price">
@@ -268,4 +289,3 @@ window.onload = () => {
 </script>
 </body>
 </html>
-
