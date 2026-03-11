@@ -49,7 +49,7 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 .dashboard { display:grid; grid-template-columns:350px 1fr 320px; max-width:1440px; margin:20px auto; padding:0 20px 40px; gap:20px; }
 .column { display:flex; flex-direction:column; gap:20px; }
 
-.card { background: var(--card-bg); border-radius: var(--radius); border:1px solid var(--border); box-shadow: var(--shadow); padding:16px; display:flex; flex-direction:column; height: fit-content; }
+.card { background: var(--card-bg); border-radius: var(--radius); border:1px solid var(--border); box-shadow: var(--shadow); padding:16px; display:flex; flex-direction:column; height: auto; }
 .card-title { font-size:13px; font-weight:700; margin-bottom:12px; text-transform:uppercase; color: var(--text-muted); text-align: center; }
 
 .chat-container { overflow-y:auto; display:flex; flex-direction:column; gap:2px; scroll-behavior:smooth; }
@@ -57,7 +57,7 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 /* --- LIQUIDATIONS STYLE --- */
 .liq-row {
   display: grid !important;
-  grid-template-columns: 1.6fr 1fr 1fr; /* Трохи розширив першу колонку для відступів */
+  grid-template-columns: 1.6fr 1fr 1fr;
   align-items: center;
   padding: 12px 10px;
   border-bottom: 1px solid var(--border);
@@ -65,8 +65,8 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
   animation: fadeIn 0.4s ease-out;
 }
 .liq-info { display: flex; align-items: center; }
-.liq-time { color: var(--text-muted); font-size: 11px; margin-right: 18px; min-width: 45px; } /* Відступ після часу */
-.liq-ex-icon { width: 15px; height: 15px; border-radius: 3px; margin-right: 15px; } /* Відступ після іконки біржі */
+.liq-time { color: var(--text-muted); font-size: 11px; margin-right: 18px; min-width: 45px; }
+.liq-ex-icon { width: 15px; height: 15px; border-radius: 3px; margin-right: 15px; }
 .liq-symbol { font-weight: 800; color: var(--text-main); font-size: 14px; }
 
 .liq-amount { text-align: center; display: flex; flex-direction: column; align-items: center; }
@@ -116,27 +116,21 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
   <div class="column">
     <div class="card"><div class="card-title">Pump & Dump Live</div><div id="pump-chat" class="chat-container" style="height:500px"></div></div>
     <div class="card"><div class="card-title">News Live</div><div id="news-container" class="chat-container" style="height:180px"></div></div>
-    <div class="card"><div class="card-title">Listing / Delisting</div><div id="listings-container" class="chat-container" style="height:180px"></div></div>
+    <div class="card" style="height: 250px;"><div class="card-title">Listing / Delisting</div><div id="listings-container" class="chat-container" style="height:100%"></div></div>
   </div>
 
   <div class="column">
-    <div class="card"><div class="card-title">Open Interest Chat</div><div id="oi-chat" class="chat-container" style="height:300px"></div></div>
-    <div class="card">
+    <div class="card"><div class="card-title">Open Interest Chat</div><div id="oi-chat" class="chat-container" style="height:390px"></div></div>
+    <div class="card" style="height: 560px;">
       <div class="card-title">Liquidations Live</div>
-      <div id="liquidations-chat" class="chat-container" style="height:500px;"></div>
+      <div id="liquidations-chat" class="chat-container" style="height:100%;"></div>
     </div>
   </div>
 
   <div class="column">
-    <div class="card">
-      <div class="card-title">Top Gainers (24h)</div>
-      <div id="gainers-list" class="leaders-content"></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Top Losers (24h)</div>
-      <div id="losers-list" class="leaders-content"></div>
-    </div>
-    <div class="card">
+    <div class="card"><div class="card-title">Top Gainers (24h)</div><div id="gainers-list" class="leaders-content"></div></div>
+    <div class="card"><div class="card-title">Top Losers (24h)</div><div id="losers-list" class="leaders-content"></div></div>
+    <div class="card" style="height: 250px;">
       <div class="card-title">About Us</div>
       <div style="font-size:13px; color:var(--text-muted); line-height:1.5; margin-bottom:10px;">Monitoring market data in real-time.</div>
       <a href="mailto:support@cryptoworld.com" class="contact-link">📧 support@cryptoworld.com</a>
@@ -146,11 +140,11 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 </main>
 
 <script>
+// (Скрипти залишаються без змін, оскільки вони працюють з ID елементів)
 const LEADERS_API = "http://127.0.0.1:5000"; 
 const LIQ_WS_URL = "ws://127.0.0.1:8000/ws/liquidations"; 
 const REF_LINKS = { binance: "https://accounts.binance.com/register?ref=184649565", bybit: "https://www.bybit.com/invite?ref=J8QWYL%230" };
 
-// CLOCK & THEME
 const themeBtn = document.getElementById('theme-btn');
 themeBtn.onclick = () => {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
@@ -159,21 +153,17 @@ themeBtn.onclick = () => {
 };
 setInterval(() => { document.getElementById('clock-utc').textContent = new Date().toLocaleTimeString('en-GB',{timeZone:'UTC'}); }, 1000);
 
-// HELPERS
 function getIconsHtml(ex, symbol, split = false) {
   const name = ex.toLowerCase();
   const exIcon = name === "binance" ? "https://bin.bnbstatic.com/static/images/common/favicon.ico" : "https://www.bybit.com/favicon.ico";
   const cgIcon = "https://www.google.com/s2/favicons?sz=32&domain=coinglass.com";
   const exF = ex.charAt(0).toUpperCase() + ex.slice(1).toLowerCase();
   const cgTvUrl = `https://www.coinglass.com/tv/ru/${exF}_${symbol}USDT`;
-
   const exHtml = `<a href="${REF_LINKS[name]||'#'}" target="_blank"><img src="${exIcon}" class="ex-icon"></a>`;
   const cgHtml = `<a href="${cgTvUrl}" target="_blank"><img src="${cgIcon}" class="ex-icon" style="margin-left:2px;"></a>`;
-
   return split ? { exHtml, cgHtml } : exHtml + cgHtml;
 }
 
-// LEADERS
 function renderLeaders(containerId, items, forceColorClass) {
   const el = document.getElementById(containerId);
   if (!items) return;
@@ -201,16 +191,13 @@ function setupLeadersSSE() {
   };
 }
 
-// LIQUIDATIONS (БЕЗ COINGLASS ТА З ВІДСТУПАМИ)
 function addLiquidationToUI(data) {
     const container = document.getElementById('liquidations-chat');
     const row = document.createElement('div');
     row.className = 'liq-row';
-
     const sideColor = data.side === "SHORT" ? "var(--green)" : "var(--red)";
     const exIcon = data.ex.toLowerCase() === "binance" ? "https://bin.bnbstatic.com/static/images/common/favicon.ico" : "https://www.bybit.com/favicon.ico";
     const refUrl = REF_LINKS[data.ex.toLowerCase()] || '#';
-
     row.innerHTML = `
         <div class="liq-info">
             <span class="liq-time">${data.tm}</span>
