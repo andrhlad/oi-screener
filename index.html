@@ -74,7 +74,8 @@
         .change-badge.up { background: rgba(0, 255, 150, 0.15); color: var(--green); }
         .change-badge.down { background: rgba(255, 92, 92, 0.15); color: var(--red); }
         .ex-icon { width: 16px; height: 16px; border-radius: 4px; object-fit: contain; }
-        .cg-icon-small { width: 14px; height: 14px; opacity: 0.7; }
+
+        .contact-link { color: var(--accent); text-decoration:none; font-weight:600; margin-top:8px; display: block; font-size: 13px; }
 
         @media(max-width:1100px){.dashboard{grid-template-columns:1fr;}}
     </style>
@@ -93,9 +94,10 @@
 
 <main class="dashboard">
     <div class="column">
-        <div class="card"><div class="card-title">Pump & Dump Live</div><div id="pump-chat" class="chat-container" style="height:500px"></div></div>
-        <div class="card"><div class="card-title">News Live</div><div id="news-container" class="chat-container" style="height:180px"></div></div>
+        <div class="card"><div class="card-title">Listing / Delisting</div><div id="listing-container" class="chat-container" style="height:250px"></div></div>
+        <div class="card"><div class="card-title">Pump & Dump Live</div><div id="pump-chat" class="chat-container" style="height:430px"></div></div>
     </div>
+
     <div class="column">
         <div class="card"><div class="card-title">Open Interest Chat</div><div id="oi-chat" class="chat-container" style="height:250px"></div></div>
         <div class="card">
@@ -103,12 +105,15 @@
             <div id="liquidations-chat" class="chat-container" style="height:550px;"></div>
         </div>
     </div>
+
     <div class="column">
         <div class="card"><div class="card-title">Top Gainers (24h)</div><div id="gainers-list" class="leaders-content"></div></div>
         <div class="card"><div class="card-title">Top Losers (24h)</div><div id="losers-list" class="leaders-content"></div></div>
+        
         <div class="card">
             <div class="card-title">About Us</div>
-            <a href="https://t.me/crypto_world_admin" target="_blank" style="color:var(--accent); text-decoration:none; font-weight:600;">✈️ Telegram: @crypto_world_admin</a>
+            <a href="https://t.me/crypto_world_admin" target="_blank" class="contact-link">✈️ Telegram: @crypto_world_admin</a>
+            <a href="mailto:crypto_world@gmail.com" class="contact-link">📧 Email: crypto_world@gmail.com</a>
         </div>
     </div>
 </main>
@@ -151,7 +156,7 @@ function setupSSE() {
     };
 }
 
-// LIQUIDATIONS (Нові зверху)
+// LIQUIDATIONS (Нові зверху + виправлено F5)
 function addLiquidationToUI(data) {
     const container = document.getElementById('liquidations-chat');
     const row = document.createElement('div');
@@ -173,9 +178,7 @@ function addLiquidationToUI(data) {
         <div class="liq-price">$${data.prc}</div>
     `;
     
-    // insertBefore(новий, перший_існуючий) — ставить новий сигнал на самий верх
     container.insertBefore(row, container.firstChild);
-    
     if (container.children.length > 40) container.lastElementChild.remove();
 }
 
@@ -185,8 +188,8 @@ function setupWS() {
         const msg = JSON.parse(event.data);
         if (msg.type === 'history') {
             document.getElementById('liquidations-chat').innerHTML = '';
-            // Розвертаємо історію, щоб при послідовному додаванні зверху найновіші лишилися вгорі
-            msg.data.forEach(item => addLiquidationToUI(item));
+            const historyData = [...msg.data].reverse(); // Розгортаємо для правильного порядку при F5
+            historyData.forEach(item => addLiquidationToUI(item));
         } else if (msg.type === 'new') { 
             addLiquidationToUI(msg.data); 
         }
