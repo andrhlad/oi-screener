@@ -31,6 +31,12 @@
 * { margin:0; padding:0; box-sizing:border-box; font-family:"Inter",system-ui,-apple-system,sans-serif; transition: background 0.3s, color 0.3s; }
 body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 
+/* SCROLLBAR STYLE */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
 /* HEADER */
 .header { background: var(--card-bg); border-bottom:1px solid var(--border); position: sticky; top:0; z-index:100; }
 .header-inner { max-width:1440px; margin:0 auto; padding:12px 24px; display:flex; justify-content:space-between; align-items:center; }
@@ -44,7 +50,7 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 .column { display:flex; flex-direction:column; gap:20px; }
 
 /* CARDS & CHATS */
-.card { background: var(--card-bg); border-radius: var(--radius); border:1px solid var(--border); box-shadow: var(--shadow); padding:16px; display:flex; flex-direction:column; }
+.card { background: var(--card-bg); border-radius: var(--radius); border:1px solid var(--border); box-shadow: var(--shadow); padding:16px; display:flex; flex-direction:column; height: fit-content; }
 .card-title { font-size:13px; font-weight:700; margin-bottom:12px; text-transform:uppercase; color: var(--text-muted); }
 
 .chat-container { 
@@ -57,10 +63,10 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
   padding: 0; 
 }
 
-/* --- ОНОВЛЕНІ СТИЛІ ЛІКВІДАЦІЙ --- */
+/* --- СТИЛІ ЛІКВІДАЦІЙ --- */
 .liq-row {
   display: grid !important;
-  grid-template-columns: 1.2fr 1fr 1fr; /* 3 колонки */
+  grid-template-columns: 1.2fr 1fr 1fr;
   align-items: center;
   gap: 10px;
   padding: 10px;
@@ -148,7 +154,10 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 
   <div class="column">
     <div class="card"><div class="card-title">Open Interest Chat</div><div id="oi-chat" class="chat-container" style="height:300px"></div></div>
-    <div class="card" style="flex-grow:1;"><div class="card-title">Liquidations Live</div><div id="liquidations-chat" class="chat-container" style="height:100%; min-height:400px;"></div></div>
+    <div class="card">
+      <div class="card-title">Liquidations Live</div>
+      <div id="liquidations-chat" class="chat-container" style="height:500px;"></div>
+    </div>
   </div>
 
   <div class="column">
@@ -241,7 +250,6 @@ function addLiquidationToUI(data) {
     const row = document.createElement('div');
     row.className = 'liq-row';
 
-    // Колір тільки для тексту сторони
     const sideColor = data.side === "LONG" ? "var(--red)" : "var(--green)";
     const exIcon = data.ex.toLowerCase() === "binance" ? 
         "https://bin.bnbstatic.com/static/images/common/favicon.ico" : 
@@ -265,7 +273,7 @@ function addLiquidationToUI(data) {
     `;
 
     container.insertBefore(row, container.firstChild);
-    if (container.children.length > 50) container.lastElementChild.remove();
+    if (container.children.length > 100) container.lastElementChild.remove();
 }
 
 function setupLiquidationsWS() {
