@@ -56,12 +56,12 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
   border-radius: var(--radius); 
   border: 1px solid var(--border); 
   box-shadow: var(--shadow); 
-  padding: 16px; 
+  padding: 14px; 
   display: flex; 
   flex-direction: column; 
 }
 
-.card-title { font-size:13px; font-weight:700; margin-bottom:12px; text-transform:uppercase; color: var(--text-muted); text-align: center; }
+.card-title { font-size:12px; font-weight:700; margin-bottom:10px; text-transform:uppercase; color: var(--text-muted); text-align: center; }
 .chat-container { overflow-y:auto; display:flex; flex-direction:column; gap:2px; flex-grow: 1; }
 
 /* --- LIQUIDATIONS STYLE --- */
@@ -75,15 +75,15 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 .liq-val-text { color: var(--text-main); font-weight: 700; font-size: 14px; }
 .liq-price { text-align: right; font-variant-numeric: tabular-nums; color: var(--text-main); font-size: 13px; font-weight: 600; }
 
-/* LEADERS STYLE */
-.leaders-content { display:flex; flex-direction:column; gap:6px; font-size:12px; overflow-y: auto; }
-.leader-row { display:grid; grid-template-columns: 1.1fr 1fr 1.4fr; padding:8px 8px; border-radius:6px; align-items:center; }
-.change-badge { display: inline-flex; align-items: center; justify-content: center; padding: 4px 10px; border-radius: 999px; font-weight: 700; min-width: 65px; }
-.change-badge.up { background: rgba(0, 255, 150, 0.15); color: var(--green); }
-.change-badge.down { background: rgba(255, 92, 92, 0.15); color: var(--red); }
+/* LEADERS STYLE (Compact Fix) */
+.leaders-content { display:flex; flex-direction:column; gap:2px; font-size:12px; overflow: hidden; }
+.leader-row { display:grid; grid-template-columns: 1.1fr 1fr 1.3fr; padding:5px 2px; border-bottom: 1px solid rgba(255,255,255,0.03); align-items:center; }
+.change-badge { display: inline-flex; align-items: center; justify-content: center; padding: 3px 8px; border-radius: 6px; font-weight: 700; min-width: 60px; font-size: 11px; }
+.change-badge.up { background: rgba(0, 255, 150, 0.12); color: var(--green); }
+.change-badge.down { background: rgba(255, 92, 92, 0.12); color: var(--red); }
 
-.ex-icon { width: 14px; height: 14px; border-radius: 3px; object-fit: contain; }
-.coin-link { text-decoration: none; color: inherit; margin-left: 2px; }
+.ex-icon { width: 14px; height: 14px; border-radius: 3px; object-fit: contain; vertical-align: middle; }
+.coin-link { text-decoration: none; color: var(--text-main); font-weight: 600; margin-left: 6px; }
 .contact-link { color: var(--accent); text-decoration:none; font-weight:600; margin-top:5px; font-size:13px; display: block; }
 
 @media(max-width:1100px){.dashboard{grid-template-columns:1fr;}}
@@ -103,37 +103,30 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 
 <main class="dashboard">
   <div class="column">
-    <div class="card" style="height:500px">
-      <div class="card-title">Pump & Dump Live</div>
-      <div id="pump-chat" class="chat-container"></div>
-    </div>
-    <div class="card" style="height:180px">
-      <div class="card-title">News Live</div>
-      <div id="news-container" class="chat-container"></div>
-    </div>
-    <div class="card" style="height:595px">
-      <div class="card-title">Listing / Delisting</div>
-      <div id="listings-container" class="chat-container"></div>
-    </div>
+    <div class="card" style="height:500px"><div class="card-title">Pump & Dump Live</div><div id="pump-chat" class="chat-container"></div></div>
+    <div class="card" style="height:180px"><div class="card-title">News Live</div><div id="news-container" class="chat-container"></div></div>
+    <div class="card" style="height:595px"><div class="card-title">Listing / Delisting</div><div id="listings-container" class="chat-container"></div></div>
   </div>
 
   <div class="column">
-    <div class="card" style="height:700px">
-      <div class="card-title">Open Interest Chat</div>
-      <div id="oi-chat" class="chat-container"></div>
-    </div>
-    <div class="card" style="height:595px">
-      <div class="card-title">Liquidations Live</div>
-      <div id="liquidations-chat" class="chat-container"></div>
-    </div>
+    <div class="card" style="height:700px"><div class="card-title">Open Interest Chat</div><div id="oi-chat" class="chat-container"></div></div>
+    <div class="card" style="height:595px"><div class="card-title">Liquidations Live</div><div id="liquidations-chat" class="chat-container"></div></div>
   </div>
 
   <div class="column">
-    <div class="card" style="height:560px"><div class="card-title">Top Gainers (24h)</div><div id="gainers-list" class="leaders-content"></div></div>
-    <div class="card" style="height:560px"><div class="card-title">Top Losers (24h)</div><div id="losers-list" class="leaders-content"></div></div>
+    <div class="card" style="height:365px">
+      <div class="card-title">Top Gainers (24h)</div>
+      <div id="gainers-list" class="leaders-content"></div>
+    </div>
+    
+    <div class="card" style="height:365px">
+      <div class="card-title">Top Losers (24h)</div>
+      <div id="losers-list" class="leaders-content"></div>
+    </div>
+
     <div class="card">
       <div class="card-title">About Us</div>
-      <div style="font-size:13px; color:var(--text-muted); line-height:1.5; margin-bottom:10px;">Monitoring market data in real-time.</div>
+      <div style="font-size:12px; color:var(--text-muted); line-height:1.4; margin-bottom:8px;">Monitoring market data in real-time.</div>
       <a href="mailto:support@cryptoworld.com" class="contact-link">📧 support@cryptoworld.com</a>
       <a href="https://t.me/crypto_world_admin" target="_blank" class="contact-link">✈️ Telegram: @crypto_world_admin</a>
     </div>
@@ -160,21 +153,22 @@ function getIconsHtml(ex, symbol, split = false) {
   const exF = ex.charAt(0).toUpperCase() + ex.slice(1).toLowerCase();
   const cgTvUrl = `https://www.coinglass.com/tv/ru/${exF}_${symbol}USDT`;
   const exHtml = `<a href="${REF_LINKS[name]||'#'}" target="_blank"><img src="${exIcon}" class="ex-icon"></a>`;
-  const cgHtml = `<a href="${cgTvUrl}" target="_blank"><img src="${cgIcon}" class="ex-icon" style="margin-left:2px;"></a>`;
+  const cgHtml = `<a href="${cgTvUrl}" target="_blank"><img src="${cgIcon}" class="ex-icon" style="margin-left:5px;"></a>`;
   return split ? { exHtml, cgHtml } : exHtml + cgHtml;
 }
 
 function renderLeaders(containerId, items, forceColorClass) {
   const el = document.getElementById(containerId);
   if (!items) return;
-  el.innerHTML = items.map(i => {
+  // Показуємо рівно 10 елементів, щоб вони ідеально вписалися у 365px
+  el.innerHTML = items.slice(0, 10).map(i => {
     const tradeUrl = i.exchange === "binance" ? `https://www.binance.com/en/futures/${i.symbol}USDT` : `https://www.bybit.com/trade/usdt/${i.symbol}USDT`;
     const icons = getIconsHtml(i.exchange, i.symbol, true);
     return `
     <div class="leader-row">
-      <div class="leader-symbol">${icons.exHtml} <a href="${tradeUrl}" target="_blank" class="coin-link">${i.symbol}</a></div>
-      <div class="leader-price ${forceColorClass}">$${i.price}</div>
-      <div class="leader-change-wrapper">
+      <div class="leader-symbol">${icons.exHtml}<a href="${tradeUrl}" target="_blank" class="coin-link">${i.symbol}</a></div>
+      <div class="leader-price" style="font-weight:600; font-variant-numeric: tabular-nums;">$${i.price}</div>
+      <div class="leader-change-wrapper" style="display:flex; align-items:center; justify-content:flex-end; gap:5px;">
         <div class="change-badge ${i.change >= 0 ? 'up' : 'down'}">${i.change >= 0 ? '+' : ''}${i.change}%</div>
         ${icons.cgHtml}
       </div>
