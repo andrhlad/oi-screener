@@ -62,7 +62,7 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 .card-title { font-size:12px; font-weight:700; margin-bottom:14px; text-transform:uppercase; color: var(--text-muted); text-align: center; }
 .chat-container { overflow-y:auto; display:flex; flex-direction:column; gap:2px; flex-grow: 1; }
 
-/* LEADERS STYLE (Spacious Fix) */
+/* LEADERS STYLE (Spacious + 12px Font) */
 .leaders-content { 
   display:flex; 
   flex-direction:column; 
@@ -80,28 +80,33 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 .leader-row:last-child { border-bottom: none; }
 
 .leader-symbol-box { display: flex; align-items: center; gap: 10px; }
-.coin-link { text-decoration: none; color: var(--text-main); font-weight: 700; font-size: 14px; }
-.leader-price { font-weight: 500; font-variant-numeric: tabular-nums; color: var(--text-main); font-size: 14px; }
+.coin-link { 
+  text-decoration: none; 
+  color: var(--text-main); 
+  font-weight: 700; 
+  font-size: 12px; /* Зменшено за запитом */
+}
+.leader-price { font-weight: 500; font-variant-numeric: tabular-nums; color: var(--text-main); font-size: 13px; }
 
 .leader-change-wrapper { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
 .change-badge { 
   font-weight: 700; 
-  font-size: 13px; 
-  padding: 5px 10px; 
-  border-radius: 7px; 
-  min-width: 70px; 
+  font-size: 12px; 
+  padding: 4px 8px; 
+  border-radius: 6px; 
+  min-width: 65px; 
   text-align: center;
 }
 .change-badge.up { background: rgba(0, 255, 150, 0.1); color: var(--green); }
 .change-badge.down { background: rgba(255, 92, 92, 0.1); color: var(--red); }
 
-.ex-icon { width: 16px; height: 16px; border-radius: 3px; }
+.ex-icon { width: 15px; height: 15px; border-radius: 3px; }
 
 /* LIQUIDATIONS STYLE */
 .liq-row { display: grid !important; grid-template-columns: 1.6fr 1fr 1fr; align-items: center; padding: 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
 .liq-info { display: flex; align-items: center; }
 .liq-time { color: var(--text-muted); font-size: 11px; margin-right: 12px; }
-.liq-ex-icon { width: 15px; height: 15px; margin-right: 10px; border-radius: 2px; }
+.liq-ex-icon { width: 14px; height: 14px; margin-right: 10px; border-radius: 2px; }
 .liq-symbol { font-weight: 800; }
 .liq-val-text { font-weight: 700; }
 .liq-price { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
