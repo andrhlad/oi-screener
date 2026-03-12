@@ -103,14 +103,26 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 
 <main class="dashboard">
   <div class="column">
-    <div class="card" style="height:500px"><div class="card-title">Pump & Dump Live</div><div id="pump-chat" class="chat-container"></div></div>
-    <div class="card" style="height:180px"><div class="card-title">News Live</div><div id="news-container" class="chat-container"></div></div>
-    <div class="card" style="height:595px"><div class="card-title">Listing / Delisting</div><div id="listings-container" class="chat-container"></div></div>
+    <div class="card" style="height:500px">
+      <div class="card-title">Pump & Dump Live</div>
+      <div id="pump-chat" class="chat-container"></div>
+    </div>
+    <div class="card" style="height:180px">
+      <div class="card-title">News Live</div>
+      <div id="news-container" class="chat-container"></div>
+    </div>
+    <div class="card" style="height:595px">
+      <div class="card-title">Listing / Delisting</div>
+      <div id="listings-container" class="chat-container"></div>
+    </div>
   </div>
 
   <div class="column">
-    <div class="card" style="height:390px"><div class="card-title">Open Interest Chat</div><div id="oi-chat" class="chat-container"></div></div>
-    <div class="card" style="height:905px">
+    <div class="card" style="height:700px">
+      <div class="card-title">Open Interest Chat</div>
+      <div id="oi-chat" class="chat-container"></div>
+    </div>
+    <div class="card" style="height:595px">
       <div class="card-title">Liquidations Live</div>
       <div id="liquidations-chat" class="chat-container"></div>
     </div>
@@ -129,7 +141,6 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
 </main>
 
 <script>
-// Скрипти (без змін)
 const LEADERS_API = "http://127.0.0.1:5000"; 
 const LIQ_WS_URL = "ws://127.0.0.1:8000/ws/liquidations"; 
 const REF_LINKS = { binance: "https://accounts.binance.com/register?ref=184649565", bybit: "https://www.bybit.com/invite?ref=J8QWYL%230" };
