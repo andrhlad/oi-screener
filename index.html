@@ -84,7 +84,7 @@ body { background: var(--bg); color: var(--text-main); min-height:100vh; }
   text-decoration: none; 
   color: var(--text-main); 
   font-weight: 700; 
-  font-size: 12px; /* Встановлено 12px за запитом */
+  font-size: 12px;
 }
 .leader-price { font-weight: 500; font-variant-numeric: tabular-nums; color: var(--text-main); font-size: 13px; }
 
@@ -213,6 +213,7 @@ function setupLeadersSSE() {
   };
 }
 
+// ОНОВЛЕНА ФУНКЦІЯ: Знято обмеження для підтримки історії за 25 годин
 function addLiquidationToUI(data) {
     const container = document.getElementById('liquidations-chat');
     const row = document.createElement('div');
@@ -233,7 +234,9 @@ function addLiquidationToUI(data) {
         <div class="liq-price">${data.prc}</div>
     `;
     container.insertBefore(row, container.firstChild);
-    if (container.children.length > 50) container.lastElementChild.remove();
+    
+    // Встановлено ліміт у 5000 записів, щоб вмістити історію за 25 годин
+    if (container.children.length > 5000) container.lastElementChild.remove();
 }
 
 function setupLiquidationsWS() {
@@ -242,8 +245,11 @@ function setupLiquidationsWS() {
         const msg = JSON.parse(event.data);
         if (msg.type === 'history') {
             document.getElementById('liquidations-chat').innerHTML = '';
-            [...msg.data].reverse().forEach(item => addLiquidationToUI(item));
-        } else if (msg.type === 'new') { addLiquidationToUI(msg.data); }
+            // Рендеримо історію так, щоб нові були зверху
+            [...msg.data].forEach(item => addLiquidationToUI(item));
+        } else if (msg.type === 'new') { 
+            addLiquidationToUI(msg.data); 
+        }
     };
 }
 
