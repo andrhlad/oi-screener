@@ -18,15 +18,36 @@
   --glow: 0 0 15px rgba(0, 210, 255, 0.15);
 }
 
-/* Світла тема (Cyber-Light) */
 [data-theme="light"] {
   --bg: #e0e5ec;
   --card-bg: rgba(255, 255, 255, 0.8);
-  --accent: #4f46e5; /* Насичений синій */
+  --accent: #4f46e5;
   --border: rgba(79, 70, 229, 0.2);
   --text-main: #1a1f2e;
   --text-muted: #64748b;
   --glow: 0 0 15px rgba(79, 70, 229, 0.1);
+}
+
+/* --- СТИЛІЗАЦІЯ СКРОЛЛБАРУ --- */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(13, 17, 23, 0.5);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 10px;
+  box-shadow: 0 0 10px var(--accent);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #fff;
+}
+.chat-container::-webkit-scrollbar {
+  width: 3px;
+}
+.chat-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 210, 255, 0.3);
 }
 
 * { margin:0; padding:0; box-sizing:border-box; transition: background 0.3s, border-color 0.3s, box-shadow 0.3s; }
@@ -44,7 +65,6 @@ body {
   background-image: radial-gradient(circle at 50% 50%, #f0f2f5 0%, #e0e5ec 100%);
 }
 
-/* CYBER FRAME */
 .cyber-card {
   background: var(--card-bg);
   position: relative;
@@ -83,13 +103,11 @@ body {
   letter-spacing: 1.5px; border-left: 3px solid var(--accent); padding-left: 8px;
 }
 
-/* HEADER */
 .header { background: rgba(5, 7, 10, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:100; }
 [data-theme="light"] .header { background: rgba(224, 229, 236, 0.8); }
 .header-inner { max-width: 1600px; margin: 0 auto; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
 .logo { font-weight: 800; font-size: 20px; color: var(--accent); text-shadow: 0 0 10px var(--accent); }
 
-/* GRID */
 .dashboard { 
   display: grid; grid-template-columns: 350px 1fr 320px; 
   max-width: 1600px; margin: 20px auto; padding: 0 20px 40px; gap: 20px; 
@@ -100,7 +118,6 @@ body {
   font-family: 'JetBrains Mono', monospace; font-size: 12px;
 }
 
-/* DATA ROWS */
 .liq-row, .leader-row { 
   display: grid; align-items: center; 
   padding: 8px 4px; border-bottom: 1px solid rgba(128,128,128,0.1); 
@@ -182,7 +199,6 @@ const REF_LINKS = {
   bybit: "https://www.bybit.com/invite?ref=J8QWYL%230" 
 };
 
-// ТЕМА ТА ГОДИННИК
 const themeBtn = document.getElementById('theme-btn');
 themeBtn.onclick = () => {
   const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -195,7 +211,6 @@ setInterval(() => {
   document.getElementById('clock-utc').textContent = new Date().toLocaleTimeString('en-GB',{timeZone:'UTC'}); 
 }, 1000);
 
-// ЛОГІКА ІКОНОК
 function getIconsHtml(ex, symbol, split = false) {
   const name = ex.toLowerCase();
   const exIcon = name === "binance" ? "https://bin.bnbstatic.com/static/images/common/favicon.ico" : "https://www.bybit.com/favicon.ico";
@@ -207,7 +222,6 @@ function getIconsHtml(ex, symbol, split = false) {
   return split ? { exHtml, cgHtml } : exHtml + cgHtml;
 }
 
-// ЛОГІКА ЛІДЕРІВ (SSE)
 function renderLeaders(containerId, items, colorClass) {
   const el = document.getElementById(containerId);
   if (!items) return;
@@ -220,7 +234,7 @@ function renderLeaders(containerId, items, colorClass) {
         ${icons.exHtml}
         <a href="${tradeUrl}" target="_blank" class="coin-link">${i.symbol}</a>
       </div>
-      <div class="liq-price">$${i.price}</div>
+      <div class="liq-price">${i.price}</div>
       <div style="display:flex; align-items:center; justify-content:flex-end; gap:8px;">
         <div class="change-badge ${colorClass}">${i.change >= 0 ? '+' : ''}${i.change}%</div>
         ${icons.cgHtml}
@@ -238,7 +252,6 @@ function setupLeadersSSE() {
   };
 }
 
-// ЛОГІКА ЛІКВІДАЦІЙ (WebSocket)
 function addLiquidationToUI(data) {
     const container = document.getElementById('liquidations-chat');
     const row = document.createElement('div');
@@ -246,6 +259,7 @@ function addLiquidationToUI(data) {
     const sideColor = data.side === "SHORT" ? "var(--green)" : "var(--red)";
     const exIcon = data.ex.toLowerCase() === "binance" ? "https://bin.bnbstatic.com/static/images/common/favicon.ico" : "https://www.bybit.com/favicon.ico";
     const refUrl = REF_LINKS[data.ex.toLowerCase()] || '#';
+    // ТУТ ВИПРАВЛЕНО: Прибрано зайвий символ $ перед змінними
     row.innerHTML = `
         <div style="display:flex; align-items:center;">
             <span class="liq-time">${data.tm}</span>
@@ -254,9 +268,9 @@ function addLiquidationToUI(data) {
         </div>
         <div>
             <span style="color: ${sideColor}; font-weight:800; font-size:10px;">${data.side}</span>
-            <span class="liq-val-text">$${data.val}</span>
+            <span class="liq-val-text">${data.val}</span>
         </div>
-        <div class="liq-price">$${data.prc}</div>
+        <div class="liq-price">${data.prc}</div>
     `;
     container.insertBefore(row, container.firstChild);
     if (container.children.length > 5000) container.lastElementChild.remove();
